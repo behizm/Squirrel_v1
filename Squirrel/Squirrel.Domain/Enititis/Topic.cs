@@ -19,6 +19,7 @@ namespace Squirrel.Domain.Enititis
 
         public string Body { get; set; }
         public DateTime EditDate { get; set; }
+        public FirstPostType FirstPost { get; set; }
 
 
 
@@ -32,5 +33,13 @@ namespace Squirrel.Domain.Enititis
 
         public virtual ICollection<Post> Posts { get; set; }
 
+    }
+
+    public enum FirstPostType
+    {
+        Newer = 0,
+        Older = 1,
+        Popular = 2,
+        LastEdited = 3,
     }
 }
