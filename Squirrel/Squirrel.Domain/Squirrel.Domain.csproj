@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enititis\Attachment.cs" />
     <Compile Include="Enititis\BaseEntity.cs" />
     <Compile Include="Enititis\Category.cs" />
     <Compile Include="Enititis\Comment.cs" />

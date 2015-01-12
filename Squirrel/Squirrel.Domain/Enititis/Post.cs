@@ -32,7 +32,15 @@ namespace Squirrel.Domain.Enititis
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
 
-        public virtual ICollection<Attachment> Attachments { get; set; }
+        [ForeignKey("Category")]
+        public Guid CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+
+        [ForeignKey("HeaderImage")]
+        public Guid? HeaderImageId { get; set; }
+        public virtual File HeaderImage { get; set; }
+
+        public virtual ICollection<File> Attachments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }

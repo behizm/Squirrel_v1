@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace Squirrel.Domain.Enititis
 {
-    class Config
+    public class Config : BaseEntity
     {
+        public Config()
+        {
+        }
+
+        public Config(Guid id, DateTime? createdate)
+            : base(id, createdate)
+        {
+        }
+
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
