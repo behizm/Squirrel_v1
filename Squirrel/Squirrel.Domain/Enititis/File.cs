@@ -26,6 +26,8 @@ namespace Squirrel.Domain.Enititis
         public int Size { get; set; }
         public DateTime EditDate { get; set; }
         public FileType Type { get; set; }
+        public string Category { get; set; }
+        public bool IsPublic { get; set; }
 
 
 
