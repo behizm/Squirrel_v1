@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -7,29 +8,32 @@ using System.Threading.Tasks;
 
 namespace Squirrel.Domain.Enititis
 {
-    public class Profile : BaseEntity
+    [Table("Profiles", Schema = "Membership")]
+    public class Profile
     {
-        public Profile()
+       public Profile()
         {
+            UserId = Guid.NewGuid();
+            CreateDate = DateTime.Now;
         }
 
-        public Profile(Guid id, DateTime? createdate)
-            : base(id, createdate)
+       public Profile(Guid id, DateTime? createDate)
         {
+            UserId = id;
+            CreateDate = createDate.HasValue ? createDate.Value : DateTime.Now;
         }
 
-
-
+        [Key, ForeignKey("User")]
+        public Guid UserId { get; private set; }
+        public DateTime CreateDate { get; private set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public DateTime EditDate { get; set; }
 
-        
 
-        [ForeignKey("User")]
-        public Guid UserId { get; set; }
         public virtual User User { get; set; }
 
-        [ForeignKey("User")]
+        [ForeignKey("Avatar")]
         public Guid? AvatarId { get; set; }
         public virtual File Avatar { get; set; }
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Squirrel.Domain.Enititis
 {
+    [Table("Users", Schema = "Membership")]
     public class User : BaseEntity
     {
         public User()

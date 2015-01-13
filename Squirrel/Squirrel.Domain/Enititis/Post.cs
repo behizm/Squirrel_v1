@@ -32,10 +32,6 @@ namespace Squirrel.Domain.Enititis
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
 
-        [ForeignKey("Category")]
-        public Guid CategoryId { get; set; }
-        public virtual Category Category { get; set; }
-
         [ForeignKey("HeaderImage")]
         public Guid? HeaderImageId { get; set; }
         public virtual File HeaderImage { get; set; }

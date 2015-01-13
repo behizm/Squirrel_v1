@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Squirrel.Domain.Enititis
 {
@@ -16,6 +17,7 @@ namespace Squirrel.Domain.Enititis
             CreateDate = createDate.HasValue ? createDate.Value : DateTime.Now;
         }
 
+        [Key]
         public Guid Id { get; private set; }
         public DateTime CreateDate { get; private set; }
     }
