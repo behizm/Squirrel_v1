@@ -4,7 +4,7 @@ using Squirrel.Domain.Enititis;
 
 namespace Squirrel.Data
 {
-    public class SquirrelContext : DbContext
+    internal class SquirrelContext : DbContext
     {
         public SquirrelContext()
             : base("name=SquirrelContext")
@@ -27,7 +27,7 @@ namespace Squirrel.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("Blog");
-            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>(); 
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
     }
 }
