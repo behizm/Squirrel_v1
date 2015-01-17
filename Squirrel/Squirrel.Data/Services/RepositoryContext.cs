@@ -22,37 +22,37 @@ namespace Squirrel.Data.Services
 
         public OperationResult OperationResult { get; private set; }
 
-        public async Task AddAsync<TEntity>(TEntity item) where TEntity : class
+        public async Task CreateAsync<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Added;
             await SaveChanges();
         }
 
-        public async Task AddAsync<TEntity>(TEntity[] items) where TEntity : class
+        public async Task CreateAsync<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Added);
             await SaveChanges();
         }
 
-        public async Task RemoveAsync<TEntity>(TEntity item) where TEntity : class
+        public async Task DeleteAsync<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Deleted;
             await SaveChanges();
         }
 
-        public async Task RemoveAsync<TEntity>(TEntity[] items) where TEntity : class
+        public async Task DeleteAsync<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Deleted);
             await SaveChanges();
         }
 
-        public async Task ModifyAsync<TEntity>(TEntity item) where TEntity : class
+        public async Task UpdateAsync<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Modified;
             await SaveChanges();
         }
 
-        public async Task ModifyAsync<TEntity>(TEntity[] items) where TEntity : class
+        public async Task UpdateAsync<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Modified);
             await SaveChanges();

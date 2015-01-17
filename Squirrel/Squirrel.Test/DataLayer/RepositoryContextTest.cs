@@ -36,10 +36,10 @@ namespace Squirrel.Test.DataLayer
             {
                 AccessFailed = 0,
                 Email = "behi8303@yahoo.com",
-                PasswordHashed = "121212",
+                PasswordHash = "121212",
                 Username = "behi8303",
             };
-            var task = RepositoryContext.AddAsync(user);
+            var task = RepositoryContext.CreateAsync(user);
             task.Wait();
             Assert.IsTrue(RepositoryContext.OperationResult.Succeeded, RepositoryContext.OperationResult.Errors.FirstOrDefault());
         }
@@ -53,7 +53,7 @@ namespace Squirrel.Test.DataLayer
             Assert.IsTrue(RepositoryContext.OperationResult.Succeeded, "1: " + RepositoryContext.OperationResult.Errors.FirstOrDefault());
             var user = task1.Result;
             user.Username = "behi8304";
-            var task2 = RepositoryContext.ModifyAsync(user);
+            var task2 = RepositoryContext.UpdateAsync(user);
             task2.Wait();
             Assert.IsTrue(RepositoryContext.OperationResult.Succeeded, "2: " + RepositoryContext.OperationResult.Errors.FirstOrDefault());
         }

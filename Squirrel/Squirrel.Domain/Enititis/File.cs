@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,23 @@ namespace Squirrel.Domain.Enititis
         }
 
 
-
+        [StringLength(25), Required]
         public string Name { get; set; }
+
+        [Required]
         public string Address { get; set; }
+
+        [StringLength(50), Required]
         public string Filename { get; set; }
+
         public int Size { get; set; }
-        public DateTime EditDate { get; set; }
+
+        public DateTime? EditDate { get; set; }
+
         public FileType Type { get; set; }
+
         public string Category { get; set; }
+
         public bool IsPublic { get; set; }
 
 

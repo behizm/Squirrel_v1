@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Squirrel.Domain.Enititis
 {
@@ -21,10 +18,26 @@ namespace Squirrel.Domain.Enititis
 
 
 
+        [StringLength(25), Required]
         public string Username { get; set; }
+
+        [StringLength(50), Required]
         public string Email { get; set; }
-        public string PasswordHashed { get; set; }
+
+        [StringLength(100), Required]
+        public string PasswordHash { get; set; }
+
         public int AccessFailed { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime? EditeDate { get; set; }
+
+        public DateTime? LastLogin { get; set; }
+
+        public bool IsLock { get; set; }
+
+        public DateTime? LockDate { get; set; }
 
 
 

@@ -11,24 +11,32 @@ namespace Squirrel.Domain.Enititis
     [Table("Profiles", Schema = "Membership")]
     public class Profile
     {
-       public Profile()
+        public Profile()
         {
             UserId = Guid.NewGuid();
             CreateDate = DateTime.Now;
         }
 
-       public Profile(Guid id, DateTime? createDate)
+        public Profile(Guid id, DateTime? createDate)
         {
             UserId = id;
             CreateDate = createDate.HasValue ? createDate.Value : DateTime.Now;
         }
 
+
+
         [Key, ForeignKey("User")]
         public Guid UserId { get; private set; }
+
         public DateTime CreateDate { get; private set; }
+
+        [StringLength(30), Required]
         public string Firstname { get; set; }
+
+        [StringLength(50), Required]
         public string Lastname { get; set; }
-        public DateTime EditDate { get; set; }
+
+        public DateTime? EditDate { get; set; }
 
 
         public virtual User User { get; set; }

@@ -22,32 +22,32 @@ namespace Squirrel.Data.Services
 
         public OperationResult OperationResult { get; private set; }
 
-        public void Add<TEntity>(TEntity item) where TEntity : class
+        public void Create<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Added;
         }
 
-        public void Add<TEntity>(TEntity[] items) where TEntity : class
+        public void Create<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Added);
         }
 
-        public void Remove<TEntity>(TEntity item) where TEntity : class
+        public void Delete<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Deleted;
         }
 
-        public void Remove<TEntity>(TEntity[] items) where TEntity : class
+        public void Delete<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Deleted);
         }
 
-        public void Modify<TEntity>(TEntity item) where TEntity : class
+        public void Update<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Modified;
         }
 
-        public void Modify<TEntity>(TEntity[] items) where TEntity : class
+        public void Update<TEntity>(TEntity[] items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Modified);
         }
