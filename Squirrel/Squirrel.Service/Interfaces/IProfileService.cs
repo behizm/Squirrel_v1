@@ -13,9 +13,9 @@ namespace Squirrel.Service
         OperationResult Result { get; }
 
         Task CreateAsync(Guid userId, Profile profile);
-        Task UpdateAsync(Profile profile);
+        Task UpdateAsync(Guid userId, Profile profile);
         Task<Profile> FindByIdAsync(Guid userId);
-        Task<List<Profile>> SearchAsync(ProfileSearchModel model);
+        Task<List<Profile>> SearchAsync(ProfileSearchModel model, int skip, int take);
         Task ChangeAvatarAsync(Guid userId, Guid fileId);
     }
 }

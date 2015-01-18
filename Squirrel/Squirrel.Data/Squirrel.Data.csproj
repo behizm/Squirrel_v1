@@ -58,21 +58,9 @@
     <Compile Include="DataIOC.cs" />
     <Compile Include="Interfaces\IRepositoryContext.cs" />
     <Compile Include="Interfaces\IWarehouseContext.cs" />
-    <Compile Include="Migrations\201501131608532_initialCreate.cs" />
-    <Compile Include="Migrations\201501131608532_initialCreate.Designer.cs">
-      <DependentUpon>201501131608532_initialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501170938401_ChangeEntities.cs" />
-    <Compile Include="Migrations\201501170938401_ChangeEntities.Designer.cs">
-      <DependentUpon>201501170938401_ChangeEntities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501171243353_EditEntities.cs" />
-    <Compile Include="Migrations\201501171243353_EditEntities.Designer.cs">
-      <DependentUpon>201501171243353_EditEntities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501181011124_ChangeUserEntity.cs" />
-    <Compile Include="Migrations\201501181011124_ChangeUserEntity.Designer.cs">
-      <DependentUpon>201501181011124_ChangeUserEntity.cs</DependentUpon>
+    <Compile Include="Migrations\201501181513288_InitialCreate.cs" />
+    <Compile Include="Migrations\201501181513288_InitialCreate.Designer.cs">
+      <DependentUpon>201501181513288_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,20 +79,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201501131608532_initialCreate.resx">
-      <DependentUpon>201501131608532_initialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501170938401_ChangeEntities.resx">
-      <DependentUpon>201501170938401_ChangeEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501171243353_EditEntities.resx">
-      <DependentUpon>201501171243353_EditEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501181011124_ChangeUserEntity.resx">
-      <DependentUpon>201501181011124_ChangeUserEntity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501181513288_InitialCreate.resx">
+      <DependentUpon>201501181513288_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

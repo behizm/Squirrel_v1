@@ -129,6 +129,12 @@
   <data name="General_LackOfInputData" xml:space="preserve">
     <value>اطلاعات ورودی ناقص است.</value>
   </data>
+  <data name="ProfileService_ProfileNotFound" xml:space="preserve">
+    <value>هیچ پروفایلی یافت نشد.</value>
+  </data>
+  <data name="ProfileService_UserHasNotProfile" xml:space="preserve">
+    <value>این کاربر پروفایل ندارد.</value>
+  </data>
   <data name="ProfileService_UserHasProfile" xml:space="preserve">
     <value>این کاربر پروفایل دارد.</value>
   </data>

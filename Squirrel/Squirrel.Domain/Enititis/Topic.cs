@@ -25,6 +25,8 @@ namespace Squirrel.Domain.Enititis
 
         public FirstPostType FirstPost { get; set; }
 
+        public int View { get; set; }
+
 
 
         [ForeignKey("Category")]

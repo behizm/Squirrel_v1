@@ -27,6 +27,8 @@ namespace Squirrel.Service
         static void Register()
         {
             _core.RegisterType<IUserService, UserService>();
+            _core.RegisterType<IProfileService, ProfileService>();
+            _core.RegisterType<IFileService, FileService>();
         }
     }
 }

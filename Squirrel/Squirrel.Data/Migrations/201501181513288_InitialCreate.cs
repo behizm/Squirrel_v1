@@ -3,7 +3,7 @@ namespace Squirrel.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialCreate : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,7 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Name = c.String(),
+                        Name = c.String(nullable: false, maxLength: 50),
                         ParentId = c.Guid(),
                         AvatarId = c.Guid(),
                         CreateDate = c.DateTime(nullable: false),
@@ -28,11 +28,11 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Name = c.String(),
-                        Address = c.String(),
-                        Filename = c.String(),
+                        Name = c.String(nullable: false, maxLength: 25),
+                        Address = c.String(nullable: false),
+                        Filename = c.String(nullable: false, maxLength: 50),
                         Size = c.Int(nullable: false),
-                        EditDate = c.DateTime(nullable: false),
+                        EditDate = c.DateTime(),
                         Type = c.Int(nullable: false),
                         Category = c.String(),
                         IsPublic = c.Boolean(nullable: false),
@@ -51,11 +51,15 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Username = c.String(),
-                        Email = c.String(),
-                        PasswordHashed = c.String(),
+                        Username = c.String(nullable: false, maxLength: 25),
+                        Email = c.String(nullable: false, maxLength: 50),
+                        PasswordHash = c.String(nullable: false, maxLength: 100),
                         AccessFailed = c.Int(nullable: false),
-                        ProfileId = c.Guid(),
+                        IsActive = c.Boolean(nullable: false),
+                        EditeDate = c.DateTime(),
+                        LastLogin = c.DateTime(),
+                        IsLock = c.Boolean(nullable: false),
+                        LockDate = c.DateTime(),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
@@ -66,9 +70,9 @@ namespace Squirrel.Data.Migrations
                     {
                         UserId = c.Guid(nullable: false),
                         CreateDate = c.DateTime(nullable: false),
-                        Firstname = c.String(),
-                        Lastname = c.String(),
-                        EditDate = c.DateTime(nullable: false),
+                        Firstname = c.String(nullable: false, maxLength: 30),
+                        Lastname = c.String(nullable: false, maxLength: 50),
+                        EditDate = c.DateTime(),
                         AvatarId = c.Guid(),
                     })
                 .PrimaryKey(t => t.UserId)
@@ -82,8 +86,9 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Body = c.String(),
-                        EditDate = c.DateTime(nullable: false),
+                        Abstract = c.String(maxLength: 300),
+                        Body = c.String(nullable: false),
+                        EditDate = c.DateTime(),
                         IsPublic = c.Boolean(nullable: false),
                         TopicId = c.Guid(nullable: false),
                         UserId = c.Guid(nullable: false),
@@ -106,7 +111,7 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Body = c.String(),
+                        Body = c.String(nullable: false),
                         PostId = c.Guid(nullable: false),
                         ParentId = c.Guid(),
                         CreateDate = c.DateTime(nullable: false),
@@ -122,7 +127,7 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Name = c.String(),
+                        Name = c.String(nullable: false, maxLength: 25),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
@@ -132,8 +137,8 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Body = c.String(),
-                        EditDate = c.DateTime(nullable: false),
+                        Title = c.String(nullable: false, maxLength: 150),
+                        EditDate = c.DateTime(),
                         FirstPost = c.Int(nullable: false),
                         CategoryId = c.Guid(nullable: false),
                         UserId = c.Guid(nullable: false),
@@ -166,8 +171,8 @@ namespace Squirrel.Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Key = c.String(),
-                        Value = c.String(),
+                        Key = c.String(nullable: false, maxLength: 50),
+                        Value = c.String(nullable: false, maxLength: 100),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
