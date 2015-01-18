@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Squirrel.Domain.Cryptography
+namespace Squirrel.Utility.Cryptography
 {
     public class Rsa
     {

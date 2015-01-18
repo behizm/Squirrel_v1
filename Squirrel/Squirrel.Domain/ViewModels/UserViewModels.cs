@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Squirrel.Domain.Resources;
 
 namespace Squirrel.Domain.ViewModels
@@ -28,13 +29,25 @@ namespace Squirrel.Domain.ViewModels
 
     public class UserUpdateModel
     {
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
     }
 
     public class UserDetailsModel
     {
+
     }
 
     public class UserSearchModel
     {
+        public Guid? Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public bool? IsActive { get; set; }
+        public DateTime? CreateDateFrom { get; set; }
+        public DateTime? CreateDateTo { get; set; }
+        public DateTime? LastLoginFrom { get; set; }
+        public DateTime? LastLoginTo { get; set; }
     }
 }

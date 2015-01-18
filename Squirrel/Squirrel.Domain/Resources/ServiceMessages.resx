@@ -117,10 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileService_FileNotFount" xml:space="preserve">
+    <value>فایل مورد نظر یافت نشد.</value>
+  </data>
+  <data name="FileService_NoAccess" xml:space="preserve">
+    <value>شما به این فایل دسترسی ندارید.</value>
+  </data>
   <data name="General_ErrorAccurred" xml:space="preserve">
     <value>در هنگام انجام درخواست شما خطایی رخ داد.</value>
   </data>
   <data name="General_LackOfInputData" xml:space="preserve">
     <value>اطلاعات ورودی ناقص است.</value>
+  </data>
+  <data name="ProfileService_UserHasProfile" xml:space="preserve">
+    <value>این کاربر پروفایل دارد.</value>
+  </data>
+  <data name="UserService_ChangePasswordAsync_SamePassword" xml:space="preserve">
+    <value>پسورد جدید و قدیم یکی هستند.</value>
+  </data>
+  <data name="UserService_CreateAsync_EmailDuplicate" xml:space="preserve">
+    <value>این آدرس ایمیل قبلا ثبت شده است.</value>
+  </data>
+  <data name="UserService_CreateAsync_PasswordLenght" xml:space="preserve">
+    <value>طول پسورد حداقل {0} حرف باید باشد.</value>
+  </data>
+  <data name="UserService_CreateAsync_UsernameDuplicate" xml:space="preserve">
+    <value>این نام کاربری وجود دارد.</value>
+  </data>
+  <data name="UserService_LoginAsync_IsActive" xml:space="preserve">
+    <value>نام کاربری شما فعال نشده است. با ادمین سیستم تماس بگیرید.</value>
+  </data>
+  <data name="UserService_LoginAsync_IsLock" xml:space="preserve">
+    <value>نام کاربری شما قفل است. برای رفع مشکل با ادمین سیستم تماس بگیرید.</value>
+  </data>
+  <data name="UserService_LoginAsync_LockDate" xml:space="preserve">
+    <value>شما بیش از حد مجاز پسورد اشتباه وارد کرده اید و نام کاربری شما موقتا قفل است. لطفا دیرتر تلاش کنید.</value>
+  </data>
+  <data name="UserService_LoginAsync_Wrong" xml:space="preserve">
+    <value>نام کاربری یا رمز عبور وارد شده صحیح نیست.</value>
+  </data>
+  <data name="UserService_UserNotFound" xml:space="preserve">
+    <value>کاربر مورد نظر یافت نشد.</value>
+  </data>
+  <data name="UserService_WrongPassword" xml:space="preserve">
+    <value>کلمه عبور اشتباه است.</value>
   </data>
 </root>

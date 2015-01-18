@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squirrel.Test", "Squirrel.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squirrel.Service", "Squirrel.Service\Squirrel.Service.csproj", "{35053FFA-16CB-49B1-9AEE-B513E0B89718}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squirrel.Utility", "Squirrel.Utility\Squirrel.Utility.csproj", "{4E7E5CE0-C8EF-4E11-B465-E270712616D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{35053FFA-16CB-49B1-9AEE-B513E0B89718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35053FFA-16CB-49B1-9AEE-B513E0B89718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35053FFA-16CB-49B1-9AEE-B513E0B89718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E7E5CE0-C8EF-4E11-B465-E270712616D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E7E5CE0-C8EF-4E11-B465-E270712616D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E7E5CE0-C8EF-4E11-B465-E270712616D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E7E5CE0-C8EF-4E11-B465-E270712616D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

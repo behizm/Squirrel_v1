@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Squirrel.Domain.ConfigModels;
+using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 
@@ -16,17 +17,17 @@ namespace Squirrel.Service
         UserServiceConfig UserServiceConfig { get; }
 
         Task CreateAsync(string username, string email, string password);
-        Task UpdateAsync(UserUpdateModel user);
-        Task<UserDetailsModel> FindByIdAsync(Guid userId);
-        Task<UserDetailsModel> FindByUsernameAsync(string username);
-        Task<UserDetailsModel> FindByEmailAsync(string username);
-        Task<List<UserDetailsModel>> SearchAsync(UserSearchModel model);
+        Task UpdateAsync(Guid id, string username, string email);
+        Task<User> FindByIdAsync(Guid userId);
+        Task<User> FindByUsernameAsync(string username);
+        Task<User> FindByEmailAsync(string email);
+        Task<List<User>> SearchAsync(UserSearchModel model, int skip = 0, int take = 10);
 
-        Task ChangePasswordAsync(string oldPassword, string newPassword);
+        Task ChangePasswordAsync(string username, string oldPassword, string newPassword);
         Task ResetPasswordAsync(Guid userId, string newPassword);
         Task<bool> ValidateAsync(string username, string password);
-        Task<bool> LoginAsync(string username, string password);
-        Task ActiveAsync(Guid userid);
+        Task<bool> LoginAsync(string username, string email, string password);
+        Task ActiveAsync(Guid userId);
         Task LockAsync(Guid userId);
         Task UnlockAsync(Guid userId);
     }

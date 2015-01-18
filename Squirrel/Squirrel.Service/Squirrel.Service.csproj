@@ -56,10 +56,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IFileService.cs" />
+    <Compile Include="Interfaces\IProfileService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceIOC.cs" />
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Share\HashSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,6 +79,10 @@
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">
       <Project>{9f182785-67c7-4abb-9306-b330af9b5fd3}</Project>
       <Name>Squirrel.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Squirrel.Utility\Squirrel.Utility.csproj">
+      <Project>{4e7e5ce0-c8ef-4e11-b465-e270712616d9}</Project>
+      <Name>Squirrel.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

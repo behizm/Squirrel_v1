@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F182785-67C7-4ABB-9306-B330AF9B5FD3}</ProjectGuid>
+    <ProjectGuid>{4E7E5CE0-C8EF-4E11-B465-E270712616D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Squirrel.Domain</RootNamespace>
-    <AssemblyName>Squirrel.Domain</AssemblyName>
+    <RootNamespace>Squirrel.Utility</RootNamespace>
+    <AssemblyName>Squirrel.Utility</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,44 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigModels\UserServiceConfig.cs" />
-    <Compile Include="Enititis\BaseEntity.cs" />
-    <Compile Include="Enititis\Category.cs" />
-    <Compile Include="Enititis\Comment.cs" />
-    <Compile Include="Enititis\Config.cs" />
-    <Compile Include="Enititis\File.cs" />
-    <Compile Include="Enititis\Post.cs" />
-    <Compile Include="Enititis\Profile.cs" />
-    <Compile Include="Enititis\Tag.cs" />
-    <Compile Include="Enititis\Topic.cs" />
-    <Compile Include="Enititis\User.cs" />
-    <Compile Include="Enititis\Vote.cs" />
+    <Compile Include="Cryptography\Hashing.cs" />
+    <Compile Include="Cryptography\Rsa.cs" />
+    <Compile Include="Cryptography\RsaKeyModel.cs" />
+    <Compile Include="Cryptography\Symmetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ServiceMessages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ServiceMessages.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\ValidationErrors.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ValidationErrors.resx</DependentUpon>
-    </Compile>
-    <Compile Include="ResultModels\OperationResult.cs" />
-    <Compile Include="ViewModels\ProfileViewModels.cs" />
-    <Compile Include="ViewModels\FileViewModels.cs" />
-    <Compile Include="ViewModels\UserViewModels.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ServiceMessages.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ServiceMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ValidationErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

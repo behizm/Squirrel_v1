@@ -77,6 +77,10 @@
       <Project>{35053ffa-16cb-49b1-9aee-b513e0b89718}</Project>
       <Name>Squirrel.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Squirrel.Utility\Squirrel.Utility.csproj">
+      <Project>{4e7e5ce0-c8ef-4e11-b465-e270712616d9}</Project>
+      <Name>Squirrel.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Squirrel.Web\Squirrel.Web.csproj">
       <Project>{7ce388ca-4f3d-4f10-92e3-fa6bf2f3964d}</Project>
       <Name>Squirrel.Web</Name>

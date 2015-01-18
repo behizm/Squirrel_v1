@@ -1,4 +1,4 @@
-﻿namespace Squirrel.Domain.Cryptography
+﻿namespace Squirrel.Utility.Cryptography
 {
     public class RsaKeyModel
     {

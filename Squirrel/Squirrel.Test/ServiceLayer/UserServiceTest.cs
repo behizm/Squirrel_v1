@@ -24,6 +24,7 @@ namespace Squirrel.Test.ServiceLayer
             var path = stringList.Aggregate((i, j) => i + "\\" + j);
             AppDomain.CurrentDomain.SetData("DataDirectory", path);
         }
+
         [TestMethod]
         public void CreateUser()
         {
@@ -31,5 +32,35 @@ namespace Squirrel.Test.ServiceLayer
             task.Wait();
             Assert.IsTrue(UserService.Result.Succeeded, UserService.Result.Errors.FirstOrDefault());
         }
+
+        [TestMethod]
+        public void UpdateUser()
+        {
+            var task1 = UserService.FindByUsernameAsync("behi8303");
+            task1.Wait();
+            Assert.IsNotNull(task1.Result, UserService.Result.Errors.FirstOrDefault());
+
+            var task = UserService.UpdateAsync(task1.Result.Id, task1.Result.Username, "behi8303@yahoo.com");
+            task.Wait();
+            Assert.IsTrue(UserService.Result.Succeeded, UserService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void ChangePassword()
+        {
+            var task = UserService.ChangePasswordAsync("behi8303", "1234567", "123456");
+            task.Wait();
+            Assert.IsTrue(UserService.Result.Succeeded, UserService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Login()
+        {
+            var task = UserService.LoginAsync("behi8303", string.Empty, "123456");
+            task.Wait();
+            Assert.IsTrue(task.Result, UserService.Result.Errors.FirstOrDefault());
+        }
+
+
     }
 }
