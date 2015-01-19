@@ -23,9 +23,11 @@ namespace Squirrel.Domain.Enititis
 
         public DateTime? EditDate { get; set; }
 
-        public FirstPostType FirstPost { get; set; }
+        public PostsOrdering PostsOrdering { get; set; }
 
         public int View { get; set; }
+
+        public bool IsPublished { get; set; }
 
 
 
@@ -41,7 +43,7 @@ namespace Squirrel.Domain.Enititis
 
     }
 
-    public enum FirstPostType
+    public enum PostsOrdering
     {
         Newer = 0,
         Older = 1,

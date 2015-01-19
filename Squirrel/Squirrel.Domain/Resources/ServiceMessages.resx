@@ -153,6 +153,12 @@
   <data name="ProfileService_UserHasProfile" xml:space="preserve">
     <value>این کاربر پروفایل دارد.</value>
   </data>
+  <data name="TopicService_NoAccess" xml:space="preserve">
+    <value>شما به این عنوان دسترسی ندارید.</value>
+  </data>
+  <data name="TopicService_TopicNotFound" xml:space="preserve">
+    <value>عنوان مورد نظر یافت نشد.</value>
+  </data>
   <data name="UserService_ChangePasswordAsync_SamePassword" xml:space="preserve">
     <value>پسورد جدید و قدیم یکی هستند.</value>
   </data>

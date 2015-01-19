@@ -13,6 +13,7 @@ namespace Squirrel.Data.Migrations
                     {
                         Id = c.Guid(nullable: false),
                         Name = c.String(nullable: false, maxLength: 50),
+                        Description = c.String(maxLength: 300),
                         ParentId = c.Guid(),
                         AvatarId = c.Guid(),
                         CreateDate = c.DateTime(nullable: false),
@@ -82,6 +83,25 @@ namespace Squirrel.Data.Migrations
                 .Index(t => t.AvatarId);
             
             CreateTable(
+                "Blog.Topics",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        Title = c.String(nullable: false, maxLength: 150),
+                        EditDate = c.DateTime(),
+                        FirstPost = c.Int(nullable: false),
+                        View = c.Int(nullable: false),
+                        CategoryId = c.Guid(nullable: false),
+                        UserId = c.Guid(nullable: false),
+                        CreateDate = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("Blog.Categories", t => t.CategoryId)
+                .ForeignKey("Membership.Users", t => t.UserId)
+                .Index(t => t.CategoryId)
+                .Index(t => t.UserId);
+            
+            CreateTable(
                 "Blog.Posts",
                 c => new
                     {
@@ -94,17 +114,14 @@ namespace Squirrel.Data.Migrations
                         UserId = c.Guid(nullable: false),
                         HeaderImageId = c.Guid(),
                         CreateDate = c.DateTime(nullable: false),
-                        Category_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("Blog.Files", t => t.HeaderImageId)
                 .ForeignKey("Blog.Topics", t => t.TopicId)
                 .ForeignKey("Membership.Users", t => t.UserId)
-                .ForeignKey("Blog.Categories", t => t.Category_Id)
                 .Index(t => t.TopicId)
                 .Index(t => t.UserId)
-                .Index(t => t.HeaderImageId)
-                .Index(t => t.Category_Id);
+                .Index(t => t.HeaderImageId);
             
             CreateTable(
                 "Blog.Comments",
@@ -131,25 +148,6 @@ namespace Squirrel.Data.Migrations
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "Blog.Topics",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false),
-                        Title = c.String(nullable: false, maxLength: 150),
-                        EditDate = c.DateTime(),
-                        FirstPost = c.Int(nullable: false),
-                        View = c.Int(nullable: false),
-                        CategoryId = c.Guid(nullable: false),
-                        UserId = c.Guid(nullable: false),
-                        CreateDate = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("Blog.Categories", t => t.CategoryId)
-                .ForeignKey("Membership.Users", t => t.UserId)
-                .Index(t => t.CategoryId)
-                .Index(t => t.UserId);
             
             CreateTable(
                 "Blog.Votes",
@@ -195,19 +193,18 @@ namespace Squirrel.Data.Migrations
         
         public override void Down()
         {
-            DropForeignKey("Blog.Posts", "Category_Id", "Blog.Categories");
+            DropForeignKey("Blog.Topics", "UserId", "Membership.Users");
             DropForeignKey("Blog.Votes", "UserId", "Membership.Users");
             DropForeignKey("Blog.Votes", "PostId", "Blog.Posts");
             DropForeignKey("Blog.Posts", "UserId", "Membership.Users");
             DropForeignKey("Blog.Posts", "TopicId", "Blog.Topics");
-            DropForeignKey("Blog.Topics", "UserId", "Membership.Users");
-            DropForeignKey("Blog.Topics", "CategoryId", "Blog.Categories");
             DropForeignKey("Blog.TagPosts", "Post_Id", "Blog.Posts");
             DropForeignKey("Blog.TagPosts", "Tag_Id", "Blog.Tags");
             DropForeignKey("Blog.Posts", "HeaderImageId", "Blog.Files");
             DropForeignKey("Blog.Comments", "PostId", "Blog.Posts");
             DropForeignKey("Blog.Comments", "ParentId", "Blog.Comments");
             DropForeignKey("Blog.Files", "Post_Id", "Blog.Posts");
+            DropForeignKey("Blog.Topics", "CategoryId", "Blog.Categories");
             DropForeignKey("Blog.Categories", "ParentId", "Blog.Categories");
             DropForeignKey("Blog.Categories", "AvatarId", "Blog.Files");
             DropForeignKey("Blog.Files", "UserId", "Membership.Users");
@@ -217,14 +214,13 @@ namespace Squirrel.Data.Migrations
             DropIndex("Blog.TagPosts", new[] { "Tag_Id" });
             DropIndex("Blog.Votes", new[] { "UserId" });
             DropIndex("Blog.Votes", new[] { "PostId" });
-            DropIndex("Blog.Topics", new[] { "UserId" });
-            DropIndex("Blog.Topics", new[] { "CategoryId" });
             DropIndex("Blog.Comments", new[] { "ParentId" });
             DropIndex("Blog.Comments", new[] { "PostId" });
-            DropIndex("Blog.Posts", new[] { "Category_Id" });
             DropIndex("Blog.Posts", new[] { "HeaderImageId" });
             DropIndex("Blog.Posts", new[] { "UserId" });
             DropIndex("Blog.Posts", new[] { "TopicId" });
+            DropIndex("Blog.Topics", new[] { "UserId" });
+            DropIndex("Blog.Topics", new[] { "CategoryId" });
             DropIndex("Membership.Profiles", new[] { "AvatarId" });
             DropIndex("Membership.Profiles", new[] { "UserId" });
             DropIndex("Blog.Files", new[] { "Post_Id" });
@@ -234,10 +230,10 @@ namespace Squirrel.Data.Migrations
             DropTable("Blog.TagPosts");
             DropTable("Site.Configs");
             DropTable("Blog.Votes");
-            DropTable("Blog.Topics");
             DropTable("Blog.Tags");
             DropTable("Blog.Comments");
             DropTable("Blog.Posts");
+            DropTable("Blog.Topics");
             DropTable("Membership.Profiles");
             DropTable("Membership.Users");
             DropTable("Blog.Files");

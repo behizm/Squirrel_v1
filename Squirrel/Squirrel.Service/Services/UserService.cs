@@ -412,6 +412,20 @@ namespace Squirrel.Service.Services
             await UpdateAsync(user);
         }
 
+        public async Task ChangeAdminAsync(Guid userId, bool isAdmin)
+        {
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            user.IsAdmin = isAdmin;
+            user.LockDate = DateTime.Now;
+            await UpdateAsync(user);
+        }
+
 
         private async Task CreateAsync(User user)
         {

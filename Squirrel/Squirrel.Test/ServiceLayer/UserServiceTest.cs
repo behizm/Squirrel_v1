@@ -28,7 +28,8 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void CreateUser()
         {
-            var task = UserService.CreateAsync("behi8303", "behi8303@yahoo.com", "123456");
+            //var task = UserService.CreateAsync("behi8303", "behi8303@yahoo.com", "123456");
+            var task = UserService.CreateAsync("admin", "admin@admin.com", "123456");
             task.Wait();
             Assert.IsTrue(UserService.Result.Succeeded, UserService.Result.Errors.FirstOrDefault());
         }
@@ -59,6 +60,14 @@ namespace Squirrel.Test.ServiceLayer
             var task = UserService.LoginAsync("behi8303", string.Empty, "123456");
             task.Wait();
             Assert.IsTrue(task.Result, UserService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void ChangeAdmin()
+        {
+            var task = UserService.ChangeAdminAsync(Guid.Parse("a4ee56af-6d44-4ca2-a049-94406e9c6a84"), true);
+            task.Wait();
+            Assert.IsTrue(UserService.Result.Succeeded, UserService.Result.Errors.FirstOrDefault());
         }
 
 

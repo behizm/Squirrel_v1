@@ -30,5 +30,6 @@ namespace Squirrel.Service
         Task ActiveAsync(Guid userId);
         Task LockAsync(Guid userId);
         Task UnlockAsync(Guid userId);
+        Task ChangeAdminAsync(Guid userId, bool isAdmin);
     }
 }

@@ -7,13 +7,13 @@ namespace Squirrel.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class ChangeCategory1 : IMigrationMetadata
+    public sealed partial class ChangeTopic : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeCategory1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeTopic));
         
         string IMigrationMetadata.Id
         {
-            get { return "201501190654305_ChangeCategory1"; }
+            get { return "201501191549281_ChangeTopic"; }
         }
         
         string IMigrationMetadata.Source

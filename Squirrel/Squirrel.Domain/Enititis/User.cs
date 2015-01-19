@@ -9,11 +9,13 @@ namespace Squirrel.Domain.Enititis
     {
         public User()
         {
+            IsAdmin = false;
         }
 
         public User(Guid id, DateTime? createdate)
             : base(id, createdate)
         {
+            IsAdmin = false;
         }
 
 
@@ -38,6 +40,8 @@ namespace Squirrel.Domain.Enititis
         public bool IsLock { get; set; }
 
         public DateTime? LockDate { get; set; }
+
+        public bool IsAdmin { get; set; }
 
 
 
