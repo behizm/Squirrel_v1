@@ -19,5 +19,7 @@ namespace Squirrel.Data
         Task UpdateAsync<TEntity>(TEntity[] items) where TEntity : class;
         Task<TEntity> RetrieveAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
         Task<IQueryable<TEntity>> SearchAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
+        Task<int?> CountAsync<TEntity>() where TEntity : class;
+        Task<int?> CountAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
     }
 }

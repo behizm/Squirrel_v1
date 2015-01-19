@@ -29,6 +29,8 @@ namespace Squirrel.Service
             _core.RegisterType<IUserService, UserService>();
             _core.RegisterType<IProfileService, ProfileService>();
             _core.RegisterType<IFileService, FileService>();
+            _core.RegisterType<ICategoryService, CategoryService>();
+            _core.RegisterType<ITopicService, TopicService>();
         }
     }
 }

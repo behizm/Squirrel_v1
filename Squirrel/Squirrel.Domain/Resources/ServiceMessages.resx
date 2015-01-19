@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CategoryService_CategoryExisted" xml:space="preserve">
+    <value>گروهی با این نام وجود دارد.</value>
+  </data>
+  <data name="CategoryService_CategoryNotFount" xml:space="preserve">
+    <value>گروهی با این نام وجود ندارد.</value>
+  </data>
+  <data name="CategoryService_DeleteAsync_HasChild" xml:space="preserve">
+    <value>این گروه پدر یک یا چند گروه دیگر بوده و قابل حذف نیست.</value>
+  </data>
+  <data name="CategoryService_DeleteAsync_HasTopic" xml:space="preserve">
+    <value>یک یا چند عنوان با این گروه ارتباط دارند و  گروه مورد نظر قابل حذف نیست.</value>
+  </data>
+  <data name="CategoryService_ParentNotFount" xml:space="preserve">
+    <value>پدری با این نام وجود ندارد.</value>
+  </data>
   <data name="FileService_FileNotFount" xml:space="preserve">
     <value>فایل مورد نظر یافت نشد.</value>
   </data>

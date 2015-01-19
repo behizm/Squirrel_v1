@@ -10,14 +10,14 @@ namespace Squirrel.Service.Share
         {
             return
                 await Symmetric<TripleDESCryptoServiceProvider>
-                    .EncryptAsync(code, "behnamZeighami@gmail", "snjab");
+                    .EncryptAsync(code, "squirrel:blog:behi", "snjab");
 
         }
         public static async Task<string> DecryptAsync(string token)
         {
             return
                 await Symmetric<TripleDESCryptoServiceProvider>
-                    .DecryptAsync(token, "behnamZeighami@gmail", "snjab");
+                    .DecryptAsync(token, "squirrel:blog:behi", "snjab");
 
         }
     }

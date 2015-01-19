@@ -3,7 +3,7 @@ namespace Squirrel.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class ReCreate : DbMigration
     {
         public override void Up()
         {
@@ -140,6 +140,7 @@ namespace Squirrel.Data.Migrations
                         Title = c.String(nullable: false, maxLength: 150),
                         EditDate = c.DateTime(),
                         FirstPost = c.Int(nullable: false),
+                        View = c.Int(nullable: false),
                         CategoryId = c.Guid(nullable: false),
                         UserId = c.Guid(nullable: false),
                         CreateDate = c.DateTime(nullable: false),

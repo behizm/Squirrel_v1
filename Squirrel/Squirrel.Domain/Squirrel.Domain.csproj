@@ -64,6 +64,7 @@
       <DependentUpon>ValidationErrors.resx</DependentUpon>
     </Compile>
     <Compile Include="ResultModels\OperationResult.cs" />
+    <Compile Include="ViewModels\CategoryViewModels.cs" />
     <Compile Include="ViewModels\ProfileViewModels.cs" />
     <Compile Include="ViewModels\FileViewModels.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />

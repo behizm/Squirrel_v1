@@ -23,6 +23,9 @@ namespace Squirrel.Domain.Enititis
         [StringLength(50), Required]
         public string Name { get; set; }
 
+        [StringLength(300)]
+        public string Description { get; set; }
+
 
 
         [ForeignKey("Parent")]
@@ -33,6 +36,6 @@ namespace Squirrel.Domain.Enititis
         public Guid? AvatarId { get; set; }
         public virtual File Avatar { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Topic> Topics { get; set; }
     }
 }
