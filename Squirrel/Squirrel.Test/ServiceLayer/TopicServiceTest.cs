@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Squirrel.Domain.Enititis;
@@ -53,6 +54,72 @@ namespace Squirrel.Test.ServiceLayer
                 Id = Guid.Parse("b56b696b-d21f-4a15-960b-791fdd92b2f3"),
             };
             var task = TopicService.EditAsync(topic, Guid.Parse("a4ee56af-6d44-4ca2-a049-94406e9c6a84"));
+            task.Wait();
+            Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Delete()
+        {
+            var model = new TopicDeleteModel
+            {
+                Id = Guid.Parse("b56b696b-d21f-4a15-960b-791fdd92b2f3"),
+            };
+            var task = TopicService.DeleteAsync(model, Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"));
+            task.Wait();
+            Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Search()
+        {
+            var model = new TopicSearchModel
+            {
+                Title = "game",
+            };
+            var ordering = new OrderingModel<Topic>
+            {
+                KeySelector = t => t.Title,
+                IsAscending = false,
+            };
+            var task = TopicService.SearchAsync(model, ordering);
+            task.Wait();
+            Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
+            Debug.WriteLine(task.Result.Select(x => x.Title).Aggregate((i, s) => i + "\n" + s));
+        }
+
+        [TestMethod]
+        public void Count()
+        {
+            var model = new TopicSearchModel
+            {
+                Title = "game",
+            };
+            var task = TopicService.CountAsync(model);
+            task.Wait();
+            Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
+            Debug.WriteLine(task.Result.ToString());
+        }
+
+        [TestMethod]
+        public void Publish()
+        {
+            var task = 
+                TopicService.PublishAsync(
+                Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), 
+                Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"));
+            //var task = TopicService.PublishAsync(Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), Guid.Parse("a4ee56af-6d44-4ca2-a049-94406e9c6a84"));
+            task.Wait();
+            Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void UnPublish()
+        {
+            var task = 
+                TopicService.UnPublishAsync(
+                Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), 
+                Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"));
             task.Wait();
             Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
         }

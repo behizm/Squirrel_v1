@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\ICategoryService.cs" />
     <Compile Include="Interfaces\IFileService.cs" />
+    <Compile Include="Interfaces\IPostService.cs" />
     <Compile Include="Interfaces\IProfileService.cs" />
     <Compile Include="Interfaces\ITopicService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="ServiceIOC.cs" />
     <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\TopicService.cs" />
     <Compile Include="Services\UserService.cs" />

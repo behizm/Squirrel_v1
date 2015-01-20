@@ -11,6 +11,8 @@ namespace Squirrel.Domain.ViewModels
         public OrderingModel()
         {
             IsAscending = true;
+            Skip = 0;
+            Take = 10;
         }
 
         public System.Linq.Expressions.Expression<Func<T, string>> KeySelector { get; set; }

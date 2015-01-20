@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -127,34 +128,177 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public Task DeleteAsync(TopicDeleteModel model, Guid userId)
+        public async Task DeleteAsync(TopicDeleteModel model, Guid userId)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.Id);
+
+            var user = await taskUser;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            var topic = await taskTopic;
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            if (!user.IsAdmin && user.Id != topic.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
+                return;
+            }
+
+            await RepositoryContext.DeleteAsync(topic);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public Task<Topic> FindByIdAsync(Guid id)
+        public async Task<Topic> FindByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var item = await RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+            if (item == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return item;
         }
 
-        public Task<List<Topic>> SearchAsync(TopicSearchModel model, OrderingModel<Topic> ordering)
+        public async Task<List<Topic>> SearchAsync(TopicSearchModel model, OrderingModel<Topic> ordering)
         {
-            throw new NotImplementedException();
+            if (model == null || ordering == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var items =
+                await
+                    RepositoryContext.SearchAsync<Topic>(x =>
+                        (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
+                        (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
+                        (string.IsNullOrEmpty(model.Username) || x.User.Username == model.Username) &&
+                        (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
+                        (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
+
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
         }
 
-        public Task<int> CountAsync(TopicSearchModel model)
+        public async Task<int?> CountAsync(TopicSearchModel model)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var count =
+                await
+                    RepositoryContext.CountAsync<Topic>(x =>
+                        (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
+                        (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
+                        (string.IsNullOrEmpty(model.Username) || x.User.Username == model.Username) &&
+                        (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
+                        (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return count;
         }
 
-        public Task PublishAsync(Guid id, Guid userId)
+        public async Task PublishAsync(Guid id, Guid userId)
         {
-            throw new NotImplementedException();
+            await ChangePublishAsync(id, userId, true);
         }
 
-        public Task UnPublishAsync(Guid id, Guid userId)
+        public async Task UnPublishAsync(Guid id, Guid userId)
         {
-            throw new NotImplementedException();
+            await ChangePublishAsync(id, userId, false);
+        }
+
+
+        private async Task ChangePublishAsync(Guid id, Guid userId, bool publishState)
+        {
+            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+
+            var user = await taskUser;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            var topic = await taskTopic;
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            if (!user.IsAdmin && user.Id != topic.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
+                return;
+            }
+
+            if (topic.IsPublished == publishState)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+
+            topic.IsPublished = publishState;
+            topic.EditDate = DateTime.Now;
+            await RepositoryContext.UpdateAsync(topic);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task RemoveAsync(Guid fileId, Guid? userId)
+        public async Task RemoveAsync(Guid fileId, Guid userId)
         {
             var item = await RepositoryContext.RetrieveAsync<File>(x => x.Id == fileId);
             if (item == null)
@@ -81,7 +81,13 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            if (userId.HasValue && item.UserId != userId)
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && item.UserId != userId)
             {
                 Result = OperationResult.Failed(ServiceMessages.FileService_NoAccess);
                 return;

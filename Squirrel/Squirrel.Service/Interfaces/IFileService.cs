@@ -14,7 +14,7 @@ namespace Squirrel.Service
 
         Task AddAsync(File file);
         Task EditAsync(File file);
-        Task RemoveAsync(Guid fileId, Guid? userId);
+        Task RemoveAsync(Guid fileId, Guid userId);
         Task<File> FindByIdAsync(Guid fileId);
         Task<List<File>> SearchAsync(FileSearchModel model, int skip = 0, int take = 10);
 

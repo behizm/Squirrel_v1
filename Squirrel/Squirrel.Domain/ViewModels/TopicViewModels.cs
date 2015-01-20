@@ -26,9 +26,15 @@ namespace Squirrel.Domain.ViewModels
 
     public class TopicDeleteModel
     {
+        public Guid Id { get; set; }
     }
 
     public class TopicSearchModel
     {
+        public string Title { get; set; }
+        public PostsOrdering? PostsOrdering { get; set; }
+        public string Category { get; set; }
+        public string Username { get; set; }
+        public bool? IsPublished { get; set; }
     }
 }
