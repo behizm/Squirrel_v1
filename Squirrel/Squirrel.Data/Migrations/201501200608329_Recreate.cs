@@ -3,7 +3,7 @@ namespace Squirrel.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class ReCreate : DbMigration
+    public partial class Recreate : DbMigration
     {
         public override void Up()
         {
@@ -61,6 +61,7 @@ namespace Squirrel.Data.Migrations
                         LastLogin = c.DateTime(),
                         IsLock = c.Boolean(nullable: false),
                         LockDate = c.DateTime(),
+                        IsAdmin = c.Boolean(nullable: false),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
@@ -89,8 +90,9 @@ namespace Squirrel.Data.Migrations
                         Id = c.Guid(nullable: false),
                         Title = c.String(nullable: false, maxLength: 150),
                         EditDate = c.DateTime(),
-                        FirstPost = c.Int(nullable: false),
+                        PostsOrdering = c.Int(nullable: false),
                         View = c.Int(nullable: false),
+                        IsPublished = c.Boolean(nullable: false),
                         CategoryId = c.Guid(nullable: false),
                         UserId = c.Guid(nullable: false),
                         CreateDate = c.DateTime(nullable: false),

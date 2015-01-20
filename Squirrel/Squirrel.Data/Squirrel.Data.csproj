@@ -58,17 +58,9 @@
     <Compile Include="DataIOC.cs" />
     <Compile Include="Interfaces\IRepositoryContext.cs" />
     <Compile Include="Interfaces\IWarehouseContext.cs" />
-    <Compile Include="Migrations\201501191430365_ReCreate.cs" />
-    <Compile Include="Migrations\201501191430365_ReCreate.Designer.cs">
-      <DependentUpon>201501191430365_ReCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501191549281_ChangeTopic.cs" />
-    <Compile Include="Migrations\201501191549281_ChangeTopic.Designer.cs">
-      <DependentUpon>201501191549281_ChangeTopic.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501191626451_EditUser.cs" />
-    <Compile Include="Migrations\201501191626451_EditUser.Designer.cs">
-      <DependentUpon>201501191626451_EditUser.cs</DependentUpon>
+    <Compile Include="Migrations\201501200608329_Recreate.cs" />
+    <Compile Include="Migrations\201501200608329_Recreate.Designer.cs">
+      <DependentUpon>201501200608329_Recreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,14 +79,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201501191430365_ReCreate.resx">
-      <DependentUpon>201501191430365_ReCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501191549281_ChangeTopic.resx">
-      <DependentUpon>201501191549281_ChangeTopic.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501191626451_EditUser.resx">
-      <DependentUpon>201501191626451_EditUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501200608329_Recreate.resx">
+      <DependentUpon>201501200608329_Recreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
