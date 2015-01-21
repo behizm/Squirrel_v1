@@ -144,6 +144,12 @@
   <data name="General_LackOfInputData" xml:space="preserve">
     <value>اطلاعات ورودی ناقص است.</value>
   </data>
+  <data name="PostService_EmptyPostBody" xml:space="preserve">
+    <value>محتوای پست نمی تواند خالی باشد.</value>
+  </data>
+  <data name="PostService_PostNotFound" xml:space="preserve">
+    <value>پست مورد نظر یافت نشد.</value>
+  </data>
   <data name="ProfileService_ProfileNotFound" xml:space="preserve">
     <value>هیچ پروفایلی یافت نشد.</value>
   </data>

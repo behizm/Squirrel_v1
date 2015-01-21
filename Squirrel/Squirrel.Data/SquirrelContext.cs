@@ -28,6 +28,9 @@ namespace Squirrel.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("Blog");
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            //modelBuilder.Entity<Post>().HasMany<File>(s => s.Branches).WithMany(c => c.Users)
+            //    .Map(c => c.MapLeftKey("User_id").MapRightKey("Branch_id").ToTable("UserBranches", "App"));
         }
     }
 }

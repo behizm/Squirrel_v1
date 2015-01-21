@@ -33,10 +33,10 @@ namespace Squirrel.Test.ServiceLayer
         {
             var topic = new TopicAddModel
             {
-                CategoryId = Guid.Parse("95d29716-a0e3-4a3b-9376-03cb04731b04"),
+                CategoryId = Guid.Parse("4026c6bc-4883-4325-8064-b26bbd977f16"),
                 PostsOrdering = PostsOrdering.Newer,
-                Title = "Movie Topic 2",
-                UserId = Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"),
+                Title = "Game Topic 1",
+                UserId = Guid.Parse("03983bdf-5143-41a1-b4b4-9f5174c81d3e"),
             };
             var task = TopicService.AddAsync(topic);
             task.Wait();

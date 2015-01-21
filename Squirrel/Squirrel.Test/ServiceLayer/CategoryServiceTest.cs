@@ -29,7 +29,7 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Create()
         {
-            var task = CategoryService.AddAsync("Movie", "", "");
+            var task = CategoryService.AddAsync("Game", "", "");
             task.Wait();
             Assert.IsTrue(CategoryService.Result.Succeeded, CategoryService.Result.Errors.FirstOrDefault());
         }

@@ -159,6 +159,8 @@ namespace Squirrel.Service.Services
                 return;
             }
 
+            // todo: بررسی ارتباطها
+
             await RepositoryContext.DeleteAsync(topic);
             if (RepositoryContext.OperationResult.Succeeded)
             {

@@ -44,6 +44,9 @@ namespace Squirrel.Domain.Enititis
         [ForeignKey("User")]
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
+
+        [InverseProperty("Attachments")]
+        public virtual ICollection<Post> Posts { get; set; }
     }
 
 

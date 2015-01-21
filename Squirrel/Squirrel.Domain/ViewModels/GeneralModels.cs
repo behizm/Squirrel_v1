@@ -20,4 +20,10 @@ namespace Squirrel.Domain.ViewModels
         public int Skip { get; set; }
         public int Take { get; set; }
     }
+
+    public class TaskDictionary<T> where T : class
+    {
+        public string Name { get; set; }
+        public Task<T> Task { get; set; }
+    }
 }
