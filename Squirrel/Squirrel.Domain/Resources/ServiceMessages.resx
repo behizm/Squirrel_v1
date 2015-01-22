@@ -147,6 +147,9 @@
   <data name="PostService_EmptyPostBody" xml:space="preserve">
     <value>محتوای پست نمی تواند خالی باشد.</value>
   </data>
+  <data name="PostService_NoAccess" xml:space="preserve">
+    <value>شما به این پست دسترسی ندارید.</value>
+  </data>
   <data name="PostService_PostNotFound" xml:space="preserve">
     <value>پست مورد نظر یافت نشد.</value>
   </data>

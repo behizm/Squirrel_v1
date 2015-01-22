@@ -27,6 +27,7 @@ namespace Squirrel.Domain.ViewModels
         public Guid TopicId { get; set; }
         public Guid? HeaderImageId { get; set; }
         public List<Guid> Attachments { get; set; }
+        public List<string> Tags { get; set; }
     }
 
     public class PostRemoveModel

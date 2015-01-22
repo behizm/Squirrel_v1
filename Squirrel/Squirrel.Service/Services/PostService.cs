@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
 using Squirrel.Data;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
@@ -53,42 +54,11 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var attachments = new List<File>();
-            if (model.Attachments != null && model.Attachments.Any())
-            {
-                model
-                    .Attachments
-                    .Select(a => RepositoryContext.RetrieveAsync<File>(x => x.Id == a))
-                    .ToList()
-                    .ForEach(async a =>
-                    {
-                        var file = await a;
-                        if (file == null)
-                        {
-                            return;
-                        }
-                        attachments.Add(file);
-                    });
-            }
+            var attachmentsTask = GetAttachmentsAsync(model.Attachments);
+            var tagsTask = GetTagsAsync(model.Tags);
 
-            var tags = new List<Tag>();
-            if (model.Tags != null && model.Tags.Any())
-            {
-                model
-                    .Tags
-                    .Select(t => t.Trim())
-                    .Select(t => new TaskDictionary<Tag>
-                    {
-                        Name = t, 
-                        Task = RepositoryContext.RetrieveAsync<Tag>(x => x.Name.ToLower() == t.ToLower())
-                    })
-                    .ToList()
-                    .ForEach(async a =>
-                    {
-                        var tag = await a.Task;
-                        tags.Add(tag ?? new Tag { Name = a.Name });
-                    });
-            }
+            var attachments = await attachmentsTask;
+            var tags = await tagsTask;
 
             var post = new Post
             {
@@ -110,9 +80,89 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public Task EditAsync(PostEditModel model, Guid userId)
+        public async Task EditAsync(PostEditModel model, Guid userId)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(model.Body))
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_EmptyPostBody);
+                return;
+            }
+
+            var postTask = RepositoryContext.RetrieveAsync<Post>(x => x.Id == model.Id);
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var topicTask = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.TopicId);
+
+            var post = await postTask;
+            if (post == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_PostNotFound);
+                return;
+            }
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && post.UserId != user.Id)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
+                return;
+            }
+
+            var topic = await topicTask;
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            model.Tags = model.Tags ?? new List<string>();
+            var newTag = model.Tags.Where(x => post.Tags.All(t => t.Name.Trim().ToLower() != x.Trim().ToLower())).ToList();
+            var removeTag = new List<Tag>();
+            post.Tags.ForEach(t =>
+            {
+                if (model.Tags.All(x => x.Trim().ToLower() != t.Name.Trim().ToLower()))
+                {
+                    removeTag.Add(t);
+                }
+            });
+            removeTag.ForEach(x => post.Tags.Remove(x));
+
+            model.Attachments = model.Attachments ?? new List<Guid>();
+            var newAttach = model.Attachments.Where(x => post.Attachments.All(a => a.Id != x)).ToList();
+            var removeAttach = new List<File>();
+            post.Attachments.ForEach(a =>
+            {
+                if (!model.Attachments.Contains(a.Id))
+                {
+                    removeAttach.Add(a);
+                }
+            });
+            removeAttach.ForEach(x => post.Attachments.Remove(x));
+
+            var tagsTask = GetTagsAsync(newTag);
+            var attachmentsTask = GetAttachmentsAsync(newAttach);
+
+            var tags = await tagsTask;
+            var attachments = await attachmentsTask;
+
+            tags.ForEach(x => post.Tags.Add(x));
+            attachments.ForEach(x => post.Attachments.Add(x));
+            post.Abstract = model.Abstract;
+            post.Body = model.Body;
+            post.HeaderImageId = model.HeaderImageId;
+            post.TopicId = topic.Id;
+            post.UserId = user.Id;
+
+            await UpdateAsync(post);
         }
 
         public Task DeleteAsync(PostRemoveModel model, Guid userId)
@@ -147,6 +197,73 @@ namespace Squirrel.Service.Services
             throw new NotImplementedException();
         }
 
+
+
+        private async Task<List<File>> GetAttachmentsAsync(List<Guid> items)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var attachments = new List<File>();
+                    if (items != null && items.Any())
+                    {
+                        items
+                            .Select(a => RepositoryContext.RetrieveAsync<File>(x => x.Id == a))
+                            .ToList()
+                            .ForEach(async a =>
+                            {
+                                var file = await a;
+                                if (file == null)
+                                {
+                                    return;
+                                }
+                                attachments.Add(file);
+                            });
+                    }
+                    return attachments;
+                }
+                catch (Exception)
+                {
+                    return new List<File>();
+                }
+            });
+
+            return await task;
+        }
+
+        private async Task<List<Tag>> GetTagsAsync(List<string> items)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var tags = new List<Tag>();
+                    if (items != null && items.Any())
+                    {
+                        items
+                            .Select(t => t.Trim())
+                            .Select(t => new TaskDictionary<Tag>
+                            {
+                                Name = t,
+                                Task = RepositoryContext.RetrieveAsync<Tag>(x => x.Name.ToLower() == t.ToLower())
+                            })
+                            .ToList()
+                            .ForEach(async a =>
+                            {
+                                var tag = await a.Task;
+                                tags.Add(tag ?? new Tag { Name = a.Name });
+                            });
+                    }
+                    return tags;
+                }
+                catch (Exception)
+                {
+                    return new List<Tag>();
+                }
+            });
+            return await task;
+        }
 
         private async Task UpdateAsync(Post post)
         {

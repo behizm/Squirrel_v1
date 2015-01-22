@@ -60,6 +60,24 @@ namespace Squirrel.Test.ServiceLayer
             Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
         }
 
+        [TestMethod]
+        public void Edit()
+        {
+            var user = UserService.FindByUsernameAsync("behi8303").Result;
+            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
+
+            var post = new PostEditModel
+            {
+                Id = Guid.Parse("5e481f90-67f7-4e1d-bb2f-f6602fe853e3"),
+                Body = "This is test of post content for game Topic. [Edited 1]",
+                TopicId = Guid.Parse("0fda4045-319a-4b24-9b07-1bae7f85c23e"),
+                Tags = new List<string> { "fps", "Game", "Cod" },
+            };
+            var task = PostService.EditAsync(post, user.Id);
+            task.Wait();
+            Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
+        }
+
 
         [TestMethod]
         public void Find()
