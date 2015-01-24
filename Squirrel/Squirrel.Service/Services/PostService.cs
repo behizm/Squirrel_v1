@@ -75,7 +75,7 @@ namespace Squirrel.Service.Services
                 HeaderImageId = model.HeaderImageId,
                 IsPublic = false,
                 TopicId = topic.Id,
-                UserId = user.Id,
+                AuthorId = user.Id,
                 Tags = tags,
             };
             await RepositoryContext.CreateAsync(post);
@@ -118,7 +118,7 @@ namespace Squirrel.Service.Services
                 Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
                 return;
             }
-            if (!user.IsAdmin && post.UserId != user.Id)
+            if (!user.IsAdmin && post.AuthorId != user.Id)
             {
                 Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
                 return;
@@ -167,7 +167,7 @@ namespace Squirrel.Service.Services
             post.Body = model.Body;
             post.HeaderImageId = model.HeaderImageId;
             post.TopicId = topic.Id;
-            post.UserId = user.Id;
+            post.AuthorId = user.Id;
 
             await UpdateAsync(post);
         }
@@ -196,7 +196,7 @@ namespace Squirrel.Service.Services
                 Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
                 return;
             }
-            if (!user.IsAdmin && user.Id != post.UserId)
+            if (!user.IsAdmin && user.Id != post.AuthorId)
             {
                 Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
                 return;
@@ -249,7 +249,7 @@ namespace Squirrel.Service.Services
                         (string.IsNullOrEmpty(model.Abstract) || p.Abstract.Contains(model.Abstract)) &&
                         (string.IsNullOrEmpty(model.Body) || p.Body.Contains(model.Body)) &&
                         (string.IsNullOrEmpty(model.Topic) || p.Topic.Title.Contains(model.Topic)) &&
-                        (string.IsNullOrEmpty(model.User) || p.User.Username == model.User) &&
+                        (string.IsNullOrEmpty(model.User) || p.Author.Username == model.User) &&
                         (!model.IsPublic.HasValue || p.IsPublic == model.IsPublic));
 
             if (items == null)
@@ -290,7 +290,7 @@ namespace Squirrel.Service.Services
                         (string.IsNullOrEmpty(model.Abstract) || p.Abstract.Contains(model.Abstract)) &&
                         (string.IsNullOrEmpty(model.Body) || p.Body.Contains(model.Body)) &&
                         (string.IsNullOrEmpty(model.Topic) || p.Topic.Title.Contains(model.Topic)) &&
-                        (string.IsNullOrEmpty(model.User) || p.User.Username == model.User) &&
+                        (string.IsNullOrEmpty(model.User) || p.Author.Username == model.User) &&
                         (!model.IsPublic.HasValue || p.IsPublic == model.IsPublic));
 
             if (count == null)
@@ -411,7 +411,7 @@ namespace Squirrel.Service.Services
                 Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
                 return;
             }
-            if (!user.IsAdmin && user.Id != post.UserId)
+            if (!user.IsAdmin && user.Id != post.AuthorId)
             {
                 Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
                 return;

@@ -35,9 +35,9 @@ namespace Squirrel.Domain.Enititis
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
-        [ForeignKey("User")]
-        public Guid UserId { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("Owner")]
+        public Guid OwnerId { get; set; }
+        public virtual User Owner { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
 

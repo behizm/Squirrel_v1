@@ -33,8 +33,11 @@ namespace Squirrel.Web.Controllers
                 var encTicket = FormsAuthentication.Encrypt(authTicket);
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
+
+                return RedirectToAction("index", "home");
             }
-            return RedirectToAction("index", "home");
+            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
+            return View();
         }
 
         public ActionResult LogOff()

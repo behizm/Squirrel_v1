@@ -54,7 +54,7 @@ namespace Squirrel.Service.Services
                 IsPublished = false,
                 PostsOrdering = model.PostsOrdering,
                 Title = model.Title,
-                UserId = user.Id,
+                OwnerId = user.Id,
             };
             await RepositoryContext.CreateAsync(item);
             if (RepositoryContext.OperationResult.Succeeded)
@@ -92,7 +92,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            if (!user.IsAdmin && user.Id != topic.UserId)
+            if (!user.IsAdmin && user.Id != topic.OwnerId)
             {
                 Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
                 return;
@@ -153,7 +153,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            if (!user.IsAdmin && user.Id != topic.UserId)
+            if (!user.IsAdmin && user.Id != topic.OwnerId)
             {
                 Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
                 return;
@@ -195,7 +195,7 @@ namespace Squirrel.Service.Services
                     RepositoryContext.SearchAsync<Topic>(x =>
                         (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
                         (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.User.Username == model.Username) &&
+                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
                         (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
                         (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
 
@@ -236,7 +236,7 @@ namespace Squirrel.Service.Services
                     RepositoryContext.CountAsync<Topic>(x =>
                         (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
                         (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.User.Username == model.Username) &&
+                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
                         (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
                         (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
 
@@ -280,7 +280,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            if (!user.IsAdmin && user.Id != topic.UserId)
+            if (!user.IsAdmin && user.Id != topic.OwnerId)
             {
                 Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
                 return;

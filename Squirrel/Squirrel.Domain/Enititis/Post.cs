@@ -36,9 +36,9 @@ namespace Squirrel.Domain.Enititis
         public Guid TopicId { get; set; }
         public virtual Topic Topic { get; set; }
 
-        [ForeignKey("User")]
-        public Guid UserId { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("Author")]
+        public Guid AuthorId { get; set; }
+        public virtual User Author { get; set; }
 
         [ForeignKey("HeaderImage")]
         public Guid? HeaderImageId { get; set; }
