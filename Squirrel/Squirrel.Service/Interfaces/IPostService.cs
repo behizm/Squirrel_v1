@@ -19,6 +19,7 @@ namespace Squirrel.Service
         Task DeleteAsync(PostRemoveModel model, Guid userId);
         Task<Post> FindByIdAsync(Guid id);
         Task<List<Post>> SearchAsync(PostSearchModel model, OrderingModel<Post> ordering);
+        Task<int?> CountAsync(PostSearchModel model);
         Task PublicPostAsync(Guid id, Guid userId);
         Task PrivatePostAsync(Guid id, Guid userId);
     }

@@ -178,7 +178,7 @@ namespace Squirrel.Service.Services
             return user;
         }
 
-        public async Task<List<User>> SearchAsync(UserSearchModel model, int skip, int take)
+        public async Task<List<User>> SearchAsync(UserSearchModel model, OrderingModel<User> ordering)
         {
             var items =
                 await RepositoryContext.SearchAsync<User>(x =>
@@ -197,8 +197,45 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
+        public async Task<int?> CountAsync(UserSearchModel model)
+        {
+            var count =
+                await RepositoryContext.CountAsync<User>(x =>
+                    (!model.Id.HasValue || model.Id.Value == x.Id) &&
+                    (string.IsNullOrEmpty(model.Username) || model.Username == x.Username) &&
+                    (string.IsNullOrEmpty(model.Email) || model.Email == x.Email) &&
+                    (!model.IsActive.HasValue || model.IsActive.Value == x.IsActive) &&
+                    (!model.CreateDateFrom.HasValue || model.CreateDateFrom.Value <= x.CreateDate) &&
+                    (!model.CreateDateTo.HasValue || model.CreateDateTo.Value >= x.CreateDate) &&
+                    (!model.LastLoginFrom.HasValue || model.LastLoginFrom.Value <= x.LastLogin) &&
+                    (!model.LastLoginTo.HasValue || model.LastLoginTo.Value >= x.LastLogin));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
             Result = OperationResult.Success;
-            return await items.OrderBy(x => x.Username).Skip(skip).Take(take).ToListAsync();
+            return count;
         }
 
         public async Task ChangePasswordAsync(string username, string oldPassword, string newPassword)
@@ -318,58 +355,58 @@ namespace Squirrel.Service.Services
             return true;
         }
 
-        public async Task<bool> LoginAsync(string username, string email, string password)
+        public async Task<string> LoginAsync(string username, string email, string password)
         {
             if ((string.IsNullOrEmpty(username) && string.IsNullOrEmpty(email)) || string.IsNullOrEmpty(password))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
-                return false;
+                return null;
             }
 
             var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username == username || x.Email == email);
             if (user == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.UserService_LoginAsync_Wrong);
-                return false;
+                return null;
             }
 
             if (!user.IsActive)
             {
                 Result = OperationResult.Failed(ServiceMessages.UserService_LoginAsync_IsActive);
-                return false;
+                return null;
             }
 
             if (user.LockDate.HasValue && user.LockDate.Value > DateTime.Now)
             {
                 Result = OperationResult.Failed(ServiceMessages.UserService_LoginAsync_LockDate);
-                return false;
+                return null;
             }
 
             if (user.IsLock)
             {
                 Result = OperationResult.Failed(ServiceMessages.UserService_LoginAsync_IsLock);
-                return false;
+                return null;
             }
 
             var passwordHash = await HashSystem.EncryptAsync(password);
             if (passwordHash == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
-                return false;
+                return null;
             }
 
             if (passwordHash != user.PasswordHash)
             {
                 await AccessFailedAsync(user);
                 Result = OperationResult.Failed(ServiceMessages.UserService_LoginAsync_Wrong);
-                return false;
+                return null;
             }
 
             user.LastLogin = DateTime.Now;
             user.AccessFailed = 0;
             await UpdateAsync(user);
             Result = OperationResult.Success;
-            return true;
+            return user.Username;
         }
 
         public async Task ActiveAsync(Guid userId)

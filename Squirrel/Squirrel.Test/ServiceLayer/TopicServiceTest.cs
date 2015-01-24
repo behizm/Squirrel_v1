@@ -17,6 +17,12 @@ namespace Squirrel.Test.ServiceLayer
             get { return _topicService ?? (_topicService = ServiceIOC.Get<ITopicService>()); }
         }
 
+        private IUserService _userService;
+        public IUserService UserService
+        {
+            get { return _userService ?? (_userService = ServiceIOC.Get<IUserService>()); }
+        }
+
         [ClassInitialize]
         public static void ClassSetup(TestContext context)
         {
@@ -104,11 +110,11 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Publish()
         {
-            var task = 
-                TopicService.PublishAsync(
-                Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), 
-                Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"));
-            //var task = TopicService.PublishAsync(Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), Guid.Parse("a4ee56af-6d44-4ca2-a049-94406e9c6a84"));
+            var user = UserService.FindByUsernameAsync("behi8303").Result;
+            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
+
+            var task =
+                TopicService.PublishAsync(Guid.Parse("ab6f4352-5104-4149-89da-144f7bb9f433"), user.Id);
             task.Wait();
             Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
         }
@@ -116,9 +122,9 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void UnPublish()
         {
-            var task = 
+            var task =
                 TopicService.UnPublishAsync(
-                Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"), 
+                Guid.Parse("d659b09f-d24e-47ad-8a41-bff66e62d7f6"),
                 Guid.Parse("935bf015-5bf7-4219-bb4b-c0a8a82b9517"));
             task.Wait();
             Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());

@@ -95,7 +95,7 @@ namespace Squirrel.Service.Services
             return item;
         }
 
-        public async Task<List<Profile>> SearchAsync(ProfileSearchModel model, int skip, int take)
+        public async Task<List<Profile>> SearchAsync(ProfileSearchModel model, OrderingModel<Profile> ordering)
         {
             var items =
                 await RepositoryContext.SearchAsync<Profile>(x =>
@@ -110,8 +110,41 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
+        public async Task<int?> CountAsync(ProfileSearchModel model)
+        {
+            var count =
+                await RepositoryContext.CountAsync<Profile>(x =>
+                    (string.IsNullOrEmpty(model.FirstName) || x.Firstname.Contains(model.FirstName)) &&
+                    (string.IsNullOrEmpty(model.LastName) || x.Lastname.Contains(model.LastName)) &&
+                    (string.IsNullOrEmpty(model.Username) || x.User.Username.Contains(model.Username)) &&
+                    (!model.UserId.HasValue || x.UserId == model.UserId));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
             Result = OperationResult.Success;
-            return await items.OrderBy(x => x.Lastname).Skip(skip).Take(take).ToListAsync();
+            return count;
         }
 
         public async Task ChangeAvatarAsync(Guid userId, Guid fileId)

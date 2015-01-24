@@ -32,6 +32,10 @@ namespace Squirrel.Service.Services
 
         public async Task AddAsync(string name, string parentName, string description)
         {
+            name = name.Trim();
+            parentName = parentName.Trim();
+            description = description.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -76,6 +80,9 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeNameAsync(string oldName, string newName)
         {
+            oldName = oldName.Trim();
+            newName = newName.Trim();
+
             if (string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -105,6 +112,9 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeParentAsync(string name, string parentName)
         {
+            name = name.Trim();
+            parentName = parentName.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -138,6 +148,9 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeDescriptionAsync(string name, string description)
         {
+            name = name.Trim();
+            description = description.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -202,6 +215,9 @@ namespace Squirrel.Service.Services
 
         public async Task ReplaceAsync(string name, string with)
         {
+            name = name.Trim();
+            with = with.Trim();
+
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(with))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -247,6 +263,8 @@ namespace Squirrel.Service.Services
 
         public async Task<List<Category>> ChildsAsync(string name)
         {
+            name = name.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -273,6 +291,8 @@ namespace Squirrel.Service.Services
 
         public async Task<List<string>> ChildsNameAsync(string name)
         {
+            name = name.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -314,6 +334,8 @@ namespace Squirrel.Service.Services
 
         public async Task<Category> FindByNameAsync(string name)
         {
+            name = name.Trim();
+
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
@@ -333,8 +355,18 @@ namespace Squirrel.Service.Services
             return item;
         }
 
-        public async Task<List<Category>> SearchAsync(CategorySearchModel model, int skip, int take)
+        public async Task<List<Category>> SearchAsync(CategorySearchModel model, OrderingModel<Category> ordering)
         {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            model.Name = model.Name.Trim();
+            model.Parent = model.Parent.Trim();
+            model.Description = model.Description.Trim();
+
             var items =
                 await RepositoryContext.SearchAsync<Category>(x =>
                     (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name.ToLower())) &&
@@ -345,14 +377,38 @@ namespace Squirrel.Service.Services
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;
+            } 
+            
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
             }
-
-            Result = OperationResult.Success;
-            return await items.OrderBy(x => x.Name).Skip(skip).Take(take).ToListAsync();
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
         }
 
         public async Task<int?> CountAsync(CategorySearchModel model)
         {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            model.Name = model.Name.Trim();
+            model.Parent = model.Parent.Trim();
+            model.Description = model.Description.Trim();
+
             var count =
                 await RepositoryContext.CountAsync<Category>(x =>
                     (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name.ToLower())) &&
@@ -371,6 +427,8 @@ namespace Squirrel.Service.Services
 
         public async Task<List<Topic>> TopicsAsync(string name, bool isFamilyGet, int skip, int take)
         {
+            name = name.Trim();
+
             IQueryable<Topic> items;
             if (isFamilyGet)
             {

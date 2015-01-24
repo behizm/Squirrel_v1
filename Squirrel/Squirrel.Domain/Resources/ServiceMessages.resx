@@ -144,6 +144,9 @@
   <data name="General_LackOfInputData" xml:space="preserve">
     <value>اطلاعات ورودی ناقص است.</value>
   </data>
+  <data name="General_NoAccessForThisOp" xml:space="preserve">
+    <value>شما دسترسی لازم برای انجام این عملیات را ندارید.</value>
+  </data>
   <data name="PostService_EmptyPostBody" xml:space="preserve">
     <value>محتوای پست نمی تواند خالی باشد.</value>
   </data>
@@ -162,8 +165,17 @@
   <data name="ProfileService_UserHasProfile" xml:space="preserve">
     <value>این کاربر پروفایل دارد.</value>
   </data>
+  <data name="TagService_TagNotFound" xml:space="preserve">
+    <value>برچسب مورد نظر یافت نشد.</value>
+  </data>
   <data name="TopicService_NoAccess" xml:space="preserve">
     <value>شما به این عنوان دسترسی ندارید.</value>
+  </data>
+  <data name="TopicService_NoPostToPublish" xml:space="preserve">
+    <value>این عنوان هیچ پستی ندارد و قابل انتشار نیست.</value>
+  </data>
+  <data name="TopicService_NoPublicPostToPublish" xml:space="preserve">
+    <value>این عنوان هیچ پست عمومی ندارد و قابل انتشار نیست.</value>
   </data>
   <data name="TopicService_TopicNotFound" xml:space="preserve">
     <value>عنوان مورد نظر یافت نشد.</value>
@@ -197,5 +209,8 @@
   </data>
   <data name="UserService_WrongPassword" xml:space="preserve">
     <value>کلمه عبور اشتباه است.</value>
+  </data>
+  <data name="VoteService_VoteNotFound" xml:space="preserve">
+    <value>رای مورد نظر یافت نشد.</value>
   </data>
 </root>

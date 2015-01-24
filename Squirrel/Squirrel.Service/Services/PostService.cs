@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace Squirrel.Service.Services
         private IRepositoryContext RepositoryContext
         {
             get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
+        }
+
+        private IWarehouseContext _warehouseContext;
+        private IWarehouseContext WarehouseContext
+        {
+            get { return _warehouseContext ?? (_warehouseContext = DataIOC.Get<IWarehouseContext>()); }
         }
 
         public OperationResult Result { get; private set; }
@@ -165,9 +172,55 @@ namespace Squirrel.Service.Services
             await UpdateAsync(post);
         }
 
-        public Task DeleteAsync(PostRemoveModel model, Guid userId)
+        public async Task DeleteAsync(PostRemoveModel model, Guid userId)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var postTask = WarehouseContext.RetrieveAsync<Post>(x => x.Id == model.Id);
+            var userTask = WarehouseContext.RetrieveAsync<User>(x => x.Id == userId);
+
+            var post = await postTask;
+            if (post == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_PostNotFound);
+                return;
+            }
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && user.Id != post.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
+                return;
+            }
+
+            if (post.Comments != null && post.Comments.Any())
+                WarehouseContext.Delete(post.Comments);
+
+            if (post.Votes != null && post.Votes.Any())
+                WarehouseContext.Delete(post.Votes);
+
+            if (post.Topic.Posts.All(p => p.Id == post.Id))
+            {
+                post.Topic.IsPublished = false;
+                WarehouseContext.Update(post.Topic);
+            }
+            WarehouseContext.Delete(post);
+            await WarehouseContext.SaveChangesAsync();
+            if (WarehouseContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
         public async Task<Post> FindByIdAsync(Guid id)
@@ -182,19 +235,82 @@ namespace Squirrel.Service.Services
             return post;
         }
 
-        public Task<List<Post>> SearchAsync(PostSearchModel model, OrderingModel<Post> ordering)
+        public async Task<List<Post>> SearchAsync(PostSearchModel model, OrderingModel<Post> ordering)
         {
-            throw new NotImplementedException();
+            if (model == null || ordering == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var items =
+                await
+                    RepositoryContext.SearchAsync<Post>(p =>
+                        (string.IsNullOrEmpty(model.Abstract) || p.Abstract.Contains(model.Abstract)) &&
+                        (string.IsNullOrEmpty(model.Body) || p.Body.Contains(model.Body)) &&
+                        (string.IsNullOrEmpty(model.Topic) || p.Topic.Title.Contains(model.Topic)) &&
+                        (string.IsNullOrEmpty(model.User) || p.User.Username == model.User) &&
+                        (!model.IsPublic.HasValue || p.IsPublic == model.IsPublic));
+
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
         }
 
-        public Task PublicPostAsync(Guid id, Guid userId)
+        public async Task<int?> CountAsync(PostSearchModel model)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var count =
+                await
+                    RepositoryContext.CountAsync<Post>(p =>
+                        (string.IsNullOrEmpty(model.Abstract) || p.Abstract.Contains(model.Abstract)) &&
+                        (string.IsNullOrEmpty(model.Body) || p.Body.Contains(model.Body)) &&
+                        (string.IsNullOrEmpty(model.Topic) || p.Topic.Title.Contains(model.Topic)) &&
+                        (string.IsNullOrEmpty(model.User) || p.User.Username == model.User) &&
+                        (!model.IsPublic.HasValue || p.IsPublic == model.IsPublic));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return count;
         }
 
-        public Task PrivatePostAsync(Guid id, Guid userId)
+        public async Task PublicPostAsync(Guid id, Guid userId)
         {
-            throw new NotImplementedException();
+            await ChangePublic(id, userId, true);
+        }
+
+        public async Task PrivatePostAsync(Guid id, Guid userId)
+        {
+            await ChangePublic(id, userId, false);
         }
 
 
@@ -275,6 +391,40 @@ namespace Squirrel.Service.Services
                 return;
             }
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        private async Task ChangePublic(Guid postId, Guid userId, bool isPublic)
+        {
+            var postTask = RepositoryContext.RetrieveAsync<Post>(x => x.Id == postId);
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+
+            var post = await postTask;
+            if (post == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_PostNotFound);
+                return;
+            }
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && user.Id != post.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_NoAccess);
+                return;
+            }
+
+            if (post.IsPublic == isPublic)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+
+            post.IsPublic = isPublic;
+            await UpdateAsync(post);
         }
     }
 }

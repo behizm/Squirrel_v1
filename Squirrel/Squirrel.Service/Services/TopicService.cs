@@ -292,6 +292,20 @@ namespace Squirrel.Service.Services
                 return;
             }
 
+            if (publishState)
+            {
+                if (topic.Posts == null || !topic.Posts.Any())
+                {
+                    Result = OperationResult.Failed(ServiceMessages.TopicService_NoPostToPublish);
+                    return;
+                }
+                if (topic.Posts.All(p => !p.IsPublic))
+                {
+                    Result = OperationResult.Failed(ServiceMessages.TopicService_NoPublicPostToPublish);
+                    return;
+                }
+            }
+
             topic.IsPublished = publishState;
             topic.EditDate = DateTime.Now;
             await RepositoryContext.UpdateAsync(topic);

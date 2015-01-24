@@ -21,12 +21,13 @@ namespace Squirrel.Service
         Task<User> FindByIdAsync(Guid userId);
         Task<User> FindByUsernameAsync(string username);
         Task<User> FindByEmailAsync(string email);
-        Task<List<User>> SearchAsync(UserSearchModel model, int skip = 0, int take = 10);
+        Task<List<User>> SearchAsync(UserSearchModel model, OrderingModel<User> ordering);
+        Task<int?> CountAsync(UserSearchModel model);
 
         Task ChangePasswordAsync(string username, string oldPassword, string newPassword);
         Task ResetPasswordAsync(Guid userId, string newPassword);
         Task<bool> ValidateAsync(string username, string password);
-        Task<bool> LoginAsync(string username, string email, string password);
+        Task<string> LoginAsync(string username, string email, string password);
         Task ActiveAsync(Guid userId);
         Task LockAsync(Guid userId);
         Task UnlockAsync(Guid userId);

@@ -22,7 +22,7 @@ namespace Squirrel.Service
         Task<List<string>> ChildsNameAsync(string name);
         Task<Category> FindByIdAsync(Guid id);
         Task<Category> FindByNameAsync(string name);
-        Task<List<Category>> SearchAsync(CategorySearchModel model, int skip = 0, int take = 10);
+        Task<List<Category>> SearchAsync(CategorySearchModel model, OrderingModel<Category> ordering);
         Task<int?> CountAsync(CategorySearchModel model);
         Task<List<Topic>> TopicsAsync(string name, bool isFamilyGet, int skip = 0, int take = 10);
         Task ChangeAvatarAsync(Guid categoryId, Guid fileId);

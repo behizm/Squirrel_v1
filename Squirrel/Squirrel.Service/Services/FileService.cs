@@ -112,7 +112,7 @@ namespace Squirrel.Service.Services
             return item;
         }
 
-        public async Task<List<File>> SearchAsync(FileSearchModel model, int skip, int take)
+        public async Task<List<File>> SearchAsync(FileSearchModel model, OrderingModel<File> ordering)
         {
             var items =
                 await RepositoryContext.SearchAsync<File>(x =>
@@ -132,9 +132,46 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
-            Result = OperationResult.Success;
-            return await items.OrderBy(x => x.Name).Skip(skip).Take(take).ToListAsync();
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
         }
 
+        public async Task<int?> CountAsync(FileSearchModel model)
+        {
+            var count =
+                await RepositoryContext.CountAsync<File>(x =>
+                    (!model.UserId.HasValue || x.IsPublic || x.UserId == model.UserId) &&
+                    (string.IsNullOrEmpty(model.Category) || x.Category.Contains(model.Category)) &&
+                    (string.IsNullOrEmpty(model.Filename) || x.Filename.Contains(model.Filename)) &&
+                    (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
+                    (!model.CreateDateFrom.HasValue || x.CreateDate >= model.CreateDateFrom) &&
+                    (!model.CreateDateTo.HasValue || x.CreateDate <= model.CreateDateTo) &&
+                    (!model.SizeFrom.HasValue || x.Size >= model.SizeFrom) &&
+                    (!model.SizeTo.HasValue || x.Size <= model.SizeTo) &&
+                    (!model.Type.HasValue || x.Type == model.Type));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return count;
+        }
     }
 }

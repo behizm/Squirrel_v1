@@ -61,7 +61,7 @@ namespace Squirrel.Test.ServiceLayer
         {
             var task = UserService.LoginAsync("behi8303", string.Empty, "123456");
             task.Wait();
-            Assert.IsTrue(task.Result, UserService.Result.Errors.FirstOrDefault());
+            Assert.IsNotNull(task.Result, UserService.Result.Errors.FirstOrDefault());
         }
 
         [TestMethod]

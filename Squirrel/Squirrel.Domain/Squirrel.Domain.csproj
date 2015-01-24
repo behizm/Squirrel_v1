@@ -64,11 +64,13 @@
       <DependentUpon>ValidationErrors.resx</DependentUpon>
     </Compile>
     <Compile Include="ResultModels\OperationResult.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CategoryViewModels.cs" />
     <Compile Include="ViewModels\GeneralModels.cs" />
     <Compile Include="ViewModels\PostViewModels.cs" />
     <Compile Include="ViewModels\ProfileViewModels.cs" />
     <Compile Include="ViewModels\FileViewModels.cs" />
+    <Compile Include="ViewModels\TagViewModels.cs" />
     <Compile Include="ViewModels\TopicViewModels.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
   </ItemGroup>

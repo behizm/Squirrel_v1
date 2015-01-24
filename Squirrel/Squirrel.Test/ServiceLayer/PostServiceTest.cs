@@ -78,7 +78,6 @@ namespace Squirrel.Test.ServiceLayer
             Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
         }
 
-
         [TestMethod]
         public void Find()
         {
@@ -89,6 +88,38 @@ namespace Squirrel.Test.ServiceLayer
             Debug.WriteLine(task.Result.Tags.Select(x => x.Name).Aggregate((i, s) => i + ", " + s));
         }
 
+        [TestMethod]
+        public void Delete()
+        {
+            var user = UserService.FindByUsernameAsync("behi8303").Result;
+            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
+
+            var task = PostService.DeleteAsync(new PostRemoveModel { Id = Guid.Parse("eed66d6b-10f2-43d3-926b-5219bb287d1b") }, user.Id);
+            task.Wait();
+            Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Public()
+        {
+            var user = UserService.FindByUsernameAsync("behi8303").Result;
+            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
+
+            var task = PostService.PublicPostAsync(Guid.Parse("69da61ef-d3e2-48d1-a1fa-30ba5ed4c420"), user.Id);
+            task.Wait();
+            Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Private()
+        {
+            var user = UserService.FindByUsernameAsync("behi8303").Result;
+            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
+
+            var task = PostService.PrivatePostAsync(Guid.Parse("69da61ef-d3e2-48d1-a1fa-30ba5ed4c420"), user.Id);
+            task.Wait();
+            Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
+        }
 
     }
 }
