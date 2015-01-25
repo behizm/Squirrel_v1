@@ -67,6 +67,7 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CategoryViewModels.cs" />
     <Compile Include="ViewModels\GeneralModels.cs" />
+    <Compile Include="ViewModels\PagingModel.cs" />
     <Compile Include="ViewModels\PostViewModels.cs" />
     <Compile Include="ViewModels\ProfileViewModels.cs" />
     <Compile Include="ViewModels\FileViewModels.cs" />
@@ -81,7 +82,7 @@
       <LastGenOutput>ServiceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ValidationErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

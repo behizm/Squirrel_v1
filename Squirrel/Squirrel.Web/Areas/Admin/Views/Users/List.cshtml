@@ -1,0 +1,20 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.Enititis.User>
+
+<table class="table">
+    <tbody>
+        @foreach (var user in Model)
+        {
+            var item = user;
+            <tr>
+                <td>@Html.DisplayFor(m => item.Username)</td>
+                <td>@Html.DisplayFor(m => item.Email)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("PagingList", (PagingModel)ViewBag.Paging)
+}

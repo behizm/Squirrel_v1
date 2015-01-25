@@ -1,0 +1,19 @@
+﻿@if (ViewBag.ErrorMessage != null)
+{
+    <div class="panel panel-danger">
+        <div class="panel-heading">خطا</div>
+        <div class="panel-body">
+            @ViewBag.ErrorMessage
+        </div>
+    </div>
+}
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="panel panel-danger">
+        <div class="panel-heading">موفقیت</div>
+        <div class="panel-body">
+            @ViewBag.SuccessMessage
+        </div>
+    </div>
+}

@@ -106,6 +106,24 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این تنظیم وجود دارد..
+        /// </summary>
+        public static string ConfigService_ConfigExisted {
+            get {
+                return ResourceManager.GetString("ConfigService_ConfigExisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تنظیم مورد نظر یافت نشد..
+        /// </summary>
+        public static string ConfigService_ConfigNotFound {
+            get {
+                return ResourceManager.GetString("ConfigService_ConfigNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فایل مورد نظر یافت نشد..
         /// </summary>
         public static string FileService_FileNotFount {

@@ -13,17 +13,9 @@ using Squirrel.Service.Share;
 
 namespace Squirrel.Service.Services
 {
-    class UserService : IUserService
+    class UserService : BaseService, IUserService
     {
-        public OperationResult Result { get; private set; }
-
         public UserServiceConfig UserServiceConfig { get; private set; }
-
-        private IRepositoryContext _repositoryContext;
-        private IRepositoryContext RepositoryContext
-        {
-            get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
-        }
 
 
         public UserService()
@@ -183,8 +175,8 @@ namespace Squirrel.Service.Services
             var items =
                 await RepositoryContext.SearchAsync<User>(x =>
                     (!model.Id.HasValue || model.Id.Value == x.Id) &&
-                    (string.IsNullOrEmpty(model.Username) || model.Username == x.Username) &&
-                    (string.IsNullOrEmpty(model.Email) || model.Email == x.Email) &&
+                    (string.IsNullOrEmpty(model.Username) || x.Username.Contains(model.Username)) &&
+                    (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email)) &&
                     (!model.IsActive.HasValue || model.IsActive.Value == x.IsActive) &&
                     (!model.CreateDateFrom.HasValue || model.CreateDateFrom.Value <= x.CreateDate) &&
                     (!model.CreateDateTo.HasValue || model.CreateDateTo.Value >= x.CreateDate) &&
@@ -220,8 +212,8 @@ namespace Squirrel.Service.Services
             var count =
                 await RepositoryContext.CountAsync<User>(x =>
                     (!model.Id.HasValue || model.Id.Value == x.Id) &&
-                    (string.IsNullOrEmpty(model.Username) || model.Username == x.Username) &&
-                    (string.IsNullOrEmpty(model.Email) || model.Email == x.Email) &&
+                    (string.IsNullOrEmpty(model.Username) || x.Username.Contains(model.Username)) &&
+                    (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email)) &&
                     (!model.IsActive.HasValue || model.IsActive.Value == x.IsActive) &&
                     (!model.CreateDateFrom.HasValue || model.CreateDateFrom.Value <= x.CreateDate) &&
                     (!model.CreateDateTo.HasValue || model.CreateDateTo.Value >= x.CreateDate) &&

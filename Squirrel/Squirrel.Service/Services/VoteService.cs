@@ -1,32 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Squirrel.Data;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 
 namespace Squirrel.Service.Services
 {
-    class VoteService : IVoteService
+    class VoteService : BaseService, IVoteService
     {
-        private IRepositoryContext _repositoryContext;
-        private IRepositoryContext RepositoryContext
-        {
-            get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
-        }
-
-        private IWarehouseContext _warehouseContext;
-        private IWarehouseContext WarehouseContext
-        {
-            get { return _warehouseContext ?? (_warehouseContext = DataIOC.Get<IWarehouseContext>()); }
-        }
-
-        public OperationResult Result { get; private set; }
-
-
         public async Task LikeAsync(Guid postId, Guid userId)
         {
             await ChangePlus(postId, userId, true);

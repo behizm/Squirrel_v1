@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
-using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 
 // ReSharper disable once CheckNamespace
@@ -10,10 +9,8 @@ using Squirrel.Domain.ViewModels;
 
 namespace Squirrel.Service
 {
-    public interface IPostService
+    public interface IPostService : IBaseService
     {
-        OperationResult Result { get; }
-
         Task AddAsync(PostAddModel model);
         Task EditAsync(PostEditModel model, Guid userId);
         Task DeleteAsync(PostRemoveModel model, Guid userId);

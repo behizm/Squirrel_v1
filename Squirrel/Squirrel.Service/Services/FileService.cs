@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using Squirrel.Data;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
@@ -11,16 +10,8 @@ using Squirrel.Domain.ViewModels;
 
 namespace Squirrel.Service.Services
 {
-    class FileService : IFileService
+    class FileService : BaseService, IFileService
     {
-        private IRepositoryContext _repositoryContext;
-        private IRepositoryContext RepositoryContext
-        {
-            get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
-        }
-
-        public OperationResult Result { get; private set; }
-
         public async Task AddAsync(File file)
         {
             var item = new File

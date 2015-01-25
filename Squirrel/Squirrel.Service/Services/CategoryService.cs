@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
-using Squirrel.Data;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
@@ -13,23 +11,8 @@ using Squirrel.Domain.ViewModels;
 
 namespace Squirrel.Service.Services
 {
-    class CategoryService : ICategoryService
+    class CategoryService : BaseService, ICategoryService
     {
-        private IRepositoryContext _repositoryContext;
-        private IRepositoryContext RepositoryContext
-        {
-            get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
-        }
-
-        private IWarehouseContext _warehouseContext;
-        private IWarehouseContext WarehouseContext
-        {
-            get { return _warehouseContext ?? (_warehouseContext = DataIOC.Get<IWarehouseContext>()); }
-        }
-
-        public OperationResult Result { get; private set; }
-
-
         public async Task AddAsync(string name, string parentName, string description)
         {
             name = name.Trim();

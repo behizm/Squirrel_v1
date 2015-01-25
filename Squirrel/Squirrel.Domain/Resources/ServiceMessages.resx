@@ -132,6 +132,12 @@
   <data name="CategoryService_ParentNotFount" xml:space="preserve">
     <value>پدری با این نام وجود ندارد.</value>
   </data>
+  <data name="ConfigService_ConfigExisted" xml:space="preserve">
+    <value>این تنظیم وجود دارد.</value>
+  </data>
+  <data name="ConfigService_ConfigNotFound" xml:space="preserve">
+    <value>تنظیم مورد نظر یافت نشد.</value>
+  </data>
   <data name="FileService_FileNotFount" xml:space="preserve">
     <value>فایل مورد نظر یافت نشد.</value>
   </data>

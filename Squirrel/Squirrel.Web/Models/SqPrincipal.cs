@@ -79,7 +79,7 @@ namespace Squirrel.Web.Models
             return user.Email;
         }
 
-        public static bool? IdAdmin(this IIdentity identity)
+        public static bool? IsAdmin(this IIdentity identity)
         {
             if (identity == null || string.IsNullOrEmpty(identity.Name))
                 return null;

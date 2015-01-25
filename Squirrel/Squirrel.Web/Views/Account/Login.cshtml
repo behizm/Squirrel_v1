@@ -6,7 +6,7 @@
 
 <h2>Login</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("login", "account", new { returnUrl = ViewBag.ReturnUrl }))
 {
     <p>
         User : @Html.TextBoxFor(m => m.Username)

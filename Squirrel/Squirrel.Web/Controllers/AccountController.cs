@@ -12,13 +12,14 @@ namespace Squirrel.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public ActionResult Login(string r)
+        public ActionResult Login(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(AccountLoginModel model)
+        public async Task<ActionResult> Login(AccountLoginModel model, string returnUrl)
         {
             var login = await UserService.LoginAsync(model.Username, null, model.Password);
             if (login != null)
@@ -34,7 +35,14 @@ namespace Squirrel.Web.Controllers
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
 
-                return RedirectToAction("index", "home");
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    return RedirectToAction("index", "home");
+                }
+
+                return Redirect(returnUrl);
+
+
             }
             ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
             return View();

@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Squirrel.Web
 {
@@ -8,6 +7,7 @@ namespace Squirrel.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new Filters.AreaAuthorizationFilter());
         }
     }
 }

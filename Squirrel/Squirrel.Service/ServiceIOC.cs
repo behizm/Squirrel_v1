@@ -34,6 +34,7 @@ namespace Squirrel.Service
             _core.RegisterType<IPostService, PostService>();
             _core.RegisterType<ITagService, TagService>();
             _core.RegisterType<IVoteService, VoteService>();
+            _core.RegisterType<IConfigService, ConfigService>();
         }
     }
 }

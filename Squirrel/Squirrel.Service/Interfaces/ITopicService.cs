@@ -8,10 +8,8 @@ using Squirrel.Domain.ViewModels;
 // ReSharper disable once CheckNamespace
 namespace Squirrel.Service
 {
-    public interface ITopicService
+    public interface ITopicService : IBaseService
     {
-        OperationResult Result { get; }
-
         Task AddAsync(TopicAddModel model);
         Task EditAsync(TopicEditModel model, Guid userId);
         Task DeleteAsync(TopicDeleteModel model, Guid userId);

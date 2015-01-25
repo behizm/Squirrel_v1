@@ -22,7 +22,7 @@ namespace Squirrel.Domain.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ValidationErrors {
+    public class ValidationErrors {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Squirrel.Domain.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Squirrel.Domain.Resources.ValidationErrors", typeof(ValidationErrors).Assembly);
@@ -51,7 +51,7 @@ namespace Squirrel.Domain.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,27 +61,45 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} را به درستی وارد کنید..
+        /// </summary>
+        public static string General_RegularExperssion {
+            get {
+                return ResourceManager.GetString("General_RegularExperssion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} را وارد کنید..
         /// </summary>
-        internal static string General_Required {
+        public static string General_Required {
             get {
                 return ResourceManager.GetString("General_Required", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to حداکثر می تواند {0} کارکتر داشته باشد..
+        ///   Looks up a localized string similar to حداکثر می تواند {1} کارکتر داشته باشد..
         /// </summary>
-        internal static string General_StringLength {
+        public static string General_StringLength {
             get {
                 return ResourceManager.GetString("General_StringLength", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حداقل {2} و حداکثر {1} کارکتر قابل قبول است..
+        /// </summary>
+        public static string General_StringLengthBound {
+            get {
+                return ResourceManager.GetString("General_StringLengthBound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to پسورد با تکرار آن منطبق نیست..
         /// </summary>
-        internal static string UserCreateModel_ConfimPassword_Compare {
+        public static string UserCreateModel_ConfimPassword_Compare {
             get {
                 return ResourceManager.GetString("UserCreateModel_ConfimPassword_Compare", resourceCulture);
             }

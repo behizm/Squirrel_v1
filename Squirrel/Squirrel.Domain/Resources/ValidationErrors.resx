@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="General_RegularExperssion" xml:space="preserve">
+    <value>{0} را به درستی وارد کنید.</value>
+  </data>
   <data name="General_Required" xml:space="preserve">
     <value>{0} را وارد کنید.</value>
   </data>
   <data name="General_StringLength" xml:space="preserve">
-    <value>حداکثر می تواند {0} کارکتر داشته باشد.</value>
+    <value>حداکثر می تواند {1} کارکتر داشته باشد.</value>
+  </data>
+  <data name="General_StringLengthBound" xml:space="preserve">
+    <value>حداقل {2} و حداکثر {1} کارکتر قابل قبول است.</value>
   </data>
   <data name="UserCreateModel_ConfimPassword_Compare" xml:space="preserve">
     <value>پسورد با تکرار آن منطبق نیست.</value>

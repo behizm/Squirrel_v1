@@ -1,0 +1,55 @@
+﻿@using Squirrel.Domain.Enititis
+
+@{
+    ViewBag.Title = "مدیریت کاربران";
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <br />
+    </div>
+    <div class="col-lg-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">لیست کاربران</div>
+            <div class="panel-body">
+                <div>
+                    <button type="button" class="btn btn-default" onclick="LoadAddUser()">+</button>
+                </div>
+                <br />
+                @Html.Partial("SearchFilter")
+            </div>
+            <div id="list_result" style="margin: 10px 30px;">
+                @Html.Partial("List", (List<User>)ViewBag.UserList)
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5" id="option_con"></div>
+</div>
+
+<div>
+
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function ReloadList() {
+            $('#user_search_from').submit();
+        }
+
+        function LoadList(page) {
+            $('#searchPage').val(page);
+            $('#user_search_from').submit();
+        }
+
+        function LoadAddUser() {
+            $.ajax({
+                url: '@Url.Action("Add", "Users")',
+                success: function (r) {
+                    $('#option_con').html(r);
+                }
+            });
+        }
+    </script>
+}

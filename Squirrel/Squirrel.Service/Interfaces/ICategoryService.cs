@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
-using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 
 // ReSharper disable once CheckNamespace
 namespace Squirrel.Service
 {
-    public interface ICategoryService
+    public interface ICategoryService : IBaseService
     {
-        OperationResult Result { get; }
-
         Task AddAsync(string name, string parentName, string description);
         Task ChangeNameAsync(string oldName, string newName);
         Task ChangeParentAsync(string name, string parentName);

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Squirrel.Data;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
@@ -12,16 +10,8 @@ using Squirrel.Domain.ViewModels;
 
 namespace Squirrel.Service.Services
 {
-    class TagService : ITagService
+    class TagService : BaseService, ITagService
     {
-        public OperationResult Result { get; private set; }
-
-        private IRepositoryContext _repositoryContext;
-        private IRepositoryContext RepositoryContext
-        {
-            get { return _repositoryContext ?? (_repositoryContext = DataIOC.Get<IRepositoryContext>()); }
-        }
-
         public async Task<List<string>> SearchAsync(TagSearchModel model, OrderingModel<Tag> ordering)
         {
             var items =

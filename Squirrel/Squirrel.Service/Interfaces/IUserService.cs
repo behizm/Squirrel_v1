@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Squirrel.Domain.ConfigModels;
 using Squirrel.Domain.Enititis;
-using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 
 // ReSharper disable once CheckNamespace
-
-
 namespace Squirrel.Service
 {
-    public interface IUserService
+    public interface IUserService : IBaseService
     {
-        OperationResult Result { get; }
         UserServiceConfig UserServiceConfig { get; }
 
         Task CreateAsync(string username, string email, string password);
