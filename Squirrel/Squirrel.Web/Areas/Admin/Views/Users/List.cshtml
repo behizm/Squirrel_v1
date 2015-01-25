@@ -9,6 +9,17 @@
             <tr>
                 <td>@Html.DisplayFor(m => item.Username)</td>
                 <td>@Html.DisplayFor(m => item.Email)</td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <span>Active</span>
+                    }
+                    else
+                    {
+                        <span style="color: gainsboro" onclick="ActiveUser(this,'@item.Id')">Active</span>
+                        <span style="display: none;">Active</span>
+                    }
+                </td>
             </tr>
         }
     </tbody>

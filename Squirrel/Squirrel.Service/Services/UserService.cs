@@ -423,6 +423,12 @@ namespace Squirrel.Service.Services
                 return;
             }
 
+            if (user.IsLock)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+
             user.IsLock = true;
             await UpdateAsync(user);
         }
@@ -436,7 +442,22 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            user.IsLock = false;
+            if ((!user.LockDate.HasValue || user.LockDate.Value < DateTime.Now) && !user.IsLock)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+
+            if (user.LockDate.HasValue && user.LockDate.Value > DateTime.Now)
+            {
+                user.LockDate = DateTime.Now;
+            }
+
+            if (user.IsLock)
+            {
+                user.IsLock = false;
+            }
+            
             user.LockDate = DateTime.Now;
             await UpdateAsync(user);
         }

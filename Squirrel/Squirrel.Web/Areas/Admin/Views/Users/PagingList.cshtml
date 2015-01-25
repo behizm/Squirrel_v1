@@ -1,5 +1,18 @@
-﻿@model Squirrel.Domain.ViewModels.PagingModel
+﻿@using System.Globalization
+@model Squirrel.Domain.ViewModels.PagingModel
 
-@Model.CurrentPage
-@Model.PageCount
-@Model.PagingMethod
+<div>
+    @for (var i = 1; i <= Model.PageCount; i++)
+    {
+        var onClickFunc = Model.PagingMethod.Replace("#", i.ToString(CultureInfo.InvariantCulture));
+        if (i == Model.CurrentPage)
+        {
+            <span style="color: gainsboro;">@i</span>
+        }
+        else
+        {
+            <span onclick="@onClickFunc">@i</span>
+        }
+
+    }
+</div>

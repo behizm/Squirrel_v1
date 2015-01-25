@@ -12,18 +12,8 @@ namespace Squirrel.Web.Areas.Admin.Controllers
 {
     public class UsersController : BaseController
     {
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var searchModel = new UserSearchModel();
-            var orderingModel = new OrderingModel<User>
-            {
-                IsAscending = true,
-                KeySelector = x => x.Username,
-                Skip = 0,
-                Take = 10,
-            };
-            var users = await UserService.SearchAsync(searchModel, orderingModel);
-            ViewBag.UserList = users;
             return View();
         }
 
@@ -81,6 +71,14 @@ namespace Squirrel.Web.Areas.Admin.Controllers
                 };
             }
             return PartialView("list", users);
+        }
+
+        public async Task<bool> Active(Guid id)
+        {
+            await UserService.ActiveAsync(id);
+            if (UserService.Result.Succeeded)
+                return true;
+            return false;
         }
     }
 }
