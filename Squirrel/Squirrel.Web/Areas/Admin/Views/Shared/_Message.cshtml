@@ -21,6 +21,6 @@
 @if (ViewBag.JsMethod != null)
 {
     <script type="text/javascript">
-        @ViewBag.JsMethod
+        @Html.Raw(ViewBag.JsMethod)
     </script>
 }

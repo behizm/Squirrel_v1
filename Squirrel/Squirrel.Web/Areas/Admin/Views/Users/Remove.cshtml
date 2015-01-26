@@ -1,0 +1,22 @@
+﻿@model Squirrel.Domain.ViewModels.UserRemoveModel
+
+<h4>حذف کاربر</h4>
+
+@Html.Partial("_Message")
+
+@using (Ajax.BeginForm("Remove", "Users", null, new AjaxOptions { UpdateTargetId = "option_con_2" }, new { id = "user_details_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <p>
+        <button type="submit" class="btn btn-default">حذف</button>
+        <button type="button" class="btn btn-default" onclick="$('#option_con_2').html('');">انصراف</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#user_details_form");
+    })
+</script>

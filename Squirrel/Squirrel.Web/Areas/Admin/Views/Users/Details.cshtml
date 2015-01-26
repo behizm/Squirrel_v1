@@ -1,0 +1,66 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.User
+
+<p>
+    @Html.DisplayNameFor(m => m.Username) :
+    <b>@Html.DisplayFor(m => m.Username)</b>
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.Email) :
+    <b>@Html.DisplayFor(m => m.Email)</b>
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.CreateDate) :
+    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
+</p>
+@if (Model.AccessFailed > 0)
+{
+    <p>
+        @Html.DisplayNameFor(m => m.AccessFailed) :
+        <b>@Html.DisplayFor(m => m.AccessFailed)</b>
+    </p>
+}
+@if (Model.EditeDate.HasValue)
+{
+    PersianDate pEditDate = Model.EditeDate.Value;
+    <p>
+        @Html.DisplayNameFor(m => m.EditeDate) :
+        <b>@pEditDate.ToStringDateTime()</b>
+    </p>
+}
+<p>
+    @Html.DisplayNameFor(m => m.IsActive) :
+    @Html.DisplayFor(m => m.IsActive)
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.IsAdmin) :
+    @Html.DisplayFor(m => m.IsAdmin)
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.IsLock) :
+    @Html.DisplayFor(m => m.IsLock)
+</p>
+@if (Model.LastLogin.HasValue)
+{
+    PersianDate pLastLogin = Model.LastLogin.Value;
+    <p>
+        @Html.DisplayNameFor(m => m.LastLogin) :
+        <b>@pLastLogin.ToStringDateTime()</b>
+    </p>
+}
+@if (Model.LockDate.HasValue)
+{
+    PersianDate pLockDate = Model.LockDate.Value;
+    <p>
+        @Html.DisplayNameFor(m => m.LockDate) :
+        <b>@pLockDate.ToStringDateTime()</b>
+    </p>
+}
+
+<div>
+    <button class="btn btn-default" onclick="LoadEditUser('@Model.Id')">Edit User</button>
+    <button class="btn btn-default" onclick="LoadRemoveUser('@Model.Id')">Remove User</button>
+    <button class="btn btn-default" onclick="LoadResetPassword('@Model.Id')">Reset Password</button>
+</div>
+
+

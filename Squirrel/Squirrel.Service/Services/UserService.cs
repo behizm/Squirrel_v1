@@ -131,6 +131,24 @@ namespace Squirrel.Service.Services
             await UpdateAsync(user);
         }
 
+        public async Task RemoveAsync(Guid id)
+        {
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == id);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            await RepositoryContext.DeleteAsync(user);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
         public async Task<User> FindByIdAsync(Guid userId)
         {
             var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
@@ -457,7 +475,7 @@ namespace Squirrel.Service.Services
             {
                 user.IsLock = false;
             }
-            
+
             user.LockDate = DateTime.Now;
             await UpdateAsync(user);
         }

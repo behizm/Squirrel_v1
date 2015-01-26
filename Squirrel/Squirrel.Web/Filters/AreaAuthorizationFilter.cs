@@ -40,11 +40,17 @@ namespace Squirrel.Web.Filters
             if (area.ToLower() != "admin")
                 return;
 
-            var isAdmin = filterContext.HttpContext.User.Identity.IsAdmin();
+            var isAdmin = ((ISqPrincipal)filterContext.HttpContext.User).Identity.IsAdmin;
             if (!isAdmin.HasValue || !isAdmin.Value)
             {
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
+                {
+                    RedirectRoute(filterContext, null, "Error", "AccessDeniedPartial");
+                }
                 RedirectRoute(filterContext, null, "Error", "AccessDenied");
             }
+
+
         }
 
         private static void RedirectRoute(ActionExecutingContext filterContext, string area, string controller, string action)

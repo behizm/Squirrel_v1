@@ -189,7 +189,11 @@
     <Content Include="Areas\Admin\Views\Users\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Message.cshtml" />
     <Content Include="Areas\Admin\Views\Users\SearchFilter.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\PagingList.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\Paging.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Remove.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\ResetPassword.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -239,6 +243,10 @@
     <ProjectReference Include="..\Squirrel.Service\Squirrel.Service.csproj">
       <Project>{35053ffa-16cb-49b1-9aee-b513e0b89718}</Project>
       <Name>Squirrel.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Squirrel.Utility\Squirrel.Utility.csproj">
+      <Project>{4e7e5ce0-c8ef-4e11-b465-e270712616d9}</Project>
+      <Name>Squirrel.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -20,7 +20,11 @@
             <div id="list_result" style="margin: 10px 30px;"></div>
         </div>
     </div>
-    <div class="col-lg-5" id="option_con"></div>
+    <div class="col-lg-5">
+        <div id="option_con"></div>
+        <br />
+        <div id="option_con_2"></div>
+    </div>
 </div>
 
 @section scripts
@@ -44,6 +48,7 @@
                 url: '@Url.Action("Add", "Users")',
                 success: function (r) {
                     $('#option_con').html(r);
+                    $('#option_con_2').html('');
                 }
             });
         }
@@ -59,6 +64,123 @@
                     }
                 }
             });
+        }
+
+        function LockUser(e, id) {
+            $.ajax({
+                url: '@Url.Action("Lock", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    if (r == "True") {
+                        var $parent = $(e).parent();
+                        $parent.children('.lock-user').show();
+                        $(e).hide();
+                    }
+                }
+            });
+        }
+
+        function UnlockUser(e, id) {
+            $.ajax({
+                url: '@Url.Action("Unlock", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    if (r == "True") {
+                        var $parent = $(e).parent();
+                        $parent.children('.unlock-user').show();
+                        $(e).hide();
+                    }
+                }
+            });
+        }
+
+        function LoadDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con').html(r);
+                }
+            });
+        }
+
+        function LoadDetailsFromList(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function AddAdmin(e, id) {
+            $.ajax({
+                url: '@Url.Action("AddAdmin", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    if (r == "True") {
+                        var $parent = $(e).parent();
+                        $parent.children('.isadmin').show();
+                        $(e).hide();
+                    }
+                }
+            });
+        }
+
+        function RemoveAdmin(e, id) {
+            $.ajax({
+                url: '@Url.Action("RemoveAdmin", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    if (r == "True") {
+                        var $parent = $(e).parent();
+                        $parent.children('.isnotadmin').show();
+                        $(e).hide();
+                    }
+                }
+            });
+        }
+
+        function LoadEditUser(id) {
+            $.ajax({
+                url: '@Url.Action("Edit", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function LoadRemoveUser(id) {
+            $.ajax({
+                url: '@Url.Action("Remove", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function LoadResetPassword(id) {
+            $.ajax({
+                url: '@Url.Action("ResetPassword", "Users")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function EditCompleteReload(id) {
+            ReloadList();
+            LoadDetails(id);
+        }
+
+        function RemoveCompleteReload() {
+            ReloadList();
+            $('#option_con').html('');
         }
     </script>
 }

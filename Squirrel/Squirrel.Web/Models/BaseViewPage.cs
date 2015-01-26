@@ -10,7 +10,8 @@ namespace Squirrel.Web.Models
     {
         public virtual new ISqPrincipal User
         {
-            get { return (ISqPrincipal)base.User; }
+            //get { return (ISqPrincipal)base.User; }
+            get { return new SqPrincipal(base.User.Identity.Name); }
         }
     }
 
@@ -18,7 +19,8 @@ namespace Squirrel.Web.Models
     {
         public virtual new ISqPrincipal User
         {
-            get { return (ISqPrincipal)base.User; }
+            //get { return (ISqPrincipal)base.User; }
+            get { return new SqPrincipal(base.User.Identity.Name); }
         }
     }
 }

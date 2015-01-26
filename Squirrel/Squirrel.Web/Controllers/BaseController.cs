@@ -17,6 +17,12 @@ namespace Squirrel.Web.Controllers
         {
             get { return _userService ?? (_userService = ServiceIOC.Get<IUserService>()); }
         }
+        
+        private IUserService _userService2;
+        protected IUserService UserService2
+        {
+            get { return _userService2 ?? (_userService2 = ServiceIOC.Get<IUserService>()); }
+        }
 
         private IProfileService _profileService;
         protected IProfileService ProfileService

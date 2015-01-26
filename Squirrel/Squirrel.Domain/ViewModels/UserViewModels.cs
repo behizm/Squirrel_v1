@@ -34,13 +34,33 @@ namespace Squirrel.Domain.ViewModels
     public class UserUpdateModel
     {
         public Guid Id { get; set; }
+
+        [Display(Name = @"نام کاربری")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(25, MinimumLength = 5, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
+        [RegularExpression(@"[a-z0-9_]+", ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
         public string Username { get; set; }
+
+        [Display(Name = @"پست الکترونیکی")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(50, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
         public string Email { get; set; }
     }
 
-    public class UserDetailsModel
+    public class UserRemoveModel
     {
+        public Guid Id { get; set; }
+    }
 
+    public class UserResetPasswordModel
+    {
+        public Guid Id { get; set; }
+
+        [Display(Name = @"کلمه عبور")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(20, MinimumLength = 6, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
+        public string Password { get; set; }
     }
 
     public class UserSearchModel

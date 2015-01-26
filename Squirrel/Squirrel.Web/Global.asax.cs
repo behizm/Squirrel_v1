@@ -11,9 +11,19 @@ namespace Squirrel.Web
 {
     public class MvcApplication : HttpApplication
     {
+        public void Init(HttpApplication context)
+        {
+            context.AuthenticateRequest += ApplicationAuthenticateRequest;
+        }
+
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
         {
-            Context.User = Thread.CurrentPrincipal = new SqPrincipal(User);
+            Context.User = Thread.CurrentPrincipal = new SqPrincipal(User.Identity.Name);
+        }
+
+        private void ApplicationAuthenticateRequest(object sender, EventArgs e)
+        {
+            Context.User = Thread.CurrentPrincipal = new SqPrincipal(User.Identity.Name);
         }
 
         protected void Application_Start()

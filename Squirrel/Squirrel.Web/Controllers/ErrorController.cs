@@ -8,10 +8,14 @@ namespace Squirrel.Web.Controllers
 {
     public class ErrorController : Controller
     {
-        // GET: Error
         public ActionResult AccessDenied()
         {
             return View();
+        }
+
+        public ActionResult AccessDeniedPartial()
+        {
+            return PartialView("AccessDenied");
         }
     }
 }
