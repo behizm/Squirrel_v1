@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Squirrel.Web.Areas.Admin.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoriesController : Controller
     {
         // GET: Admin/Category
         public ActionResult Index()

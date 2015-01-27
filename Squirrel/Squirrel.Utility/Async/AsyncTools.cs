@@ -5,7 +5,7 @@ namespace Squirrel.Utility.Async
 {
     public class AsyncTools
     {
-        public static T ConvertToSync<T>(Func<Task<T>> func) where T : class
+        public static T ConvertToSync<T>(Func<Task<T>> func)
         {
             var task = Task.Run(func);
             task.Wait();

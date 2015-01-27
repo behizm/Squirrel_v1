@@ -1,0 +1,21 @@
+﻿@model Squirrel.Domain.Enititis.Config
+
+<p>
+    @Html.DisplayNameFor(m => m.Key) :
+    <b>@Html.DisplayFor(m => m.Key)</b>
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.Value) :
+    <b>@Html.DisplayFor(m => m.Value)</b>
+</p>
+<p>
+    @Html.DisplayNameFor(m => m.Description) :
+    <b>@Html.DisplayFor(m => m.Description)</b>
+</p>
+
+<div>
+    <button class="btn btn-default" onclick="LoadEditConfig('@Model.Id')">Edit This</button>
+    <button class="btn btn-default" onclick="LoadRemoveConfig('@Model.Id')">Remove This</button>
+</div>
+<br/>
+

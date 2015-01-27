@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "تنظیمات سایت";
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <br />
+    </div>
+    <div class="col-lg-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">تنظیمات سایت</div>
+            <div class="panel-body">
+                <div>
+                    <button type="button" class="btn btn-default" onclick="LoadAddUser()">+</button>
+                </div>
+                <br />
+                @Html.Partial("SearchFilter")
+            </div>
+            <div id="list_result" style="margin: 10px 30px;"></div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div id="option_con"></div>
+        <div id="option_con_2"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            LoadList(1);
+        });
+
+        function ReloadList() {
+            $('#config_search_from').submit();
+        }
+
+        function LoadList(page) {
+            $('#searchPage').val(page);
+            $('#config_search_from').submit();
+        }
+
+        function LoadAddUser() {
+            $.ajax({
+                url: '@Url.Action("Add", "Configs")',
+                success: function (r) {
+                    $('#option_con').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function LoadConfigDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Configs")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con').html(r);
+                }
+            });
+        }
+
+        function LoadConfigDetailsFromList(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Configs")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function LoadEditConfig(id) {
+            $.ajax({
+                url: '@Url.Action("Edit", "Configs")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function LoadRemoveConfig(id) {
+            $.ajax({
+                url: '@Url.Action("Remove", "Configs")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function EditCompleteReload(id) {
+            ReloadList();
+            LoadConfigDetails(id);
+        }
+
+        function RemoveCompleteReload() {
+            ReloadList();
+            $('#option_con').html('');
+        }
+    </script>
+}

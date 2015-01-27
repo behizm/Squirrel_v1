@@ -35,7 +35,7 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             if (UserService.Result.Succeeded)
             {
                 ViewBag.SuccessMessage = "کاربر با موفقیت افزوده شد.";
-                ViewBag.JsMethod = "ReloadList(1)";
+                ViewBag.JsMethod = "ReloadList()";
                 return PartialView("_Message");
             }
 

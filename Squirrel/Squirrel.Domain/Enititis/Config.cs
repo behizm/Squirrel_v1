@@ -27,5 +27,8 @@ namespace Squirrel.Domain.Enititis
 
         [StringLength(100), Required]
         public string Value { get; set; }
+
+        [StringLength(200)]
+        public string Description { get; set; }
     }
 }

@@ -39,10 +39,12 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Add()
         {
-            var user = UserService.FindByUsernameAsync("behi8303").Result;
-            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
-
-            var task = ConfigService.AddAsync("Key 1 ", " Val 1", user.Id);
+            var model = new ConfigAddModel
+            {
+                Key = "Key 1",
+                Value = "Val 1",
+            };
+            var task = ConfigService.AddAsync(model, "behi8303");
             task.Wait();
             Assert.IsTrue(ConfigService.Result.Succeeded, ConfigService.Result.Errors.FirstOrDefault());
         }
@@ -50,10 +52,13 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Edit()
         {
-            var user = UserService.FindByUsernameAsync("behi8303").Result;
-            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
-
-            var task = ConfigService.EditAsync("Key 1 ", " Val 2", user.Id);
+            var model = new ConfigEditModel()
+            {
+                Id = Guid.Parse(""),
+                Key = "Key 1",
+                Value = "Val 1",
+            };
+            var task = ConfigService.EditAsync(model, "behi8303");
             task.Wait();
             Assert.IsTrue(ConfigService.Result.Succeeded, ConfigService.Result.Errors.FirstOrDefault());
         }
@@ -64,7 +69,7 @@ namespace Squirrel.Test.ServiceLayer
             var user = UserService.FindByUsernameAsync("behi8303").Result;
             Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
 
-            var task = ConfigService.DeleteAsync("Key 1 ", user.Id);
+            var task = ConfigService.DeleteAsync(Guid.Parse(""), "behi8303");
             task.Wait();
             Assert.IsTrue(ConfigService.Result.Succeeded, ConfigService.Result.Errors.FirstOrDefault());
         }

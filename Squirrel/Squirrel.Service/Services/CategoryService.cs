@@ -8,6 +8,7 @@ using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Async;
 
 namespace Squirrel.Service.Services
 {
@@ -44,6 +45,50 @@ namespace Squirrel.Service.Services
                 var parent =
                     await
                         RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == parentName.ToLower());
+                if (parent == null)
+                {
+                    Result = OperationResult.Failed(ServiceMessages.CategoryService_ParentNotFount);
+                    return;
+                }
+                item.ParentId = parent.Id;
+            }
+
+            await RepositoryContext.CreateAsync(item);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        public async Task AddAsync(CategoryAddModel model)
+        {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var category =
+                await RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == model.Name.ToLower());
+            if (category != null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryExisted);
+                return;
+            }
+
+            var item = new Category
+            {
+                Name = model.Name,
+                Description = string.IsNullOrEmpty(model.Description) ? null : model.Description,
+            };
+
+            if (!string.IsNullOrEmpty(model.Parent))
+            {
+                var parent =
+                    await
+                        RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == model.Parent.ToLower());
                 if (parent == null)
                 {
                     Result = OperationResult.Failed(ServiceMessages.CategoryService_ParentNotFount);
@@ -149,6 +194,45 @@ namespace Squirrel.Service.Services
 
             item.Description = string.IsNullOrEmpty(description) ? null : description;
             await UpdateAsync(item);
+        }
+
+        public async Task UpdateAsync(CategoryEditModel model)
+        {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var category =
+                await RepositoryContext.RetrieveAsync<Category>(x => x.Id == model.Id);
+            if (category == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
+                return;
+            }
+
+            category.Name = model.Name;
+            category.Description = string.IsNullOrEmpty(model.Description) ? null : model.Description;
+
+            if (!string.IsNullOrEmpty(model.Parent))
+            {
+                var parent =
+                    await
+                        RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == model.Parent.ToLower());
+                if (parent == null)
+                {
+                    Result = OperationResult.Failed(ServiceMessages.CategoryService_ParentNotFount);
+                    return;
+                }
+                category.ParentId = parent.Id;
+            }
+
+            await RepositoryContext.UpdateAsync(category);
+            if (RepositoryContext.OperationResult.Succeeded)
+                Result = OperationResult.Success;
+
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
         public async Task DeleteAsync(Guid id)
@@ -360,8 +444,8 @@ namespace Squirrel.Service.Services
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;
-            } 
-            
+            }
+
             try
             {
                 Result = OperationResult.Success;
@@ -456,6 +540,21 @@ namespace Squirrel.Service.Services
             await UpdateAsync(category);
         }
 
+        public async Task<List<CategoryTreeModel>> FamilyTree()
+        {
+            var items = await RepositoryContext.SearchAsync<Category>(x => true);
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            var cats = await items.ToListAsync();
+            var originNodes = cats.Where(x => x.ParentId == null).ToList();
+            return originNodes.Select(x => CreateTreeNode(x, cats)).ToList();
+        }
+
+
 
         private async Task UpdateAsync(Category category)
         {
@@ -505,6 +604,31 @@ namespace Squirrel.Service.Services
 
             Result = OperationResult.Success;
             return returnVal;
+        }
+
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+        private CategoryTreeModel CreateTreeNode(Category item, List<Category> categoryList)
+        {
+            var node = new CategoryTreeModel
+            {
+                Node = item
+            };
+            node.Node.TopicCount = TopicCount(item.Id);
+
+            var childs = categoryList.Where(x => x.ParentId == item.Id).ToList();
+            if (!childs.Any())
+            {
+                return node;
+            }
+            node.Childs = childs.Select(c => CreateTreeNode(c, categoryList)).ToList();
+            node.Node.ChildTopicCount = node.Childs.Sum(x => x.Node.TopicCount + x.Node.ChildTopicCount);
+            return node;
+        }
+
+        private int TopicCount(Guid categoryId)
+        {
+            var count = AsyncTools.ConvertToSync(() => RepositoryContext.CountAsync<Topic>(x => x.CategoryId == categoryId));
+            return count ?? 0;
         }
     }
 }

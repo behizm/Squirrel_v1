@@ -1,26 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
+using Squirrel.Domain.ViewModels;
 
 namespace Squirrel.Service.Services
 {
     class ConfigService : BaseService, IConfigService
     {
-        public async Task AddAsync(string key, string value, Guid userId)
+        public async Task AddAsync(ConfigAddModel model, string username)
         {
-            key = key.Trim();
-            value = value.Trim();
-
-            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(model.Key) || string.IsNullOrEmpty(model.Value))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
-            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == key.ToLower());
+            model.Key = model.Key.Trim();
+            model.Value = model.Value.Trim();
+            if (!string.IsNullOrEmpty(model.Description))
+            {
+                model.Description = model.Description.Trim();
+            }
+
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == username);
+            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == model.Key.ToLower());
 
             var user = await userTask;
             if (user == null)
@@ -43,8 +51,9 @@ namespace Squirrel.Service.Services
 
             var item = new Config
             {
-                Key = key,
-                Value = value,
+                Key = model.Key,
+                Value = model.Value,
+                Description = model.Description
             };
             await RepositoryContext.CreateAsync(item);
             if (RepositoryContext.OperationResult.Succeeded)
@@ -55,19 +64,23 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task EditAsync(string key, string value, Guid userId)
+        public async Task EditAsync(ConfigEditModel model, string username)
         {
-            key = key.Trim();
-            value = value.Trim();
-
-            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(model.Key) || string.IsNullOrEmpty(model.Value))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
-            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == key.ToLower());
+            model.Key = model.Key.Trim();
+            model.Value = model.Value.Trim();
+            if (!string.IsNullOrEmpty(model.Description))
+            {
+                model.Description = model.Description.Trim();
+            }
+
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == username);
+            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Id == model.Id);
 
             var user = await userTask;
             if (user == null)
@@ -88,12 +101,13 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            if (config.Value == value)
+            if (config.Value == model.Value && config.Description == model.Description)
             {
                 Result = OperationResult.Success;
                 return;
             }
-            config.Value = value;
+            config.Value = model.Value;
+            config.Description = model.Description;
             await RepositoryContext.UpdateAsync(config);
             if (RepositoryContext.OperationResult.Succeeded)
             {
@@ -103,18 +117,10 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task DeleteAsync(string key, Guid userId)
+        public async Task DeleteAsync(Guid id, string username)
         {
-            key = key.Trim();
-
-            if (string.IsNullOrEmpty(key))
-            {
-                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
-                return;
-            }
-
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
-            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == key.ToLower());
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == username);
+            var configTak = RepositoryContext.RetrieveAsync<Config>(x => x.Id == id);
 
             var user = await userTask;
             if (user == null)
@@ -144,15 +150,14 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task<string> GetAsync(string key)
+        public async Task<string> GetValueAsync(string key)
         {
-            key = key.Trim();
-
             if (string.IsNullOrEmpty(key))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return null;
             }
+            key = key.Trim();
 
             var config = await RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == key.ToLower());
             if (config == null)
@@ -162,6 +167,87 @@ namespace Squirrel.Service.Services
             }
 
             return config.Value;
+        }
+
+        public async Task<Config> FindByIdAsync(Guid id)
+        {
+            var config = await RepositoryContext.RetrieveAsync<Config>(x => x.Id == id);
+            if (config == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_ConfigNotFound);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return config;
+        }
+
+        public async Task<Config> FindByKeyAsync(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+            key = key.Trim();
+
+            var config = await RepositoryContext.RetrieveAsync<Config>(x => x.Key.ToLower() == key.ToLower());
+            if (config == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_ConfigNotFound);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return config;
+        }
+
+        public async Task<List<Config>> SearchAsync(string key, OrderingModel<Config> ordering)
+        {
+            key = key.Trim();
+            var items =
+                await RepositoryContext.SearchAsync<Config>(x => string.IsNullOrEmpty(key) || x.Key.Contains(key));
+
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                }
+                return
+                    await
+                        items.OrderByDescending(ordering.KeySelector)
+                            .Skip(ordering.Skip)
+                            .Take(ordering.Take)
+                            .ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
+        public async Task<int?> CountAsync(string key)
+        {
+            var count =
+                await
+                    RepositoryContext.CountAsync<Config>(x => string.IsNullOrEmpty(key) || x.Key.Contains(key));
+
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return count;
         }
     }
 }

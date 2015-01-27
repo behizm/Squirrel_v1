@@ -1,0 +1,42 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Category
+
+<p>
+    @Html.DisplayNameFor(m => m.Name) :
+    <b>@Html.DisplayFor(m => m.Name)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Parent) :
+    @if (Model.ParentId.HasValue)
+    {
+        <b>@Html.DisplayFor(m => m.Parent.Name)</b>
+    }
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Description) :
+    <b>@Html.DisplayFor(m => m.Description)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Avatar) :
+    @if (Model.AvatarId.HasValue)
+    {
+        <b>@Html.DisplayFor(m => m.Avatar.Address)</b>
+    }
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.CreateDate) :
+    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
+</p>
+
+<div>
+    <button class="btn btn-default" onclick="">Edit</button>
+    <button class="btn btn-default" onclick="">Remove</button>
+    <button class="btn btn-default" onclick="">Replace</button>
+    <button class="btn btn-default" onclick="">Avatar</button>
+</div>
+
+

@@ -19,14 +19,50 @@
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
+                <ul class="nav navbar-nav"></ul>
             </div>
         </div>
     </div>
 
-    <div class="container body-content">
-        @RenderBody()
+    <div class="container-fluid body-content">
+        <div class="row">
+            <div class="col-lg-2">
+                <ul style="margin: 30px 0;">
+                    <li>
+                        @Html.ActionLink("Home", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Categories", "Index", "Categories", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Comment", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("File", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Post", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Profile", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Tag", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Topic", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Vote", "Index", "Panel", new { area = "author" }, null)
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-10">
+                <div class="row">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>

@@ -1,0 +1,39 @@
+﻿@model Squirrel.Domain.ViewModels.ConfigAddModel
+
+@Html.Partial("_Message")
+
+@using (Ajax.BeginForm("Add", "Configs", null, new AjaxOptions { UpdateTargetId = "option_con" }, new { id = "config_ops_form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Key)
+        <br />
+        @Html.TextBoxFor(m => m.Key)
+        @Html.ValidationMessageFor(m => m.Key)
+    </p>
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Value)
+        <br />
+        @Html.TextBoxFor(m => m.Value)
+        @Html.ValidationMessageFor(m => m.Value)
+    </p>
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Description)
+        <br />
+        @Html.TextAreaFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+    </p>
+
+    <p>
+        <button type="submit" class="btn btn-default">افزودن</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#config_ops_form");
+    })
+</script>

@@ -10,9 +10,11 @@ namespace Squirrel.Service
     public interface ICategoryService : IBaseService
     {
         Task AddAsync(string name, string parentName, string description);
+        Task AddAsync(CategoryAddModel model);
         Task ChangeNameAsync(string oldName, string newName);
         Task ChangeParentAsync(string name, string parentName);
         Task ChangeDescriptionAsync(string name, string description);
+        Task UpdateAsync(CategoryEditModel model);
         Task DeleteAsync(Guid id);
         Task ReplaceAsync(string name, string with);
         Task<List<Category>> ChildsAsync(string name);
@@ -23,5 +25,6 @@ namespace Squirrel.Service
         Task<int?> CountAsync(CategorySearchModel model);
         Task<List<Topic>> TopicsAsync(string name, bool isFamilyGet, int skip = 0, int take = 10);
         Task ChangeAvatarAsync(Guid categoryId, Guid fileId);
+        Task<List<CategoryTreeModel>> FamilyTree();
     }
 }

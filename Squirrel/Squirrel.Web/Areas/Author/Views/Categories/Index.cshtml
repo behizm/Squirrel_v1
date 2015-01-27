@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "دسته بندی ها";
+}
+
+<h2>دسته بندی ها</h2>
+<hr />
+
+<div class="col-lg-6">
+    <div>
+        <button type="button" class="btn btn-default" onclick="LoadAddForm()">+</button>
+    </div>
+    <br />
+    <div id="tree_con"></div>
+</div>
+
+<div class="col-lg-6">
+    <div id="option_con_1"></div>
+    <div id="option_con_2"></div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            ReloadTree();
+        });
+
+        function ReloadTree() {
+            $.ajax({
+                url: '@Url.Action("Tree", "Categories")',
+                success: function (r) {
+                    $('#tree_con').html(r);
+                },
+            });
+        }
+
+        function LoadAddForm() {
+            $.ajax({
+                url: '@Url.Action("Add", "Categories")',
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function LoadDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Categories")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                }
+            });
+        }
+
+        function LoadDetailsFromList(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Categories")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+    </script>
+}

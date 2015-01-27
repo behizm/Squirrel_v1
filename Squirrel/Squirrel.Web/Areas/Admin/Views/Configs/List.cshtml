@@ -1,0 +1,24 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.Enititis.Config>
+
+<table class="table">
+    <tbody>
+        @foreach (var config in Model)
+        {
+            var item = config;
+            <tr>
+                <td>
+                    <span style="border-bottom: 1px solid;" onclick="LoadConfigDetailsFromList('@item.Id')">
+                        @Html.DisplayFor(m => item.Key)
+                    </span>
+                </td>
+                <td>@Html.DisplayFor(m => item.Value)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+}

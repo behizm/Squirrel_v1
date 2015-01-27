@@ -1,0 +1,39 @@
+﻿@model Squirrel.Domain.ViewModels.CategoryAddModel
+
+@Html.Partial("_Message")
+
+@using (Ajax.BeginForm("Add", "Categories", null, new AjaxOptions { UpdateTargetId = "option_con_1" }, new { id = "cat_ops_form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Name)
+        <br />
+        @Html.TextBoxFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
+    </p>
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Parent)
+        <br />
+        @Html.TextBoxFor(m => m.Parent)
+        @Html.ValidationMessageFor(m => m.Parent)
+    </p>
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Description)
+        <br />
+        @Html.TextAreaFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+    </p>
+
+    <p>
+        <button type="submit" class="btn btn-default">افزودن</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#cat_ops_form");
+    })
+</script>

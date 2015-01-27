@@ -66,6 +66,7 @@
     <Compile Include="ResultModels\OperationResult.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CategoryViewModels.cs" />
+    <Compile Include="ViewModels\ConfigViewModels.cs" />
     <Compile Include="ViewModels\GeneralModels.cs" />
     <Compile Include="ViewModels\PagingModel.cs" />
     <Compile Include="ViewModels\PostViewModels.cs" />

@@ -1,0 +1,21 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.ViewModels.CategoryTreeModel>
+
+@foreach (var cat in Model)
+{
+    CategoryTreeModel item = cat;
+    <div>
+        <div>
+            <span style="border-bottom: 1px solid; padding-left: 20px;" onclick="LoadDetailsFromList('@cat.Node.Id')">
+                @Html.DisplayFor(m => item.Node.Name)
+                [@Html.DisplayFor(m => item.Node.TopicCount) : @Html.DisplayFor(m => item.Node.ChildTopicCount)]
+            </span>
+        </div>
+        @if (cat.Childs != null && cat.Childs.Any())
+        {
+            <div style="border-left: 1px solid; margin-left: 20px;">
+                @Html.Partial("Tree", cat.Childs)
+            </div>
+        }
+    </div>
+}
