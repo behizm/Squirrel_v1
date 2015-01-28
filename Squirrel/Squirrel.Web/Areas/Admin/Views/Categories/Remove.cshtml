@@ -1,0 +1,22 @@
+﻿@model Squirrel.Domain.ViewModels.CategoryRemoveModel
+
+<h4>حذف گروه</h4>
+
+@Html.Partial("_Message")
+
+@using (Ajax.BeginForm("Remove", "Categories", null, new AjaxOptions { UpdateTargetId = "option_con_2" }, new { id = "cat_details_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <p>
+        <button type="submit" class="btn btn-default">حذف</button>
+        <button type="button" class="btn btn-default" onclick="$('#option_con_2').html('');">انصراف</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#cat_details_form");
+    })
+</script>

@@ -16,7 +16,7 @@ namespace Squirrel.Service
         Task ChangeDescriptionAsync(string name, string description);
         Task UpdateAsync(CategoryEditModel model);
         Task DeleteAsync(Guid id);
-        Task ReplaceAsync(string name, string with);
+        Task<Category> ReplaceAsync(CategoryReplaceModel model);
         Task<List<Category>> ChildsAsync(string name);
         Task<List<string>> ChildsNameAsync(string name);
         Task<Category> FindByIdAsync(Guid id);

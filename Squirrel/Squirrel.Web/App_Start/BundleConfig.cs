@@ -17,10 +17,19 @@ namespace Squirrel.Web
             //            "~/Scripts/jquery.validate.unobtrusive.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
-                         "~/Scripts/jquery.unobtrusive-ajax.js",
-                        "~/Scripts/jquery.validate.js",
-                        "~/Scripts/jquery.validate.unobtrusive.js"));
+                "~/Scripts/jquery-{version}.js",
+                "~/Scripts/jquery.unobtrusive-ajax.js",
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/jquery.validate.unobtrusive.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+                "~/Scripts/jquery-ui-1.11.2.js"));
+
+            bundles.Add(new StyleBundle("~/Content/Autocomplete").Include(
+                "~/Content/themes/base/theme.css",
+                "~/Content/themes/base/core.css",
+                "~/Content/themes/base/menu.css",
+                "~/Content/themes/base/autocomplete.css"));
 
             //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
             //            "~/Scripts/jquery.unobtrusive-ajax.js",

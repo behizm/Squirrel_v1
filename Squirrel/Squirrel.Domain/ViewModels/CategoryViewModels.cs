@@ -8,22 +8,38 @@ namespace Squirrel.Domain.ViewModels
 {
     public class CategoryAddModel
     {
-        [Display(Name = @"نام دسته")]
+        [Display(Name = @"نام گروه")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
         public string Name { get; set; }
 
-        [Display(Name = @"نام پدر دسته")]
+        [Display(Name = @"نام پدر گروه")]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
         public string Parent { get; set; }
 
-        [Display(Name = @"توضیحات دسته")]
+        [Display(Name = @"توضیحات گروه")]
         [StringLength(300, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
         public string Description { get; set; }
     }
+
     public class CategoryEditModel : CategoryAddModel
     {
         public Guid Id { get; set; }
+    }
+
+    public class CategoryRemoveModel
+    {
+        public Guid Id { get; set; }
+    }
+
+    public class CategoryReplaceModel
+    {
+        public Guid Id { get; set; }
+
+        [Display(Name = @"گروه جایگزین")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
+        public string ReplaceName { get; set; }
     }
 
     public class CategorySearchModel

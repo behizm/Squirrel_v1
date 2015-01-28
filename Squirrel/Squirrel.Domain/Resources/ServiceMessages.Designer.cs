@@ -124,6 +124,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این پدر برای این گروه قابل انتخاب نیست..
+        /// </summary>
+        public static string ConfigService_InvalidParent {
+            get {
+                return ResourceManager.GetString("ConfigService_InvalidParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فایل مورد نظر یافت نشد..
         /// </summary>
         public static string FileService_FileNotFount {

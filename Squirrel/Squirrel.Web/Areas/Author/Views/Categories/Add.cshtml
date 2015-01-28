@@ -16,7 +16,7 @@
     <p class="form-group">
         @Html.LabelFor(m => m.Parent)
         <br />
-        @Html.TextBoxFor(m => m.Parent)
+        @Html.TextBoxFor(m => m.Parent, new { id = "parent_add" })
         @Html.ValidationMessageFor(m => m.Parent)
     </p>
 
@@ -35,5 +35,25 @@
 <script type="text/javascript">
     $(function () {
         $.validator.unobtrusive.parse("#cat_ops_form");
+
+        $("#parent_add").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("NameJson", "Categories")",
+                    dataType: "json",
+                    data: { id: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.Name,
+                                ID: item.Id
+                            };
+                        }));
+                    },
+                    //error: function () { alert('خطا'); }
+                });
+            },
+            minLength: 2,
+        });
     })
 </script>

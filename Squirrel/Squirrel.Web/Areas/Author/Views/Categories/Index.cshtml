@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "دسته بندی ها";
+    ViewBag.Title = "گروه ها";
 }
 
-<h2>دسته بندی ها</h2>
+<h2>گروه ها</h2>
 <hr />
 
 <div class="col-lg-6">
@@ -19,49 +19,98 @@
 </div>
 
 @section scripts{
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/Autocomplete")
+
     <script type="text/javascript">
-        $(function () {
-            ReloadTree();
+    $(function () {
+        ReloadTree();
+    });
+
+    function ReloadTree() {
+        $.ajax({
+            url: '@Url.Action("Tree", "Categories")',
+            success: function (r) {
+                $('#tree_con').html(r);
+            },
         });
+    }
 
-        function ReloadTree() {
-            $.ajax({
-                url: '@Url.Action("Tree", "Categories")',
-                success: function (r) {
-                    $('#tree_con').html(r);
-                },
-            });
-        }
+    function LoadAddForm() {
+        $.ajax({
+            url: '@Url.Action("Add", "Categories")',
+            success: function (r) {
+                $('#option_con_1').html(r);
+                $('#option_con_2').html('');
+            }
+        });
+    }
 
-        function LoadAddForm() {
-            $.ajax({
-                url: '@Url.Action("Add", "Categories")',
-                success: function (r) {
-                    $('#option_con_1').html(r);
-                    $('#option_con_2').html('');
+    function LoadDetails(id) {
+        $.ajax({
+            url: '@Url.Action("Details", "Categories")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_1').html(r);
+            }
+        });
+    }
+
+    function LoadDetailsFromList(id) {
+        $.ajax({
+            url: '@Url.Action("Details", "Categories")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_1').html(r);
+                $('#option_con_2').html('');
+            }
+        });
+    }
+
+    function LoadEditForm(id) {
+        $.ajax({
+            url: '@Url.Action("Edit", "Categories")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_2').html(r);
+            }
+        });
+    }
+
+    function EditCompleteReload(id) {
+        ReloadTree();
+        LoadDetails(id);
+    }
+
+    function LoadRemoveForm(id) {
+        $.ajax({
+            url: '@Url.Action("Remove", "Categories", new {area = "admin"})',
+                data: { id: id },
+                success: function(r) {
+                    $('#option_con_2').html(r);
                 }
             });
         }
 
-        function LoadDetails(id) {
+        function RemoveCompleteReload() {
+            ReloadTree();
+            $('#option_con_1').html('');
+        }
+
+        function LoadReplaceForm(id) {
             $.ajax({
-                url: '@Url.Action("Details", "Categories")',
+                url: '@Url.Action("Replace", "Categories", new {area = "admin"})',
                 data: { id: id },
                 success: function (r) {
-                    $('#option_con_1').html(r);
+                    $('#option_con_2').html(r);
                 }
             });
         }
 
-        function LoadDetailsFromList(id) {
-            $.ajax({
-                url: '@Url.Action("Details", "Categories")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_1').html(r);
-                    $('#option_con_2').html('');
-                }
-            });
+        function ReplaceCompleteReload(id) {
+            ReloadTree();
+            LoadDetails(id);
         }
     </script>
 }

@@ -84,6 +84,34 @@ namespace Squirrel.Data.Services
             }
         }
 
+        public async Task<int?> CountAsync<TEntity>() where TEntity : class
+        {
+            OperationResult = OperationResult.Success;
+            try
+            {
+                return await _context.Set<TEntity>().CountAsync();
+            }
+            catch (Exception ex)
+            {
+                OperationResult = OperationResult.Failed(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<int?> CountAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        {
+            OperationResult = OperationResult.Success;
+            try
+            {
+                return await _context.Set<TEntity>().CountAsync(predicate);
+            }
+            catch (Exception ex)
+            {
+                OperationResult = OperationResult.Failed(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<OperationResult> SaveChangesAsync()
         {
             var task = Task.Run(() =>

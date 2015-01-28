@@ -16,13 +16,19 @@ namespace Squirrel.Service.Services
     {
         public async Task AddAsync(string name, string parentName, string description)
         {
-            name = name.Trim();
-            parentName = parentName.Trim();
-            description = description.Trim();
-
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            name = name.Trim();
+            parentName = string.IsNullOrEmpty(parentName) ? null : parentName.Trim();
+            description = string.IsNullOrEmpty(description) ? null : description.Trim();
+
+            if (name == parentName)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_InvalidParent);
                 return;
             }
 
@@ -67,6 +73,12 @@ namespace Squirrel.Service.Services
             if (model == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (model.Name == model.Parent)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_InvalidParent);
                 return;
             }
 
@@ -140,12 +152,18 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeParentAsync(string name, string parentName)
         {
-            name = name.Trim();
-            parentName = parentName.Trim();
-
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            name = name.Trim();
+            parentName = string.IsNullOrEmpty(parentName) ? null : parentName.Trim();
+
+            if (name == parentName)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_InvalidParent);
                 return;
             }
 
@@ -176,14 +194,14 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeDescriptionAsync(string name, string description)
         {
-            name = name.Trim();
-            description = description.Trim();
-
             if (string.IsNullOrEmpty(name))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
+
+            name = name.Trim();
+            description = string.IsNullOrEmpty(description) ? null : description.Trim();
 
             var item = await FindByNameAsync(name);
             if (item == null)
@@ -201,6 +219,12 @@ namespace Squirrel.Service.Services
             if (model == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (model.Name == model.Parent)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ConfigService_InvalidParent);
                 return;
             }
 
@@ -227,12 +251,12 @@ namespace Squirrel.Service.Services
                 }
                 category.ParentId = parent.Id;
             }
+            else if (string.IsNullOrEmpty(model.Parent) && category.ParentId.HasValue)
+            {
+                category.ParentId = null;
+            }
 
-            await RepositoryContext.UpdateAsync(category);
-            if (RepositoryContext.OperationResult.Succeeded)
-                Result = OperationResult.Success;
-
-            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+            await UpdateAsync(category);
         }
 
         public async Task DeleteAsync(Guid id)
@@ -245,7 +269,7 @@ namespace Squirrel.Service.Services
             }
 
             var task1 = RepositoryContext.CountAsync<Topic>(x => x.CategoryId == id);
-            var task2 = RepositoryContext.CountAsync<Category>(x => x.ParentId == id);
+            var task2 = RepositoryContext2.CountAsync<Category>(x => x.ParentId == id);
 
             var childCount = await task2;
             if (childCount == null)
@@ -280,39 +304,37 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task ReplaceAsync(string name, string with)
+        public async Task<Category> ReplaceAsync(CategoryReplaceModel model)
         {
-            name = name.Trim();
-            with = with.Trim();
-
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(with))
+            if (string.IsNullOrEmpty(model.ReplaceName))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
-                return;
+                return null;
             }
+            model.ReplaceName = model.ReplaceName.Trim();
 
-            var task1 = WarehouseContext.RetrieveAsync<Category>(x => x.Name.ToLower() == name.ToLower());
-            var task2 = WarehouseContext.RetrieveAsync<Category>(x => x.Name.ToLower() == with.ToLower());
+            var task1 = WarehouseContext.RetrieveAsync<Category>(x => x.Id == model.Id);
+            var task2 = WarehouseContext2.RetrieveAsync<Category>(x => x.Name.ToLower() == model.ReplaceName.ToLower());
 
             var category = await task1;
             if (category == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
-                return;
+                return null;
             }
 
             var categoryWith = await task2;
             if (categoryWith == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
-                return;
+                return null;
             }
 
             var childs = await WarehouseContext.SearchAsync<Category>(x => x.ParentId == category.Id);
             if (childs == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
-                return;
+                return null;
             }
 
             childs.ForEach(c => c.ParentId = categoryWith.Id);
@@ -323,9 +345,10 @@ namespace Squirrel.Service.Services
             if (WarehouseContext.OperationResult.Succeeded)
             {
                 Result = OperationResult.Success;
-                return;
+                return categoryWith;
             }
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+            return null;
         }
 
         public async Task<List<Category>> ChildsAsync(string name)
@@ -430,14 +453,14 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
-            model.Name = model.Name.Trim();
-            model.Parent = model.Parent.Trim();
-            model.Description = model.Description.Trim();
+            model.Name = string.IsNullOrEmpty(model.Name) ? null : model.Name.Trim();
+            model.Parent = string.IsNullOrEmpty(model.Parent) ? null : model.Parent.Trim();
+            model.Description = string.IsNullOrEmpty(model.Description) ? null : model.Description.Trim();
 
             var items =
                 await RepositoryContext.SearchAsync<Category>(x =>
-                    (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name.ToLower())) &&
-                    (string.IsNullOrEmpty(model.Parent) || x.Parent.Name.Contains(model.Parent.ToLower())) &&
+                    (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
+                    (string.IsNullOrEmpty(model.Parent) || x.Parent.Name.Contains(model.Parent)) &&
                     (string.IsNullOrEmpty(model.Description) || x.Description.Contains(model.Description)));
 
             if (items == null)
@@ -561,7 +584,10 @@ namespace Squirrel.Service.Services
             await RepositoryContext.UpdateAsync(category);
 
             if (RepositoryContext.OperationResult.Succeeded)
+            {
                 Result = OperationResult.Success;
+                return;
+            }
 
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }

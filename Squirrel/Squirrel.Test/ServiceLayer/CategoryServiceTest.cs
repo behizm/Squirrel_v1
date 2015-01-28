@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.ViewModels;
 using Squirrel.Service;
 
 namespace Squirrel.Test.ServiceLayer
@@ -61,7 +62,12 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Replace()
         {
-            var task = CategoryService.ReplaceAsync("movie", "game");
+            var model = new CategoryReplaceModel
+            {
+                Id = Guid.Parse(""),
+                ReplaceName = ""
+            };
+            var task = CategoryService.ReplaceAsync(model);
             task.Wait();
             Assert.IsTrue(CategoryService.Result.Succeeded, CategoryService.Result.Errors.FirstOrDefault());
         }
