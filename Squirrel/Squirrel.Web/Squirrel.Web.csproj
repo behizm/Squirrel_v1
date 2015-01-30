@@ -145,7 +145,9 @@
     <Compile Include="Areas\Admin\Controllers\MainController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Author\AuthorAreaRegistration.cs" />
+    <Compile Include="Areas\Author\Controllers\FileApiController.cs" />
     <Compile Include="Areas\Author\Controllers\CategoriesController.cs" />
+    <Compile Include="Areas\Author\Controllers\FilesController.cs" />
     <Compile Include="Areas\Author\Controllers\PanelController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -156,6 +158,7 @@
     </Compile>
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Models\BaseViewPage.cs" />
+    <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\SqPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -243,6 +246,7 @@
     <Content Include="Areas\Author\Views\Categories\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Remove.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Replace.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Add.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -307,6 +311,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Author\Models\" />
+    <Folder Include="Uploads\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <PropertyGroup>

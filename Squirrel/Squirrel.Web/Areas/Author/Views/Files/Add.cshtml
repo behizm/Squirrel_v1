@@ -1,0 +1,100 @@
+﻿
+<h2>Async file upload</h2>
+<form action="/api/FileApi" method="post" enctype="multipart/form-data">
+    <div id="uploadControls">
+        <div>
+            <span>Select file(s) to upload :</span>
+            <input id="fileUpload" type="file" multiple="multiple" />
+        </div>
+        <div>
+            <input id="btnUpload" type="button" value="Upload" />
+        </div>
+        <ul id="uploadResults"></ul>
+    </div>
+    <div id="uploadProgress" style="display: none;">
+        upload progress ...
+        <p></p>
+    </div>
+</form>  
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //$("#btnUpload").click(OnUpload);
+            $("#btnUpload").click(function() {
+                UploadFile();
+            });
+        });
+
+        function ShowUploadControls() {
+            $("#uploadControls").show();
+            $("#uploadProgress").hide();
+        }
+
+        function ShowUploadProgress() {
+            $("#uploadControls").hide();
+            $("#uploadProgress").show();
+        }
+
+        function OnUpload(evt) {
+            var files = $("#fileUpload").get(0).files;
+            if (files.length > 0) {
+
+                ShowUploadProgress();
+
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+                    for (i = 0; i < files.length; i++) {
+                        data.append("file" + i, files[i]);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/FileApi",
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function(results) {
+                            ShowUploadControls();
+                            $("#uploadResults").empty();
+                            for (i = 0; i < results.length; i++) {
+                                $("#uploadResults").append($("<li/>").text(results[i]));
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            ShowUploadControls();
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    alert("Your browser doesn't support HTML5 multiple file uploads! Please use some decent browser.");
+                }
+            }
+        }
+
+        function UploadFile() {
+            ShowUploadProgress(); //show dialog
+            var file = document.getElementById('fileUpload').files[0];
+            var formData = new FormData();
+            formData.append("file", file);
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.open("POST", "/api/FileApi");
+            ajax.send(formData);
+        }
+
+        function progressHandler(event) {
+            var percent = (event.loaded / event.total) * 100;
+            $('#uploadProgress > p').text(percent);
+        }
+
+        function completeHandler() {
+            $('#uploadProgress > p').text(100);
+            setTimeout(function() {
+                ShowUploadControls();
+            }, 1000);
+        }
+    </script>
+}
+

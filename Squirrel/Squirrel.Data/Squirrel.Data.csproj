@@ -58,13 +58,9 @@
     <Compile Include="DataIOC.cs" />
     <Compile Include="Interfaces\IRepositoryContext.cs" />
     <Compile Include="Interfaces\IWarehouseContext.cs" />
-    <Compile Include="Migrations\201501241529436_Recreate.cs" />
-    <Compile Include="Migrations\201501241529436_Recreate.Designer.cs">
-      <DependentUpon>201501241529436_Recreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501270457131_ChangeConfig.cs" />
-    <Compile Include="Migrations\201501270457131_ChangeConfig.Designer.cs">
-      <DependentUpon>201501270457131_ChangeConfig.cs</DependentUpon>
+    <Compile Include="Migrations\201501300826205_Recreate.cs" />
+    <Compile Include="Migrations\201501300826205_Recreate.Designer.cs">
+      <DependentUpon>201501300826205_Recreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,11 +79,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201501241529436_Recreate.resx">
-      <DependentUpon>201501241529436_Recreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501270457131_ChangeConfig.resx">
-      <DependentUpon>201501270457131_ChangeConfig.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501300826205_Recreate.resx">
+      <DependentUpon>201501300826205_Recreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

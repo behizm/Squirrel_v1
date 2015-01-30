@@ -13,7 +13,7 @@ namespace Squirrel.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201501241529436_Recreate"; }
+            get { return "201501300826205_Recreate"; }
         }
         
         string IMigrationMetadata.Source

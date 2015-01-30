@@ -171,6 +171,7 @@ namespace Squirrel.Data.Migrations
                         Id = c.Guid(nullable: false),
                         Key = c.String(nullable: false, maxLength: 50),
                         Value = c.String(nullable: false, maxLength: 100),
+                        Description = c.String(maxLength: 200),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);

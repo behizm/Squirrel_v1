@@ -17,7 +17,6 @@ namespace Squirrel.Service.Services
     {
         public UserServiceConfig UserServiceConfig { get; private set; }
 
-
         public UserService()
         {
             UserServiceConfig = new UserServiceConfig
