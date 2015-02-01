@@ -1,17 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
+using File = Squirrel.Domain.Enititis.File;
 
 namespace Squirrel.Service.Services
 {
     class FileService : BaseService, IFileService
     {
+        public List<FileTypeExtensions> FileTypeWithExtensionses { get; private set; }
+        public List<FileTypeSize> FileTypeMaxSize { get; private set; }
+        public List<string> ValidFileExtentions { get; private set; }
+        public int TempSubDirectotyLifeTimeMinutes { get; private set; }
+
+        public FileService()
+        {
+            FileTypeWithExtensionses = new List<FileTypeExtensions>
+            {
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Image , 
+                    ExtensionsList = new List<string> { "bmp", "gif", "jpeg", "jpg" , "png", "svg" }
+                },
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Audio , 
+                    ExtensionsList = new List<string> { "mp3", "wave", "wma" }
+                },
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Video , 
+                    ExtensionsList = new List<string> { "mpeg","mpg","mov","flv","avi","wmv" }
+                },
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Archive , 
+                    ExtensionsList = new List<string> { "zip","rar","z7" }
+                },
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Document , 
+                    ExtensionsList = new List<string> { "xls", "xlsx", "pps", "ppt", "ppsx", "pptx", "doc", "docx" }
+                },
+                new FileTypeExtensions
+                {
+                    FileType = FileType.Program , 
+                    ExtensionsList = new List<string>()
+                },
+            };
+
+            FileTypeMaxSize = new List<FileTypeSize>
+            {
+                new FileTypeSize {FileType = FileType.Archive, MaxSize = 40 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Audio, MaxSize = 10 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Document, MaxSize = 5 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Image, MaxSize = 3 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Program, MaxSize = 50 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Video, MaxSize = 60 * 1024 * 1024},
+            };
+
+            ValidFileExtentions = FileTypeWithExtensionses.SelectMany(x => x.ExtensionsList).ToList();
+            TempSubDirectotyLifeTimeMinutes = 15;
+        }
+
         public async Task AddAsync(File file)
         {
             var item = new File
@@ -163,6 +221,75 @@ namespace Squirrel.Service.Services
 
             Result = OperationResult.Success;
             return count;
+        }
+
+        public FileType? GetFileTypeByExtention(string extension)
+        {
+            extension = extension.ToLower();
+            var type = FileTypeWithExtensionses.FirstOrDefault(x => x.ExtensionsList.Any(e => e.ToLower() == extension));
+            if (type == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.FileService_InvalidExtension);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return type.FileType;
+        }
+
+        public FileType? GetFileTypeByFileName(string filename)
+        {
+            if (!filename.Split('.').Any())
+            {
+                Result = OperationResult.Failed(ServiceMessages.FileService_UnkhownExtension);
+                return null;
+            }
+
+            var extension = filename.Split('.').Last();
+            return GetFileTypeByExtention(extension);
+        }
+
+        public int? GetFileTypeSize(FileType fileType)
+        {
+            var item = FileTypeMaxSize.FirstOrDefault(x => x.FileType == fileType);
+            if (item == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return item.MaxSize;
+        }
+
+        public string CreateTempSubDirectory(string tempDirectotyPath)
+        {
+            try
+            {
+                if (!Directory.Exists(tempDirectotyPath))
+                {
+                    Directory.CreateDirectory(tempDirectotyPath);
+                }
+                else
+                {
+                    var dirInfo = new DirectoryInfo(tempDirectotyPath);
+                    dirInfo.GetDirectories()
+                        .Where(x => x.CreationTime < DateTime.Now.AddMinutes(-TempSubDirectotyLifeTimeMinutes))
+                        .ForEach(x => Directory.Delete(x.FullName, true));
+                }
+
+                var folderName = Guid.NewGuid().ToString();
+                var folderPath = string.Format("{0}\\{1}", tempDirectotyPath, folderName);
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                Result = OperationResult.Success;
+                return folderName;
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
         }
     }
 }

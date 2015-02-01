@@ -247,6 +247,8 @@
     <Content Include="Areas\Admin\Views\Categories\Remove.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Replace.cshtml" />
     <Content Include="Areas\Author\Views\Files\Add.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Index.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Upload.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -311,7 +313,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Author\Models\" />
-    <Folder Include="Uploads\" />
+    <Folder Include="Content\Files\temp\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <PropertyGroup>

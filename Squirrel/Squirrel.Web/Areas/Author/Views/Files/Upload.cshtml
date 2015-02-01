@@ -1,0 +1,143 @@
+﻿<form action="/api/FileApi" method="post" enctype="multipart/form-data">
+    <div id="uploadControls">
+        <div>
+            <span>Select file(s) to upload :</span>
+            <input id="fileUpload" type="file" multiple="multiple" />
+        </div>
+        <br />
+        <div id="uploadProgress" style="display: none;">
+            <span></span>
+            <p></p>
+        </div>
+        <div>
+            <input id="btnUpload" type="button" value="Upload" />
+            <button id="stop_upload" type="button">Stop</button>
+            <button type="button" onclick="LoadUpload()">Reset</button>
+        </div>
+        <ul id="uploadResults"></ul>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#btnUpload").click(OnUpload);
+        $("#btnUpload").click(function () {
+            UploadFile();
+        });
+
+        var timeout;
+        var xhr;
+
+        $('#fileUpload').bind('change', function () {
+            var extension = this.files[0].name.split('.').pop();
+            var size = this.files[0].size;
+            $('#uploadProgress span').text('check file ...');
+            $('#uploadProgress').show();
+            timeout = setTimeout(function () {
+                CheckFileValidate(extension, size);
+            }, 5000);
+        });
+
+        $('#stop_upload').click(function () {
+            $('#uploadProgress').hide();
+            clearTimeout(timeout);
+        });
+    });
+
+    function CheckFileValidate(fileType, fileSize) {
+        $.ajax({
+            url: '@Url.Action("FileIsValid")',
+            data: {
+                ext: fileType,
+                size: fileSize
+            },
+            success: function (r) {
+                if (r.result == false) {
+                    $('#uploadProgress span').text(r.message);
+                    $('#uploadProgress').show();
+                }
+                else if (r.result == true) {
+                    $('#uploadProgress span').text("ok");
+                    $('#uploadProgress').show();
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+    function ShowUploadControls() {
+        $("#uploadControls").show();
+        $("#uploadProgress").hide();
+    }
+
+    function ShowUploadProgress() {
+        $("#uploadControls").hide();
+        $("#uploadProgress").show();
+    }
+
+    function OnUpload(evt) {
+        var files = $("#fileUpload").get(0).files;
+        if (files.length > 0) {
+
+            ShowUploadProgress();
+
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (i = 0; i < files.length; i++) {
+                    data.append("file" + i, files[i]);
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/api/FileApi",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (results) {
+                        ShowUploadControls();
+                        $("#uploadResults").empty();
+                        for (i = 0; i < results.length; i++) {
+                            $("#uploadResults").append($("<li/>").text(results[i]));
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ShowUploadControls();
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support HTML5 multiple file uploads! Please use some decent browser.");
+            }
+        }
+    }
+
+    function UploadFile() {
+        ShowUploadProgress(); //show dialog
+        var file = document.getElementById('fileUpload').files[0];
+        var formData = new FormData();
+        formData.append("ufile", file);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        //ajax.open("POST", "/api/FileApi");
+        ajax.open("POST", '@Url.Action("upload","files", new {area = "author"})');
+        ajax.send(formData);
+    }
+
+    function progressHandler(event) {
+        var percent = (event.loaded / event.total) * 100;
+        $('#uploadProgress > p').text(percent);
+    }
+
+    function completeHandler() {
+        $('#uploadProgress > p').text(100);
+        setTimeout(function () {
+            ShowUploadControls();
+        }, 1000);
+    }
+</script>
+
+

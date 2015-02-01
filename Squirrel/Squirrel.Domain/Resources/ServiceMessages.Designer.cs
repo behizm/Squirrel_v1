@@ -142,11 +142,29 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این نوع فایل برای آپلود معتبر نیست..
+        /// </summary>
+        public static string FileService_InvalidExtension {
+            get {
+                return ResourceManager.GetString("FileService_InvalidExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to شما به این فایل دسترسی ندارید..
         /// </summary>
         public static string FileService_NoAccess {
             get {
                 return ResourceManager.GetString("FileService_NoAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نوع فایل مشخص نیست..
+        /// </summary>
+        public static string FileService_UnkhownExtension {
+            get {
+                return ResourceManager.GetString("FileService_UnkhownExtension", resourceCulture);
             }
         }
         

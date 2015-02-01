@@ -144,8 +144,14 @@
   <data name="FileService_FileNotFount" xml:space="preserve">
     <value>فایل مورد نظر یافت نشد.</value>
   </data>
+  <data name="FileService_InvalidExtension" xml:space="preserve">
+    <value>این نوع فایل برای آپلود معتبر نیست.</value>
+  </data>
   <data name="FileService_NoAccess" xml:space="preserve">
     <value>شما به این فایل دسترسی ندارید.</value>
+  </data>
+  <data name="FileService_UnkhownExtension" xml:space="preserve">
+    <value>نوع فایل مشخص نیست.</value>
   </data>
   <data name="General_ErrorAccurred" xml:space="preserve">
     <value>در هنگام انجام درخواست شما خطایی رخ داد.</value>

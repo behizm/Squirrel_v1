@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Squirrel.Domain.Enititis;
 
 namespace Squirrel.Domain.ViewModels
@@ -16,5 +17,17 @@ namespace Squirrel.Domain.ViewModels
         public string Category { get; set; }
         public bool? IsPublic { get; set; }
         public Guid? UserId { get; set; }
+    }
+
+    public class FileTypeExtensions
+    {
+        public FileType FileType { get; set; }
+        public List<string> ExtensionsList { get; set; }
+    }
+
+    public class FileTypeSize
+    {
+        public FileType FileType { get; set; }
+        public int MaxSize { get; set; }
     }
 }

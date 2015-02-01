@@ -51,5 +51,12 @@ namespace Squirrel.Web.Controllers
             get { return _profileService ?? (_profileService = ServiceIOC.Get<IProfileService>()); }
         }
 
+        //
+        private IFileService _fileService;
+        protected IFileService FileService
+        {
+            get { return _fileService ?? (_fileService = ServiceIOC.Get<IFileService>()); }
+        }
+
     }
 }
