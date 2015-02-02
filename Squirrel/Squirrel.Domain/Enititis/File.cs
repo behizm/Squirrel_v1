@@ -67,5 +67,7 @@ namespace Squirrel.Domain.Enititis
 
         [Description(@"برنامه")]
         Program = 5,
+
+        None = 99,
     }
 }

@@ -74,9 +74,10 @@
     <Compile Include="Cryptography\Rsa.cs" />
     <Compile Include="Cryptography\RsaKeyModel.cs" />
     <Compile Include="Cryptography\Symmetric.cs" />
-    <Compile Include="EnumHelpers\EnumExtensions.cs" />
+    <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="FarsiTools\FarsiDigit.cs" />
     <Compile Include="FarsiTools\PersianDate.cs" />
+    <Compile Include="Helpers\SelectListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

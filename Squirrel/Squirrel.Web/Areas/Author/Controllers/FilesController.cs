@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.ViewModels;
 using Squirrel.Service;
-using Squirrel.Utility.EnumHelpers;
 using Squirrel.Utility.FarsiTools;
+using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Models;
 using WebGrease.Css.Extensions;
@@ -27,6 +28,32 @@ namespace Squirrel.Web.Areas.Author.Controllers
         public ActionResult Add()
         {
             return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Add(FileAddModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
+                return PartialView(model);
+            }
+
+            model.Address = "add";
+            model.Filename = "file";
+            model.Size = 10;
+            model.Type = FileType.Image;
+            model.Username = User.Identity.Name;
+            await FileService.AddAsync(model);
+            if (FileService.Result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "فایل با موفقیت افزوده شد.";
+                ViewBag.JsMethod = "ReloadTree()";
+                return PartialView("_Message");
+            }
+
+            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+            return PartialView(model);
         }
 
         [HttpPost]

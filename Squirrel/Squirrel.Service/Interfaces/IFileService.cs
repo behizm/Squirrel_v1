@@ -12,7 +12,7 @@ namespace Squirrel.Service
         List<FileTypeExtensions> FileTypeWithExtensionses { get; }
         List<string> ValidFileExtentions { get; }
 
-        Task AddAsync(File file);
+        Task AddAsync(FileAddModel file);
         Task EditAsync(File file);
         Task RemoveAsync(Guid fileId, Guid userId);
         Task<File> FindByIdAsync(Guid fileId);

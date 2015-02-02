@@ -71,18 +71,37 @@ namespace Squirrel.Service.Services
             TempSubDirectotyLifeTimeMinutes = 15;
         }
 
-        public async Task AddAsync(File file)
+        public async Task AddAsync(FileAddModel file)
         {
+            if (file == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(file.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            file.Username = file.Username.ToLower();
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == file.Username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
             var item = new File
             {
                 Address = file.Address,
                 Category = file.Category,
                 Filename = file.Filename,
-                IsPublic = file.IsPublic,
+                IsPublic = !file.IsPublic.HasValue || file.IsPublic.Value,
                 Name = file.Name,
                 Size = file.Size,
-                Type = file.Type,
-                UserId = file.UserId,
+                Type = file.Type.HasValue ? file.Type.Value : FileType.None,
+                UserId = user.Id
             };
 
             await RepositoryContext.CreateAsync(item);
