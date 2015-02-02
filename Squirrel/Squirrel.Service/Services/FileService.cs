@@ -26,44 +26,45 @@ namespace Squirrel.Service.Services
             {
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Image , 
-                    ExtensionsList = new List<string> { "bmp", "gif", "jpeg", "jpg" , "png", "svg" }
+                    FileType = FileType.Image,
+                    ExtensionsList = new List<string> {"bmp", "gif", "jpeg", "jpg", "png", "svg"}
                 },
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Audio , 
-                    ExtensionsList = new List<string> { "mp3", "wave", "wma" }
+                    FileType = FileType.Audio,
+                    ExtensionsList = new List<string> {"mp3", "wave", "wma"}
                 },
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Video , 
-                    ExtensionsList = new List<string> { "mpeg","mpg","mov","flv","avi","wmv" }
+                    FileType = FileType.Video,
+                    ExtensionsList = new List<string> {"mpeg", "mpg", "mp4", "mov", "flv", "avi", "wmv"}
                 },
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Archive , 
-                    ExtensionsList = new List<string> { "zip","rar","z7" }
+                    FileType = FileType.Archive,
+                    ExtensionsList = new List<string> {"zip", "rar", "z7"}
                 },
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Document , 
-                    ExtensionsList = new List<string> { "xls", "xlsx", "pps", "ppt", "ppsx", "pptx", "doc", "docx" }
+                    FileType = FileType.Document,
+                    ExtensionsList =
+                        new List<string> {"xls", "xlsx", "pps", "ppt", "ppsx", "pptx", "doc", "docx", "txt"}
                 },
                 new FileTypeExtensions
                 {
-                    FileType = FileType.Program , 
+                    FileType = FileType.Program,
                     ExtensionsList = new List<string>()
                 },
             };
 
             FileTypeMaxSize = new List<FileTypeSize>
             {
-                new FileTypeSize {FileType = FileType.Archive, MaxSize = 40 * 1024 * 1024},
-                new FileTypeSize {FileType = FileType.Audio, MaxSize = 10 * 1024 * 1024},
-                new FileTypeSize {FileType = FileType.Document, MaxSize = 5 * 1024 * 1024},
-                new FileTypeSize {FileType = FileType.Image, MaxSize = 3 * 1024 * 1024},
-                new FileTypeSize {FileType = FileType.Program, MaxSize = 50 * 1024 * 1024},
-                new FileTypeSize {FileType = FileType.Video, MaxSize = 60 * 1024 * 1024},
+                new FileTypeSize {FileType = FileType.Archive, MaxSize = 40*1024*1024},
+                new FileTypeSize {FileType = FileType.Audio, MaxSize = 10*1024*1024},
+                new FileTypeSize {FileType = FileType.Document, MaxSize = 5*1024*1024},
+                new FileTypeSize {FileType = FileType.Image, MaxSize = 3*1024*1024},
+                new FileTypeSize {FileType = FileType.Program, MaxSize = 50*1024*1024},
+                new FileTypeSize {FileType = FileType.Video, MaxSize = 60*1024*1024},
             };
 
             ValidFileExtentions = FileTypeWithExtensionses.SelectMany(x => x.ExtensionsList).ToList();

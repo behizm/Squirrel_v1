@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -49,11 +50,22 @@ namespace Squirrel.Domain.Enititis
 
     public enum FileType
     {
+        [Description(@"تصویر")]
         Image = 0,
+
+        [Description(@"فیلم")]
         Video = 1,
+
+        [Description(@"صدا")]
         Audio = 2,
+
+        [Description(@"آرشیو")]
         Archive = 3,
+
+        [Description(@"مستندات")]
         Document = 4,
+
+        [Description(@"برنامه")]
         Program = 5,
     }
 }

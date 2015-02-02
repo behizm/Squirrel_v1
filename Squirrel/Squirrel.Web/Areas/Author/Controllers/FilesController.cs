@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Service;
+using Squirrel.Utility.EnumHelpers;
 using Squirrel.Utility.FarsiTools;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Models;
@@ -58,7 +59,8 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     {
                         result = false,
                         message =
-                            string.Format("حجم این نوع فایل حداکثر {0} مگابایت می تواند باشد", (maxSize.Value / (1024 * 1024)).FaDigit())
+                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                                fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
                     },
                     JsonRequestBehavior.AllowGet);
             }
@@ -96,7 +98,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView("Upload");
         }
 
-        public JsonResult FileIsValid(string ext, int size)
+        public JsonResult FileIsValid(string ext, long size)
         {
             var type = FileService.GetFileTypeByExtention(ext);
             if (type == null)
@@ -120,7 +122,8 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     {
                         result = false,
                         message =
-                            string.Format("حجم این نوع فایل حداکثر {0} مگابایت می تواند باشد", (maxSize.Value / (1024 * 1024)).FaDigit())
+                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                                type.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
                     },
                     JsonRequestBehavior.AllowGet);
             }
