@@ -1,0 +1,37 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.Enititis.File>
+
+<table class="table">
+    <tbody>
+        @foreach (var user in Model)
+        {
+            var item = user;
+            <tr>
+                <td>
+                    <span style="border-bottom: 1px solid;" onclick="">
+                        @Html.DisplayFor(m => item.Name)
+                    </span>
+                </td>
+                <td>@Html.DisplayFor(m => item.Filename)</td>
+                <td>@Html.DisplayFor(m => item.Category)</td>
+                <td>
+                    @if (item.IsPublic)
+                    {
+                        <span class="isnotadmin" style="display: none;" onclick="">Private</span>
+                        <span class="isadmin" onclick="">Public</span>
+                    }
+                    else
+                    {
+                        <span class="isnotadmin" onclick="">Private</span>
+                        <span class="isadmin" style="display: none;" onclick="">Public</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+}

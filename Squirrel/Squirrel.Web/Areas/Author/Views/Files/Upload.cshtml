@@ -1,4 +1,4 @@
-﻿@Html.Hidden("FileAddress")
+﻿@*@Html.Hidden("FileAddress")*@
 
 <div>
     <div id="upload_control">
@@ -8,8 +8,9 @@
     <div id="upload_errormessage" style="color: orangered; display: none;">
         <span></span>
     </div>
-    <div id="upload_successmessage" style="color: skyblue; display: none;">
-        <span></span>
+    <div id="upload_successmessage" style="display: none;">
+        <p></p>
+        <span style="color: skyblue; "></span>
         <button id="upload_cancel" type="button" onclick="renewUpload()">R</button>
     </div>
     <div id="upload_progress" style="display: none;">
@@ -91,17 +92,17 @@
             data: formData,
             processData: false,
             contentType: false,
-            error: function () {
+            error: function() {
                 renewUpload();
             },
-            success: function (r) {
-                renewUpload();
-                setTimeout(function () {
+            success: function(r) {
+                setTimeout(function() {
                     if (r.result == true) {
-                        $('#FileAddress').val(r.path);
+                        setAddressFile(r.path);
                         ShowUploadMessage('', r.message);
-                    }
-                    else if (r.result == false) {
+                        successUpload();
+                    } else if (r.result == false) {
+                        renewUpload();
                         ShowUploadMessage(r.message, '');
                     }
                 }, 100);
@@ -137,7 +138,18 @@
         $('#upload_successmessage').hide();
         $('#upload_progress').hide();
         $('#fileUpload').val('');
-        $('#FileAddress').val('');
+        setAddressFile('');
         $('#upload_control').show();
+    }
+
+    function successUpload() {
+        $('#upload_progress').hide();
+        $('#fileUpload').val('');
+        $('#upload_control').hide();
+        $('#upload_successmessage p').text(fileName);
+    }
+
+    function setAddressFile(addr) {
+        $('#FileAddress').val(addr).trigger('change');
     }
 </script>

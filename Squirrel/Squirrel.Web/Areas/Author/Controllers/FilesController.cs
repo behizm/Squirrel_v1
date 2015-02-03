@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure.Interception;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -25,6 +26,40 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return View();
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Search(FileSearchModel model, int searchPage = 1)
+        {
+            var orderingModel = new OrderingModel<Domain.Enititis.File>
+            {
+                IsAscending = true,
+                KeySelector = x => x.Name,
+                Skip = (searchPage - 1) * 10,
+                Take = 10,
+            };
+
+            var itemsTask = FileService.SearchAsync(model, orderingModel);
+            var countTask = FileService2.CountAsync(model);
+
+            var items = await itemsTask;
+            if (items == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            var count = await countTask;
+            if (count.HasValue)
+            {
+                ViewBag.Paging = new PagingModel
+                {
+                    CurrentPage = searchPage,
+                    PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
+                    PagingMethod = "LoadList(#)"
+                };
+            }
+            return PartialView("list", items);
+        }
+
         public ActionResult Add()
         {
             return PartialView();
@@ -39,16 +74,61 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 return PartialView(model);
             }
 
-            model.Address = "add";
-            model.Filename = "file";
-            model.Size = 10;
-            model.Type = FileType.Image;
+            var filePath = System.Web.HttpContext.Current.Server.MapPath(model.FileAddress);
+            if (!System.IO.File.Exists(filePath))
+            {
+                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
+                return PartialView(model);
+            }
+            var fileInfo = new FileInfo(filePath);
+            var fileType = FileService.GetFileTypeByFileName(fileInfo.Name);
+            if (fileType == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView(model);
+            }
+
+            var maxSize = FileService.GetFileTypeSize(fileType.Value);
+            if (maxSize == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView(model);
+            }
+            if (fileInfo.Length > maxSize)
+            {
+                ViewBag.ErrorMessage =
+                    string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                        fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit());
+                return PartialView(model);
+            }
+
+            const string mainPath = "~/Content/Files";
+            var physicalMainPath = System.Web.HttpContext.Current.Server.MapPath(mainPath);
+            var newDirPath = FileService.MoveFromTempToMain(filePath, physicalMainPath);
+            if (newDirPath == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView(model);
+            }
+            var newFilePath = string.Format("{0}/{1}", mainPath, newDirPath);
+            var physicalNewFilePath = System.Web.HttpContext.Current.Server.MapPath(newFilePath);
+            if (!System.IO.File.Exists(physicalNewFilePath))
+            {
+                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
+                return PartialView(model);
+            }
+            var newFileInfo = new FileInfo(physicalNewFilePath);
+
+            model.FileAddress = newFilePath;
+            model.Filename = newFileInfo.Name;
+            model.Size = (int)newFileInfo.Length;
+            model.Type = fileType;
             model.Username = User.Identity.Name;
             await FileService.AddAsync(model);
             if (FileService.Result.Succeeded)
             {
                 ViewBag.SuccessMessage = "فایل با موفقیت افزوده شد.";
-                ViewBag.JsMethod = "ReloadTree()";
+                ViewBag.JsMethod = "ReloadList()";
                 return PartialView("_Message");
             }
 
@@ -120,11 +200,6 @@ namespace Squirrel.Web.Areas.Author.Controllers
             }
         }
 
-        public ActionResult ResetUpload()
-        {
-            return PartialView("Upload");
-        }
-
         public JsonResult FileIsValid(string ext, long size)
         {
             var type = FileService.GetFileTypeByExtention(ext);
@@ -158,6 +233,17 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return Json(
                 new { result = true, message = "" },
                 JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        // Json
+
+        public async Task<JsonResult> CategoryJson(string id)
+        {
+            var items =
+                (await FileService.Categories(id,0,5)) ?? new List<string>();
+            return Json(items.Select(x => new { Name = x }), JsonRequestBehavior.AllowGet);
         }
 
     }

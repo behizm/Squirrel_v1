@@ -94,7 +94,7 @@ namespace Squirrel.Service.Services
 
             var item = new File
             {
-                Address = file.Address,
+                Address = file.FileAddress,
                 Category = file.Category,
                 Filename = file.Filename,
                 IsPublic = !file.IsPublic.HasValue || file.IsPublic.Value,
@@ -243,6 +243,32 @@ namespace Squirrel.Service.Services
             return count;
         }
 
+        public async Task<List<string>> Categories(string category, int skip, int take)
+        {
+            var items =
+                await
+                    RepositoryContext.SearchAsync<File>(
+                        x => string.IsNullOrEmpty(category) || x.Category.Contains(category));
+
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                return
+                    await items.Select(x => x.Category).Distinct().OrderBy(x => x).Skip(skip).Take(take).ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
         public FileType? GetFileTypeByExtention(string extension)
         {
             extension = extension.ToLower();
@@ -309,6 +335,60 @@ namespace Squirrel.Service.Services
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;
+            }
+        }
+
+        public string MoveFromTempToMain(string sourcePath, string mainDirPath)
+        {
+            var folderName = Guid.NewGuid().ToString();
+            var thisDayDir = string.Format("{0}{1}{2}",
+                DateTime.Now.Year,
+                DateTime.Now.Month.ToString("00"),
+                DateTime.Now.Day.ToString("00"));
+            var folderPath = string.Format("{0}\\{1}\\{2}", mainDirPath, thisDayDir, folderName);
+
+            try
+            {
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            var sourceInfo = new FileInfo(sourcePath);
+            var sourceDir = sourceInfo.DirectoryName;
+            if (string.IsNullOrEmpty(sourceDir))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            var targetPath = string.Format("{0}\\{1}\\{2}\\{3}", mainDirPath, thisDayDir, folderName, sourceInfo.Name);
+            try
+            {
+                System.IO.File.Copy(sourcePath, targetPath, true);
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            var returnVal = string.Format("{0}/{1}/{2}", thisDayDir, folderName, sourceInfo.Name);
+            try
+            {
+                Directory.Delete(sourceDir, true);
+                return returnVal;
+            }
+            catch (Exception)
+            {
+                return returnVal;
             }
         }
     }

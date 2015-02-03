@@ -1,0 +1,42 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.ViewModels.FileSearchModel
+
+@using (Ajax.BeginForm("Search", "Files", null, new AjaxOptions { UpdateTargetId = "list_con" }, new { id = "file_search_from" }))
+{
+    <div class="form-group">
+        @Html.AntiForgeryToken()
+        @Html.Hidden("searchPage", 1)
+
+        @Html.TextBoxFor(m => m.Name, new { placeholder = "نام" })
+        @Html.TextBoxFor(m => m.Filename, new { placeholder = "نام فایل" })
+        @Html.TextBoxFor(m => m.Category, new { placeholder = "دسته بندی", id = "category_search" })
+        @Html.DropDownListFor(m => m.Type, typeof(FileType).ToSelectList(true), new { placeholder = "نوع" })
+        <button type="submit" class="btn btn-default">جستجو</button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#category_search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Url.Action("CategoryJson", "Files")",
+                        dataType: "json",
+                        data: { id: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.Name,
+                                };
+                            }));
+                        },
+                    });
+                },
+                minLength: 2,
+            });
+        })
+    </script>
+}

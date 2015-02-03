@@ -1,5 +1,4 @@
-﻿@using Squirrel.Domain.Enititis
-@using Squirrel.Utility.Helpers
+﻿@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.FileAddModel
 
 @Html.Partial("_Message")
@@ -7,11 +6,15 @@
 <div id="upload_file_con">
     @Html.Partial("Upload")
 </div>
-<br />
+
 
 @using (Ajax.BeginForm("Add", "Files", null, new AjaxOptions { UpdateTargetId = "option_con_1" }, new { id = "file_ops_form" }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.FileAddress)
+    <p class="form-group">
+        @Html.ValidationMessageFor(m => m.FileAddress)
+    </p>
 
     <p class="form-group">
         @Html.LabelFor(m => m.Name)
@@ -23,7 +26,7 @@
     <p class="form-group">
         @Html.LabelFor(m => m.Category)
         <br />
-        @Html.TextBoxFor(m => m.Category)
+        @Html.TextBoxFor(m => m.Category, new {id = "category_add"})
         @Html.ValidationMessageFor(m => m.Category)
     </p>
 
@@ -40,27 +43,30 @@
 }
 
 <script type="text/javascript">
-    $(function () {
+    $(function() {
         $.validator.unobtrusive.parse("#file_ops_form");
+        $("#file_ops_form").data("validator").settings.ignore = "";
 
-        $("#parent_add").autocomplete({
+        $('#FileAddress').bind('change', function () {
+            $(this).valid();
+        });
+
+        $("#category_add").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: "@Url.Action("NameJson", "Categories")",
+                    url: "@Url.Action("CategoryJson", "Files")",
                     dataType: "json",
                     data: { id: request.term },
                     success: function (data) {
                         response($.map(data, function (item) {
                             return {
                                 label: item.Name,
-                                ID: item.Id
                             };
                         }));
                     },
-                    //error: function () { alert('خطا'); }
                 });
             },
             minLength: 2,
         });
-    })
+    });
 </script>

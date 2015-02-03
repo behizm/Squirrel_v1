@@ -21,7 +21,9 @@ namespace Squirrel.Domain.ViewModels
         [Display(Name = @"دسته بندی")]
         public string Category { get; set; }
 
-        public string Address { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "FileAddModel_FileAddress_Required", ErrorMessage = null)]
+        public string FileAddress { get; set; }
+
         public string Filename { get; set; }
         public int Size { get; set; }
         public FileType? Type { get; set; }

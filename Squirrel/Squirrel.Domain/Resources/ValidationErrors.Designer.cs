@@ -61,6 +61,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to هیچ فایلی آپلود نشده است..
+        /// </summary>
+        public static string FileAddModel_FileAddress_Required {
+            get {
+                return ResourceManager.GetString("FileAddModel_FileAddress_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} را به درستی وارد کنید..
         /// </summary>
         public static string General_RegularExperssion {
