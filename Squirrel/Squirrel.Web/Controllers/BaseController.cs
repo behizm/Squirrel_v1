@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using Squirrel.Service;
 using Squirrel.Web.Models;
 
@@ -63,6 +64,24 @@ namespace Squirrel.Web.Controllers
         {
             get { return _fileService2 ?? (_fileService2 = ServiceIOC.Get<IFileService>()); }
         }
+
+        // Methods
+        protected async Task<string> EncryptAsync(string code)
+        {
+            return
+                await Utility.Cryptography.Symmetric<System.Security.Cryptography.TripleDESCryptoServiceProvider>
+                    .EncryptAsync(code, "squirrel:basecontroller", "snjab");
+
+        }
+
+        protected async Task<string> DecryptAsync(string token)
+        {
+            return
+                await Utility.Cryptography.Symmetric<System.Security.Cryptography.TripleDESCryptoServiceProvider>
+                    .DecryptAsync(token, "squirrel:basecontroller", "snjab");
+
+        }
+
 
     }
 }

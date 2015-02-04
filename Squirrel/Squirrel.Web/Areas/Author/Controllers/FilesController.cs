@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Service;
 using Squirrel.Utility.FarsiTools;
@@ -37,6 +38,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 Take = 10,
             };
 
+            model.Username = User.Identity.Name;
             var itemsTask = FileService.SearchAsync(model, orderingModel);
             var countTask = FileService2.CountAsync(model);
 
@@ -58,6 +60,105 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 };
             }
             return PartialView("list", items);
+        }
+
+        public JsonResult FileIsValid(string ext, long size)
+        {
+            var type = FileService.GetFileTypeByExtention(ext);
+            if (type == null)
+            {
+                return Json(
+                    new { result = false, message = FileService.Result.Errors.First() },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            var maxSize = FileService.GetFileTypeSize(type.Value);
+            if (maxSize == null)
+            {
+                return Json(
+                    new { result = false, message = FileService.Result.Errors.First() },
+                    JsonRequestBehavior.AllowGet);
+            }
+            if (size > maxSize)
+            {
+                return Json(
+                    new
+                    {
+                        result = false,
+                        message =
+                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                                type.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
+                    },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(
+                new { result = true, message = "" },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Upload()
+        {
+            if (Request.Files["ufile"] == null)
+            {
+                return Json(new { result = false, message = "هیچ فایلی مشخص نشده است." }, JsonRequestBehavior.AllowGet);
+            }
+
+            var file = Request.Files["ufile"];
+            var fileType = FileService.GetFileTypeByFileName(file.FileName);
+            if (fileType == null)
+            {
+                return Json(new { result = false, message = FileService.Result.Errors.First() },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            var maxSize = FileService.GetFileTypeSize(fileType.Value);
+            if (maxSize == null)
+            {
+                return Json(
+                    new { result = false, message = FileService.Result.Errors.First() },
+                    JsonRequestBehavior.AllowGet);
+            }
+            if (file.ContentLength > maxSize)
+            {
+                return Json(
+                    new
+                    {
+                        result = false,
+                        message =
+                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                                fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
+                    },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            const string tempPath = "~/Content/Files/temp";
+            var physicalTempPath = System.Web.HttpContext.Current.Server.MapPath(tempPath);
+            var folderName = FileService.CreateTempSubDirectory(physicalTempPath);
+            if (folderName == null)
+            {
+                return Json(new { result = false, message = FileService.Result.Errors.First() },
+                    JsonRequestBehavior.AllowGet);
+            }
+            var savePath = string.Format("{0}\\{1}\\{2}", physicalTempPath, folderName, file.FileName);
+            try
+            {
+                file.SaveAs(savePath);
+                return
+                    Json(
+                        new
+                        {
+                            result = true,
+                            //message = file.ContentType,
+                            message = "فایل با موفقیت آپلود شد.",
+                            path = string.Format("{0}/{1}/{2}", tempPath, folderName, file.FileName)
+                        }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new { result = false, message = "هنگام انجام درخواست خطا رخ داد." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult Add()
@@ -136,103 +237,217 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView(model);
         }
 
-        [HttpPost]
-        public JsonResult Upload()
+        public async Task<ActionResult> Details(Guid id)
         {
-            if (Request.Files["ufile"] == null)
+            var item = await FileService.FindByIdAsync(id);
+            if (item == null)
             {
-                return Json(new { result = false, message = "هیچ فایلی مشخص نشده است." }, JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
             }
 
-            var file = Request.Files["ufile"];
-            var fileType = FileService.GetFileTypeByFileName(file.FileName);
+            if (!item.IsPublic && User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
+            {
+                ViewBag.ErrorMessage = "شما دسترسی مشاهده این فایل را ندارید.";
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = item;
+            return PartialView();
+        }
+
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            var item = await FileService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
+            {
+                ViewBag.ErrorMessage = "شما دسترسی ویرایش این فایل را ندارید.";
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = new FileEditModel
+            {
+                Category = item.Category,
+                Id = item.Id,
+                IsPublic = item.IsPublic,
+                Name = item.Name,
+            };
+            return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(FileEditModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
+                return PartialView(model);
+            }
+
+            model.Username = User.Identity.Name;
+            await FileService.EditAsync(model);
+            if (FileService.Result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "فایل با موفقیت ویرایش شد.";
+                ViewBag.JsMethod = string.Format("CompleteEdit('{0}');", model.Id);
+                return PartialView("_Message");
+            }
+
+            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+            return PartialView(model);
+        }
+
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var item = await FileService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
+            {
+                ViewBag.ErrorMessage = "شما دسترسی حذف این فایل را ندارید.";
+                return PartialView("_Message");
+            }
+
+            var fullPath = await EncryptAsync(Server.MapPath(item.Address));
+            if (fullPath == null)
+            {
+                ViewBag.ErrorMessage = ServiceMessages.General_ErrorAccurred;
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = new FileDeleteModel
+            {
+                Id = item.Id,
+                FullFilePath = fullPath,
+            };
+            return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(FileDeleteModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
+                return PartialView(model);
+            }
+
+            var fullPath = await DecryptAsync(model.FullFilePath);
+            if (fullPath == null)
+            {
+                ViewBag.ErrorMessage = ServiceMessages.General_ErrorAccurred;
+                return PartialView("_Message");
+            }
+
+            model.Username = User.Identity.Name;
+            model.FullFilePath = fullPath;
+            await FileService.RemoveAsync(model);
+            if (FileService.Result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "فایل با موفقیت حذف شد.";
+                ViewBag.JsMethod = "CompleteDelete();";
+                return PartialView("_Message");
+            }
+
+            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+            return PartialView(model);
+        }
+
+        public async Task<ActionResult> Replace(Guid id)
+        {
+            var item = await FileService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
+            {
+                ViewBag.ErrorMessage = "شما دسترسی ویرایش این فایل را ندارید.";
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = new FileReplaceModel
+            {
+                Id = item.Id,
+            };
+            return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Replace(FileReplaceModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
+                return PartialView(model);
+            }
+
+            var filePath = System.Web.HttpContext.Current.Server.MapPath(model.FileAddress);
+            if (!System.IO.File.Exists(filePath))
+            {
+                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
+                return PartialView(model);
+            }
+            var fileInfo = new FileInfo(filePath);
+            var fileType = FileService.GetFileTypeByFileName(fileInfo.Name);
             if (fileType == null)
             {
-                return Json(new { result = false, message = FileService.Result.Errors.First() },
-                    JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView(model);
             }
 
             var maxSize = FileService.GetFileTypeSize(fileType.Value);
             if (maxSize == null)
             {
-                return Json(
-                    new { result = false, message = FileService.Result.Errors.First() },
-                    JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView(model);
             }
-            if (file.ContentLength > maxSize)
+            if (fileInfo.Length > maxSize)
             {
-                return Json(
-                    new
-                    {
-                        result = false,
-                        message =
-                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
-                                fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
-                    },
-                    JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage =
+                    string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                        fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit());
+                return PartialView(model);
             }
 
-            const string tempPath = "~/Content/Files/temp";
-            var physicalTempPath = System.Web.HttpContext.Current.Server.MapPath(tempPath);
-            var folderName = FileService.CreateTempSubDirectory(physicalTempPath);
-            if (folderName == null)
+            var file = await FileService.FindByIdAsync(model.Id);
+            if (file == null)
             {
-                return Json(new { result = false, message = FileService.Result.Errors.First() },
-                    JsonRequestBehavior.AllowGet);
-            }
-            var savePath = string.Format("{0}\\{1}\\{2}", physicalTempPath, folderName, file.FileName);
-            try
-            {
-                file.SaveAs(savePath);
-                return
-                    Json(
-                        new
-                        {
-                            result = true,
-                            //message = file.ContentType,
-                            message = "فایل با موفقیت آپلود شد.",
-                            path = string.Format("{0}/{1}/{2}", tempPath, folderName, file.FileName)
-                        }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception)
-            {
-                return Json(new { result = false, message = "هنگام انجام درخواست خطا رخ داد." }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public JsonResult FileIsValid(string ext, long size)
-        {
-            var type = FileService.GetFileTypeByExtention(ext);
-            if (type == null)
-            {
-                return Json(
-                    new { result = false, message = FileService.Result.Errors.First() },
-                    JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage = ServiceMessages.FileService_FileNotFount;
+                return PartialView(model);
             }
 
-            var maxSize = FileService.GetFileTypeSize(type.Value);
-            if (maxSize == null)
+            if (fileType != file.Type)
             {
-                return Json(
-                    new { result = false, message = FileService.Result.Errors.First() },
-                    JsonRequestBehavior.AllowGet);
-            }
-            if (size > maxSize)
-            {
-                return Json(
-                    new
-                    {
-                        result = false,
-                        message =
-                            string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
-                                type.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit())
-                    },
-                    JsonRequestBehavior.AllowGet);
+                ViewBag.ErrorMessage = "نوع فایل آپلود شده با فایل اصلی همخوانی ندارد.";
+                return PartialView(model);
             }
 
-            return Json(
-                new { result = true, message = "" },
-                JsonRequestBehavior.AllowGet);
+            model.OldFilePath = Server.MapPath(file.Address);
+            model.NewFilePath = filePath;
+            model.Username = User.Identity.Name;
+            await FileService.ReplaceAsync(model);
+            if (FileService.Result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "فایل با موفقیت جایگذین شد.";
+                ViewBag.JsMethod = string.Format("LoadDetails('{0}')", model.Id);
+                return PartialView("_Message");
+            }
+
+            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+            return PartialView(model);
         }
 
 
@@ -242,7 +457,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         public async Task<JsonResult> CategoryJson(string id)
         {
             var items =
-                (await FileService.Categories(id,0,5)) ?? new List<string>();
+                (await FileService.CategoriesAsync(id, 0, 5)) ?? new List<string>();
             return Json(items.Select(x => new { Name = x }), JsonRequestBehavior.AllowGet);
         }
 

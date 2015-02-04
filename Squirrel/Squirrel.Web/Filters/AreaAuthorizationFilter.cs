@@ -41,7 +41,7 @@ namespace Squirrel.Web.Filters
                 return;
 
             var isAdmin = ((ISqPrincipal)filterContext.HttpContext.User).Identity.IsAdmin;
-            if (!isAdmin.HasValue || !isAdmin.Value)
+            if (!isAdmin)
             {
                 if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {

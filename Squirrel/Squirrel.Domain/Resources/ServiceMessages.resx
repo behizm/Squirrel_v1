@@ -162,6 +162,9 @@
   <data name="General_NoAccessForThisOp" xml:space="preserve">
     <value>شما دسترسی لازم برای انجام این عملیات را ندارید.</value>
   </data>
+  <data name="General_NoUserDefined" xml:space="preserve">
+    <value>برای دسترسی به این مورد، کاربر باید مشخص باشد.</value>
+  </data>
   <data name="PostService_EmptyPostBody" xml:space="preserve">
     <value>محتوای پست نمی تواند خالی باشد.</value>
   </data>

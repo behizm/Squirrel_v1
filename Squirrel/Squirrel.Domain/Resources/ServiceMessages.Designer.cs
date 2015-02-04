@@ -196,6 +196,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to برای دسترسی به این مورد، کاربر باید مشخص باشد..
+        /// </summary>
+        public static string General_NoUserDefined {
+            get {
+                return ResourceManager.GetString("General_NoUserDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to محتوای پست نمی تواند خالی باشد..
         /// </summary>
         public static string PostService_EmptyPostBody {

@@ -1,0 +1,73 @@
+﻿@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.Enititis.File
+
+<p>
+    @Html.DisplayNameFor(m => m.Name) :
+    <b>@Html.DisplayFor(m => m.Name)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Address) :
+    @if (Request.Url != null)
+    {
+        <b>@(Request.Url.Host + Model.Address.Substring(1))</b>
+    }
+    else
+    {
+        <b>@Html.DisplayFor(m => m.Address)</b>
+    }
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Category) :
+    <b>@Html.DisplayFor(m => m.Category)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.CreateDate) :
+    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
+</p>
+
+@if (Model.EditDate.HasValue)
+{
+    <p>
+        @Html.DisplayNameFor(m => m.EditDate) :
+        <b>@(((PersianDate)Model.EditDate).ToStringDateTime())</b>
+    </p>
+}
+
+<p>
+    @Html.DisplayNameFor(m => m.Filename) :
+    <b>@Html.DisplayFor(m => m.Filename)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.IsPublic) :
+    <b>@Html.DisplayFor(m => m.IsPublic)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Size) :
+    <b>@Html.DisplayFor(m => m.Size)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Type) :
+    <b>@Model.Type.Description()</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.User) :
+    <b>@Html.DisplayFor(m => m.User.Username)</b>
+</p>
+
+<div>
+    @if (User.Identity.IsAdmin || Model.UserId == User.Identity.UserId)
+    {
+        <button class="btn btn-default" onclick="LoadEdit('@Model.Id')">Edit</button>
+        <button class="btn btn-default" onclick="LoadDelete('@Model.Id')">Delete</button>
+        <button class="btn btn-default" onclick="LoadReplace('@Model.Id')">Replace File</button>
+    }
+</div>
+<br />

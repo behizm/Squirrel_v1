@@ -100,7 +100,7 @@
                     if (r.result == true) {
                         setAddressFile(r.path);
                         ShowUploadMessage('', r.message);
-                        successUpload();
+                        successUpload(fileName);
                     } else if (r.result == false) {
                         renewUpload();
                         ShowUploadMessage(r.message, '');
@@ -142,11 +142,11 @@
         $('#upload_control').show();
     }
 
-    function successUpload() {
+    function successUpload(name) {
         $('#upload_progress').hide();
         $('#fileUpload').val('');
         $('#upload_control').hide();
-        $('#upload_successmessage p').text(fileName);
+        $('#upload_successmessage p').text(name);
     }
 
     function setAddressFile(addr) {

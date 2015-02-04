@@ -3,12 +3,12 @@
 
 <table class="table">
     <tbody>
-        @foreach (var user in Model)
+        @foreach (var file in Model)
         {
-            var item = user;
+            var item = file;
             <tr>
                 <td>
-                    <span style="border-bottom: 1px solid;" onclick="">
+                    <span style="border-bottom: 1px solid;" onclick="LoadDetailsPure('@file.Id')">
                         @Html.DisplayFor(m => item.Name)
                     </span>
                 </td>

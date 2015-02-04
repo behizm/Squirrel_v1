@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using Squirrel.Domain.Enititis;
 using Squirrel.Service;
 using Squirrel.Utility.Async;
@@ -60,6 +61,7 @@ namespace Squirrel.Web.Models
             if (user == null)
                 return;
 
+            _userId = user.Id;
             _email = user.Email;
             _isAdmin = user.IsAdmin;
             _profile = user.Profile;
@@ -78,6 +80,17 @@ namespace Squirrel.Web.Models
             get { return !string.IsNullOrEmpty(Name); }
         }
 
+        private Guid _userId;
+        public Guid UserId
+        {
+            get
+            {
+                if (!_filled)
+                    FillProps();
+                return _userId;
+            }
+        }
+
         private string _email;
         public string Email
         {
@@ -89,8 +102,8 @@ namespace Squirrel.Web.Models
             }
         }
 
-        private bool? _isAdmin;
-        public bool? IsAdmin
+        private bool _isAdmin;
+        public bool IsAdmin
         {
             get
             {

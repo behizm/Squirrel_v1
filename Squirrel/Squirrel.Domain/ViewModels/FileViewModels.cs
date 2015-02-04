@@ -30,6 +30,46 @@ namespace Squirrel.Domain.ViewModels
         public string Username { get; set; }
     }
 
+    public class FileEditModel
+    {
+        public Guid Id { get; set; }
+
+        [Display(Name = @"نام")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
+        public string Name { get; set; }
+
+        [Display(Name = @"دسترسی")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public bool? IsPublic { get; set; }
+
+        [Display(Name = @"دسته بندی")]
+        public string Category { get; set; }
+
+        public string Username { get; set; }
+    }
+
+    public class FileDeleteModel
+    {
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string FullFilePath { get; set; }
+    }
+
+    public class FileReplaceModel
+    {
+        public Guid Id { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "FileAddModel_FileAddress_Required", ErrorMessage = null)]
+        public string FileAddress { get; set; }
+
+        public string Username { get; set; }
+
+        public string OldFilePath { get; set; }
+
+        public string NewFilePath { get; set; }
+    }
+
     public class FileSearchModel
     {
         public Guid? Id { get; set; }
@@ -42,7 +82,7 @@ namespace Squirrel.Domain.ViewModels
         public FileType? Type { get; set; }
         public string Category { get; set; }
         public bool? IsPublic { get; set; }
-        public Guid? UserId { get; set; }
+        public string Username { get; set; }
     }
 
     public class FileTypeExtensions

@@ -252,6 +252,10 @@
     <Content Include="Areas\Author\Views\Files\SearchFilter.cshtml" />
     <Content Include="Areas\Author\Views\Files\List.cshtml" />
     <Content Include="Areas\Author\Views\Shared\Paging.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Edit.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Details.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Delete.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Replace.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

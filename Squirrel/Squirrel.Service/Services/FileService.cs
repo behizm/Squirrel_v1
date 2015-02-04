@@ -113,26 +113,51 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task EditAsync(File file)
+        public async Task EditAsync(FileEditModel model)
         {
-            var item = await RepositoryContext.RetrieveAsync<File>(x => x.Id == file.Id);
-            if (item == null)
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var fileTask = RepositoryContext.RetrieveAsync<File>(x => x.Id == model.Id);
+            var usertask = RepositoryContext2.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+
+            var file = await fileTask;
+            if (file == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.FileService_FileNotFount);
                 return;
             }
 
-            item.Address = file.Address;
-            item.Category = file.Category;
-            item.Filename = file.Filename;
-            item.IsPublic = file.IsPublic;
-            item.Name = file.Name;
-            item.Size = file.Size;
-            item.Type = file.Type;
-            item.UserId = file.UserId;
-            item.EditDate = DateTime.Now;
+            var user = await usertask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
 
-            await RepositoryContext.UpdateAsync(item);
+            if (!user.IsAdmin && user.Id != file.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.FileService_NoAccess);
+                return;
+            }
+
+            file.Category = model.Category;
+            file.IsPublic = !model.IsPublic.HasValue || model.IsPublic.Value;
+            file.Name = model.Name;
+            file.UserId = user.Id;
+            file.EditDate = DateTime.Now;
+
+            await RepositoryContext.UpdateAsync(file);
             if (RepositoryContext.OperationResult.Succeeded)
             {
                 Result = OperationResult.Success;
@@ -141,28 +166,108 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task RemoveAsync(Guid fileId, Guid userId)
+        public async Task RemoveAsync(FileDeleteModel model)
         {
-            var item = await RepositoryContext.RetrieveAsync<File>(x => x.Id == fileId);
-            if (item == null)
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var fileTask = RepositoryContext.RetrieveAsync<File>(x => x.Id == model.Id);
+            var usertask = RepositoryContext2.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+
+            var file = await fileTask;
+            if (file == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.FileService_FileNotFount);
                 return;
             }
 
-            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var user = await usertask;
             if (user == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
                 return;
             }
-            if (!user.IsAdmin && item.UserId != userId)
+
+            if (!user.IsAdmin && user.Id != file.UserId)
             {
                 Result = OperationResult.Failed(ServiceMessages.FileService_NoAccess);
                 return;
             }
 
-            await RepositoryContext.DeleteAsync(item);
+            if (!DeleteFile(model.FullFilePath))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+
+            await RepositoryContext.DeleteAsync(file);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        public async Task ReplaceAsync(FileReplaceModel model)
+        {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var fileTask = RepositoryContext.RetrieveAsync<File>(x => x.Id == model.Id);
+            var usertask = RepositoryContext2.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+
+            var file = await fileTask;
+            if (file == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.FileService_FileNotFount);
+                return;
+            }
+
+            var user = await usertask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            if (!user.IsAdmin && user.Id != file.UserId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.FileService_NoAccess);
+                return;
+            }
+
+            var newSize = ReplaceFile(model.NewFilePath, model.OldFilePath);
+            if (!newSize.HasValue)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+
+            file.EditDate = DateTime.Now;
+            file.Size = newSize.Value;
+
+            await RepositoryContext.UpdateAsync(file);
             if (RepositoryContext.OperationResult.Succeeded)
             {
                 Result = OperationResult.Success;
@@ -183,9 +288,22 @@ namespace Squirrel.Service.Services
 
         public async Task<List<File>> SearchAsync(FileSearchModel model, OrderingModel<File> ordering)
         {
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_NoUserDefined);
+                return null;
+            }
+            model.Username = model.Username.ToLower();
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return null;
+            }
+
             var items =
                 await RepositoryContext.SearchAsync<File>(x =>
-                    (!model.UserId.HasValue || x.IsPublic || x.UserId == model.UserId) &&
+                    (x.IsPublic || user.IsAdmin || x.UserId == user.Id) &&
                     (string.IsNullOrEmpty(model.Category) || x.Category.Contains(model.Category)) &&
                     (string.IsNullOrEmpty(model.Filename) || x.Filename.Contains(model.Filename)) &&
                     (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
@@ -221,9 +339,22 @@ namespace Squirrel.Service.Services
 
         public async Task<int?> CountAsync(FileSearchModel model)
         {
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_NoUserDefined);
+                return null;
+            }
+            model.Username = model.Username.ToLower();
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return null;
+            }
+
             var count =
                 await RepositoryContext.CountAsync<File>(x =>
-                    (!model.UserId.HasValue || x.IsPublic || x.UserId == model.UserId) &&
+                    (x.IsPublic || user.IsAdmin || x.UserId == user.Id) &&
                     (string.IsNullOrEmpty(model.Category) || x.Category.Contains(model.Category)) &&
                     (string.IsNullOrEmpty(model.Filename) || x.Filename.Contains(model.Filename)) &&
                     (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
@@ -243,7 +374,7 @@ namespace Squirrel.Service.Services
             return count;
         }
 
-        public async Task<List<string>> Categories(string category, int skip, int take)
+        public async Task<List<string>> CategoriesAsync(string category, int skip, int take)
         {
             var items =
                 await
@@ -390,6 +521,60 @@ namespace Squirrel.Service.Services
             {
                 return returnVal;
             }
+        }
+
+
+        private static bool DeleteFile(string path)
+        {
+            if (!System.IO.File.Exists(path))
+                return true;
+
+            try
+            {
+                var fileInfo = new FileInfo(path);
+                var dir = fileInfo.Directory;
+                if (dir == null)
+                {
+                    System.IO.File.Delete(path);
+                    return true;
+                }
+
+                Directory.Delete(dir.FullName, true);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static int? ReplaceFile(string newPath, string oldPath)
+        {
+            if (!System.IO.File.Exists(newPath) || !System.IO.File.Exists(newPath))
+            {
+                return null;
+            }
+
+            try
+            {
+                System.IO.File.Copy(newPath, oldPath, true);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            var newInfo = new FileInfo(newPath);
+            var size = newInfo.Length;
+            if (newInfo.DirectoryName == null)
+            {
+                System.IO.File.Delete(newPath);
+            }
+            else
+            {
+                Directory.Delete(newInfo.DirectoryName, true);
+            }
+            return (int)size;
         }
     }
 }

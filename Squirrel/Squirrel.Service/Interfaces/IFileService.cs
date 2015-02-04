@@ -13,12 +13,13 @@ namespace Squirrel.Service
         List<string> ValidFileExtentions { get; }
 
         Task AddAsync(FileAddModel file);
-        Task EditAsync(File file);
-        Task RemoveAsync(Guid fileId, Guid userId);
+        Task EditAsync(FileEditModel file);
+        Task RemoveAsync(FileDeleteModel model);
+        Task ReplaceAsync(FileReplaceModel model);
         Task<File> FindByIdAsync(Guid fileId);
         Task<List<File>> SearchAsync(FileSearchModel model, OrderingModel<File> ordering);
         Task<int?> CountAsync(FileSearchModel model);
-        Task<List<string>> Categories(string category, int skip, int take);
+        Task<List<string>> CategoriesAsync(string category, int skip, int take);
         FileType? GetFileTypeByExtention(string extension);
         FileType? GetFileTypeByFileName(string filename);
         int? GetFileTypeSize(FileType fileType);

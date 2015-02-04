@@ -28,7 +28,7 @@ namespace Squirrel.Web.Controllers
                     1,
                     model.Username,
                     DateTime.Now,
-                    DateTime.Now.AddMinutes(30),
+                    DateTime.Now.AddMinutes(120),
                     false,
                     login);
                 var encTicket = FormsAuthentication.Encrypt(authTicket);

@@ -25,33 +25,95 @@
     @Styles.Render("~/Content/Autocomplete")
 
     <script type="text/javascript">
-        $(function () {
-            LoadList(1);
+    $(function () {
+        LoadList(1);
+    });
+
+    function ReloadList() {
+        $('#file_search_from').submit();
+    }
+
+    function LoadList(page) {
+        $('#searchPage').val(page);
+        $('#file_search_from').submit();
+    }
+
+    function LoadAddFile() {
+        $.ajax({
+            url: '@Url.Action("add")',
+            success: function (r) {
+                $('#option_con_2').html('');
+                $('#option_con_1').html(r);
+            }
         });
+    }
 
-        function ReloadList() {
-            $('#file_search_from').submit();
-        }
+    function LoadUpload() {
+        $.ajax({
+            url: '@Url.Action("resetupload")',
+            success: function (r) {
+                $('#upload_file_con').html(r);
+            }
+        });
+    }
 
-        function LoadList(page) {
-            $('#searchPage').val(page);
-            $('#file_search_from').submit();
-        }
+    function LoadDetailsPure(id) {
+        $.ajax({
+            url: '@Url.Action("Details", "Files")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_1').html(r);
+                $('#option_con_2').html('');
+            }
+        });
+    }
 
-        function LoadAddFile() {
-            $.ajax({
-                url: '@Url.Action("add")',
+    function LoadDetails(id) {
+        $.ajax({
+            url: '@Url.Action("Details", "Files")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_1').html(r);
+            }
+        });
+    }
+
+    function LoadEdit(id) {
+        $.ajax({
+            url: '@Url.Action("Edit", "Files")',
+            data: { id: id },
+            success: function (r) {
+                $('#option_con_2').html(r);
+            }
+        });
+    }
+
+    function CompleteEdit(id) {
+        ReloadList();
+        LoadDetails(id);
+    }
+
+    function LoadDelete(id) {
+        $.ajax({
+            url: '@Url.Action("Delete", "Files")',
+                data: { id: id },
                 success: function (r) {
-                    $('#option_con_1').html(r);
+                    $('#option_con_2').html(r);
                 }
             });
         }
 
-        function LoadUpload() {
+        function CompleteDelete() {
+            ReloadList();
+            $('#option_con_1').html('');
+        }
+
+        function LoadReplace(id) {
             $.ajax({
-                url: '@Url.Action("resetupload")',
+                url: '@Url.Action("Replace", "Files")',
+                data: { id: id },
                 success: function (r) {
-                    $('#upload_file_con').html(r);
+                    $('#option_con_2').html(r);
                 }
             });
         }
