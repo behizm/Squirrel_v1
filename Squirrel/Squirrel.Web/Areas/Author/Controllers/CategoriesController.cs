@@ -43,8 +43,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await CategoryService.AddAsync(model);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت افزوده شد.";
-                ViewBag.JsMethod = "ReloadTree()";
+                ViewBag.SuccessMessage = "پروفایل با موفقیت ویرایش شد.";
                 return PartialView("_Message");
             }
 
@@ -101,6 +100,45 @@ namespace Squirrel.Web.Areas.Author.Controllers
             ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
             return PartialView(model);
         }
+
+        public async Task<ActionResult> Avatar(Guid id)
+        {
+            var category = await CategoryService.FindByIdAsync(id);
+            if (category == null)
+            {
+                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = new CategoryAvatarModel
+            {
+                Id = category.Id,
+            };
+            return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Avatar(CategoryAvatarModel model)
+        {
+            if (!ModelState.IsValid || !model.FileId.HasValue)
+            {
+                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
+                return PartialView(model);
+            }
+
+            await CategoryService.ChangeAvatarAsync(model.Id, model.FileId.Value);
+            if (CategoryService.Result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "گروه با موفقیت ویرایش شد.";
+                ViewBag.JsMethod = string.Format("EditCompleteReload('{0}');", model.Id);
+                return PartialView("_Message");
+            }
+
+            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
+            return PartialView(model);
+        }
+
+
 
         // Json
 

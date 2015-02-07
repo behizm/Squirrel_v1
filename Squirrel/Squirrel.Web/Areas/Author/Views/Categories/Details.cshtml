@@ -34,8 +34,8 @@
 
 <div>
     <button class="btn btn-default" onclick="LoadEditForm('@Model.Id')">Edit</button>
-    <button class="btn btn-default" onclick="">Avatar</button>
-    @if (User.Identity.IsAdmin.HasValue && User.Identity.IsAdmin.Value)
+    <button class="btn btn-default" onclick="LoadAvatar('@Model.Id')">Avatar</button>
+    @if (User.Identity.IsAdmin)
     {
         <button class="btn btn-default" onclick="LoadRemoveForm('@Model.Id')">Remove</button>
         <button class="btn btn-default" onclick="LoadReplaceForm('@Model.Id')">Replace</button>

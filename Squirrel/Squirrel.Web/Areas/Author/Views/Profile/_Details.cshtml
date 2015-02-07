@@ -1,0 +1,20 @@
+﻿@model Squirrel.Domain.Enititis.Profile
+
+<div class="form-row">
+    <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
+    <p class="control">@Html.DisplayFor(model => model.Firstname)</p>
+</div>
+
+<div class="form-row">
+    <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
+    <p class="control">@Html.DisplayFor(model => model.Lastname)</p>
+</div>
+
+<div class="form-row">
+    <p class="title"></p>
+    <p class="control">
+        <button type="button" class="btn btn-default" onclick="LoadEdit()">ویرایش</button>
+    </p>
+</div>
+
+@Html.Partial("_Message")

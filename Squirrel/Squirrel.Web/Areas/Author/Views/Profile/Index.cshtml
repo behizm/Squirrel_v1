@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "مدیریت پروفایل";
+}
+
+<div class="col-lg-12">
+    <h2>پروفایل</h2>
+    <hr />
+</div>
+
+<div class="col-lg-6">
+    <div id="profile_details"></div>
+</div>
+
+<div class="col-lg-6">
+    <div id="option_con_1"></div>
+    <div id="option_con_2"></div>
+</div>
+
+@section scripts
+{
+    @*@Scripts.Render("~/bundles/jqueryui")
+        @Styles.Render("~/Content/Autocomplete")*@
+
+    <script type="text/javascript">
+        $(function () {
+            LoadDetails();
+        });
+
+        function LoadDetails() {
+            $.ajax({
+                url: '@Url.Action("Details", "Profile")',
+                success: function (r) {
+                    $('#profile_details').html(r);
+                },
+            });
+        }
+
+        function LoadEdit(e) {
+            $('#firstname_con .control:eq(0)').hide();
+            $('#firstname_con .control:eq(1)').show();
+            $('#lastname_con .control:eq(0)').hide();
+            $('#lastname_con .control:eq(1)').show();
+            $(e).hide();
+            $(e).next().show();
+        }
+
+        function SubmitEdit(e) {
+            $.ajax({
+                url: '@Url.Action("Edit","Profile")',
+                type: 'POST',
+                data: {
+                    Firstname: $('#firstname_con input[type="text"]').val(),
+                    Lastname: $('#lastname_con input[type="text"]').val(),
+                },
+                success: function (r) { },
+            });
+        }
+    </script>
+}

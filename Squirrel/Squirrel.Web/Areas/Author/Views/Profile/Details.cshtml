@@ -1,0 +1,98 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Profile
+
+<div class="form-con">
+    <div class="form-row">
+        <p class="title">@Html.DisplayNameFor(model => model.CreateDate)</p>
+        <p class="control">@(((PersianDate)Model.CreateDate).ToStringDateTime())</p>
+    </div>
+
+    @if (Model.EditDate.HasValue)
+    {
+        <div class="form-row">
+            <p class="title">@Html.DisplayNameFor(model => model.EditDate)</p>
+            <p class="control">@(((PersianDate)Model.EditDate).ToStringDateTime())</p>
+        </div>
+    }
+
+    <div class="form-row">
+        <p class="title">@Html.DisplayNameFor(model => model.AvatarId)</p>
+        <p class="control">
+            @Html.DisplayFor(model => model.AvatarId)
+            <button type="button" class="btn">Change</button>
+        </p>
+    </div>
+
+    @using (Ajax.BeginForm("Edit", "Profile", null, new AjaxOptions { }, new { id = "profile_details_form" }))
+    {
+        <div class="form-row" id="firstname_con">
+            <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
+            <p class="control">@Html.DisplayFor(model => model.Firstname)</p>
+        </div>
+        <div class="form-row" id="firstname_con">
+            <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
+            <p class="control">
+                @Html.EditorFor(model => model.Firstname)
+                @Html.ValidationMessageFor(model => model.Firstname)
+            </p>
+        </div>
+
+        <div class="form-row" id="lastname_con">
+            <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
+            <p class="control">@Html.DisplayFor(model => model.Lastname)</p>
+        </div>
+        <div class="form-row" id="lastname_con">
+            <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
+            <p class="control">
+                @Html.EditorFor(model => model.Lastname)
+                @Html.ValidationMessageFor(model => model.Lastname)
+            </p>
+        </div>
+
+        <div class="form-row">
+            <p class="title"></p>
+            <p class="control">
+                <button type="button" class="btn btn-default" onclick="LoadEdit(this)">ویرایش</button>
+            </p>
+        </div>
+        <div class="form-row">
+            <p class="title"></p>
+            <p class="control">
+                <button type="submit" class="btn btn-default" onclick="SubmitEdit(this)">ثبت</button>
+                <button type="button" class="btn btn-default" onclick="">انصراف</button>
+            </p>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#profile_details_form");
+    });
+</script>
+
+<style type="text/css">
+    .form-con {
+    }
+
+        .form-con .form-row {
+            line-height: 45px;
+        }
+
+            .form-con .form-row .title {
+                display: inline-block;
+                font-weight: bold;
+                width: 100px;
+                text-align: right;
+                margin: 0 20px 0 0;
+            }
+
+            .form-con .form-row .control {
+                display: inline-block;
+                margin: 0;
+            }
+
+                .form-con .form-row .control input[type="text"] {
+                    line-height: 21px;
+                }
+</style>

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Squirrel.Domain.Enititis
+@{
     ViewBag.Title = "گروه ها";
 }
 
@@ -24,70 +25,70 @@
     @Styles.Render("~/Content/Autocomplete")
 
     <script type="text/javascript">
-    $(function () {
-        ReloadTree();
-    });
-
-    function ReloadTree() {
-        $.ajax({
-            url: '@Url.Action("Tree", "Categories")',
-            success: function (r) {
-                $('#tree_con').html(r);
-            },
+        $(function () {
+            ReloadTree();
         });
-    }
 
-    function LoadAddForm() {
-        $.ajax({
-            url: '@Url.Action("Add", "Categories")',
-            success: function (r) {
-                $('#option_con_1').html(r);
-                $('#option_con_2').html('');
-            }
-        });
-    }
+        function ReloadTree() {
+            $.ajax({
+                url: '@Url.Action("Tree", "Categories")',
+                success: function (r) {
+                    $('#tree_con').html(r);
+                },
+            });
+        }
 
-    function LoadDetails(id) {
-        $.ajax({
-            url: '@Url.Action("Details", "Categories")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_1').html(r);
-            }
-        });
-    }
+        function LoadAddForm() {
+            $.ajax({
+                url: '@Url.Action("Add", "Categories")',
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
 
-    function LoadDetailsFromList(id) {
-        $.ajax({
-            url: '@Url.Action("Details", "Categories")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_1').html(r);
-                $('#option_con_2').html('');
-            }
-        });
-    }
-
-    function LoadEditForm(id) {
-        $.ajax({
-            url: '@Url.Action("Edit", "Categories")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_2').html(r);
-            }
-        });
-    }
-
-    function EditCompleteReload(id) {
-        ReloadTree();
-        LoadDetails(id);
-    }
-
-    function LoadRemoveForm(id) {
-        $.ajax({
-            url: '@Url.Action("Remove", "Categories", new {area = "admin"})',
+        function LoadDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Categories")',
                 data: { id: id },
-                success: function(r) {
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                }
+            });
+        }
+
+        function LoadDetailsFromList(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Categories")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function LoadEditForm(id) {
+            $.ajax({
+                url: '@Url.Action("Edit", "Categories")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function EditCompleteReload(id) {
+            ReloadTree();
+            LoadDetails(id);
+        }
+
+        function LoadRemoveForm(id) {
+            $.ajax({
+                url: '@Url.Action("Remove", "Categories", new {area = "admin"})',
+                data: { id: id },
+                success: function (r) {
                     $('#option_con_2').html(r);
                 }
             });
@@ -111,6 +112,32 @@
         function ReplaceCompleteReload(id) {
             ReloadTree();
             LoadDetails(id);
+        }
+
+        function LoadAvatar(id) {
+            $.ajax({
+                url: '@Url.Action("Avatar", "Categories")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function LoadRequestFile(target) {
+            $.ajax({
+                url: '@Url.Action("RequestFile", "Files")',
+                data: {
+                    Page: 1,
+                    TragetKey: 'category_avatar',
+                    Type: '@FileType.Image',
+                    IsFixedType: true,
+                },
+                type: "POST",
+                success: function (r) {
+                    $('#' + target + '_con').html(r);
+                }
+            });
         }
     </script>
 }

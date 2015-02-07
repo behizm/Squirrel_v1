@@ -1,0 +1,37 @@
+﻿@model Squirrel.Domain.ViewModels.ProfileCreateModel
+
+@using (Ajax.BeginForm("Create", "Profile", null, new AjaxOptions { UpdateTargetId = "profile_edit_con" }, new { id = "profile_details_form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-row">
+        <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
+        <p class="control">
+            @Html.TextBoxFor(model => model.Firstname)
+            @Html.ValidationMessageFor(model => model.Firstname)
+        </p>
+    </div>
+
+    <div class="form-row">
+        <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
+        <p class="control">
+            @Html.TextBoxFor(model => model.Lastname)
+            @Html.ValidationMessageFor(model => model.Lastname)
+        </p>
+    </div>
+
+    <div class="form-row">
+        <p class="title"></p>
+        <p class="control">
+            <button type="button" class="btn btn-default" onclick="">ویرایش</button>
+        </p>
+    </div>
+}
+
+@Html.Partial("_Message")
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#profile_details_form");
+    });
+</script>

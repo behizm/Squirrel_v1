@@ -85,6 +85,16 @@ namespace Squirrel.Domain.ViewModels
         public string Username { get; set; }
     }
 
+    public class FileRequestModel
+    {
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public FileType Type { get; set; }
+        public string TragetKey { get; set; }
+        public int Page { get; set; }
+        public bool IsFixedType { get; set; }
+    }
+
     public class FileTypeExtensions
     {
         public FileType FileType { get; set; }

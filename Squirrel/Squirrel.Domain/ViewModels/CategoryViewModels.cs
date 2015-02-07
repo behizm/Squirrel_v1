@@ -49,6 +49,14 @@ namespace Squirrel.Domain.ViewModels
         public string Parent { get; set; }
     }
 
+    public class CategoryAvatarModel
+    {
+        public Guid Id { get; set; }
+
+        [Required(ErrorMessage = @"هیچ عکسی انتخاب نشده است.")]
+        public Guid? FileId { get; set; }
+    }
+
     public class SimpleCategory
     {
         public Guid Id { get; set; }

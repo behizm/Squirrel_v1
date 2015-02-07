@@ -450,6 +450,49 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView(model);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> RequestFile(FileRequestModel filterModel)
+        {
+            filterModel.Page = filterModel.Page < 1 ? 1 : filterModel.Page;
+            var orderingModel = new OrderingModel<Domain.Enititis.File>
+            {
+                IsAscending = false,
+                KeySelector = x => x.CreateDate.ToString(),
+                Skip = (filterModel.Page - 1) * 12,
+                Take = 12,
+            };
+
+            var searchModel = new FileSearchModel
+            {
+                Category = filterModel.Category,
+                Name = filterModel.Name,
+                Type = filterModel.Type,
+                Username = User.Identity.Name,
+            };
+            var itemsTask = FileService.SearchAsync(searchModel, orderingModel);
+            var countTask = FileService2.CountAsync(searchModel);
+
+            var items = await itemsTask;
+            if (items == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            var count = await countTask;
+            if (!count.HasValue)
+                return PartialView("Request", items);
+
+            ViewBag.Paging = new PagingModel
+            {
+                CurrentPage = filterModel.Page,
+                PageCount = count.Value % 12 == 0 ? count.Value / 12 : (count.Value / 12) + 1,
+                PagingMethod = "LoadRequestFileList(#)"
+            };
+            ViewBag.RequestFileFilter = filterModel;
+            return PartialView("Request", items);
+        }
+
 
 
         // Json

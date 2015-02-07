@@ -44,6 +44,42 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
+        public async Task CreateAsync(ProfileCreateModel model, string username)
+        {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username == username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            if (user.Profile != null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ProfileService_UserHasProfile);
+                return;
+            }
+
+            var item = new Profile(user.Id, null)
+            {
+                Firstname = model.Firstname,
+                Lastname = model.Lastname,
+            };
+
+            await RepositoryContext.CreateAsync(item);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
         public async Task UpdateAsync(Guid userId, Profile profile)
         {
             var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);

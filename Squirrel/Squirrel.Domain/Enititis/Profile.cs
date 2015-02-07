@@ -30,10 +30,10 @@ namespace Squirrel.Domain.Enititis
 
         public DateTime CreateDate { get; private set; }
 
-        [StringLength(30), Required]
+        [Display(Name = @"نام"), StringLength(30), Required]
         public string Firstname { get; set; }
 
-        [StringLength(50), Required]
+        [Display(Name = @"نام خانوادگی"), StringLength(50), Required]
         public string Lastname { get; set; }
 
         public DateTime? EditDate { get; set; }
