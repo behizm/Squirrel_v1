@@ -218,11 +218,11 @@ namespace Squirrel.Service.Services
                 if (ordering.IsAscending)
                 {
                     return
-                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await items.OrderBy(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
                 }
                 return
                     await
-                        items.OrderByDescending(ordering.KeySelector)
+                        items.OrderByDescending(ordering.OrderByKeySelector)
                             .Skip(ordering.Skip)
                             .Take(ordering.Take)
                             .ToListAsync();

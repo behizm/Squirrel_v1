@@ -74,7 +74,7 @@ namespace Squirrel.Test.ServiceLayer
                 CategoryId = cat.Id,
                 PostsOrdering = PostsOrdering.Newer,
                 Title = "Game Topic 1",
-                UserId = user.Id,
+                Username = "behi8303"
             };
             var topictask = TopicService.AddAsync(topic);
             topictask.Wait();
@@ -82,7 +82,7 @@ namespace Squirrel.Test.ServiceLayer
 
             var topics =
                 TopicService.SearchAsync(new TopicSearchModel {Title = "Game Topic 1"},
-                    new OrderingModel<Topic> {KeySelector = x => x.Title})
+                    new OrderingModel<Topic> {OrderByKeySelector = x => x.Title})
                     .Result;
             Assert.IsNotNull(topics, TopicService.Result.Errors.FirstOrDefault());
             Assert.IsTrue(topics.Any(), "No Topic.");

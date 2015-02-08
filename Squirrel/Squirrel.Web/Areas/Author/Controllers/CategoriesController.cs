@@ -147,7 +147,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var searchModel = new CategorySearchModel { Name = id };
             var orderingModel = new OrderingModel<Category>
             {
-                KeySelector = x => x.Name,
+                OrderByKeySelector = x => x.Name,
                 Skip = 0,
                 Take = 5,
             };

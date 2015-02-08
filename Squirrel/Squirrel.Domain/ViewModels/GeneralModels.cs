@@ -15,7 +15,8 @@ namespace Squirrel.Domain.ViewModels
             Take = 10;
         }
 
-        public System.Linq.Expressions.Expression<Func<T, string>> KeySelector { get; set; }
+        public System.Linq.Expressions.Expression<Func<T, string>> OrderByKeySelector { get; set; }
+        public System.Linq.Expressions.Expression<Func<T, string>> ThenByKeySelector { get; set; }
         public bool IsAscending { get; set; }
         public int Skip { get; set; }
         public int Take { get; set; }

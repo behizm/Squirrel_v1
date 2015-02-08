@@ -42,7 +42,7 @@ namespace Squirrel.Test.ServiceLayer
                 CategoryId = Guid.Parse("4f8955bb-ea19-4829-892e-df991a5752d6"),
                 PostsOrdering = PostsOrdering.Newer,
                 Title = "Game Topic - Adv 5",
-                UserId = Guid.Parse("642877cc-f9fc-414a-976f-a9aaf857352a"),
+                Username = "behi8303"
             };
             var task = TopicService.AddAsync(topic);
             task.Wait();
@@ -58,8 +58,9 @@ namespace Squirrel.Test.ServiceLayer
                 PostsOrdering = PostsOrdering.Newer,
                 Title = "Movie Topic 2",
                 Id = Guid.Parse("b56b696b-d21f-4a15-960b-791fdd92b2f3"),
+                Username = "behi8303"
             };
-            var task = TopicService.EditAsync(topic, Guid.Parse("a4ee56af-6d44-4ca2-a049-94406e9c6a84"));
+            var task = TopicService.EditAsync(topic);
             task.Wait();
             Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
         }
@@ -85,7 +86,7 @@ namespace Squirrel.Test.ServiceLayer
             };
             var ordering = new OrderingModel<Topic>
             {
-                KeySelector = t => t.Title,
+                OrderByKeySelector = t => t.Title,
                 IsAscending = false,
             };
             var task = TopicService.SearchAsync(model, ordering);

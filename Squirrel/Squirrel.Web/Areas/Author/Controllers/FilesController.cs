@@ -33,7 +33,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var orderingModel = new OrderingModel<Domain.Enititis.File>
             {
                 IsAscending = true,
-                KeySelector = x => x.Name,
+                OrderByKeySelector = x => x.Name,
                 Skip = (searchPage - 1) * 10,
                 Take = 10,
             };
@@ -457,7 +457,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var orderingModel = new OrderingModel<Domain.Enititis.File>
             {
                 IsAscending = false,
-                KeySelector = x => x.CreateDate.ToString(),
+                OrderByKeySelector = x => x.CreateDate.ToString(),
                 Skip = (filterModel.Page - 1) * 12,
                 Take = 12,
             };

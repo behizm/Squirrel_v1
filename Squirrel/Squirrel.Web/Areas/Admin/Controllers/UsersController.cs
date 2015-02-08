@@ -49,7 +49,7 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             var orderingModel = new OrderingModel<User>
             {
                 IsAscending = true,
-                KeySelector = x => x.Username,
+                OrderByKeySelector = x => x.Username,
                 Skip = (searchPage - 1) * 10,
                 Take = 10,
             };

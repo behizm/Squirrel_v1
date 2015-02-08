@@ -120,6 +120,9 @@
   <data name="FileAddModel_FileAddress_Required" xml:space="preserve">
     <value>هیچ فایلی آپلود نشده است.</value>
   </data>
+  <data name="General_NoPictureChoiced" xml:space="preserve">
+    <value>هیچ عکسی انتخاب نشده است.</value>
+  </data>
   <data name="General_RegularExperssion" xml:space="preserve">
     <value>{0} را به درستی وارد کنید.</value>
   </data>

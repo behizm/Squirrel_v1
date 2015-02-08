@@ -1,0 +1,44 @@
+﻿@using Squirrel.Domain.Enititis
+@model Squirrel.Domain.ViewModels.ProfileAvatarModel
+<h4>عکس پروفایل</h4>
+
+<div id="profile_avatar_con"></div>
+
+@using (Ajax.BeginForm("Avatar", "Profile", null, new AjaxOptions { OnSuccess = "onChangeAvatarSuccess" }, new { id = "profile_details_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.AvatarId, new { id = "profile_avatar_id" })
+    @Html.ValidationMessageFor(m => m.AvatarId)
+
+    <p>
+        <button type="submit" class="btn btn-default">ثبت</button>
+        <button type="button" class="btn btn-default" onclick="$('#option_con_1').html('');">انصراف</button>
+    </p>
+}
+
+<div id="profile_avatar_error" style="color: orangered;"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#profile_details_form");
+        $("#profile_details_form").data("validator").settings.ignore = "";
+
+        LoadRequestFile('profile_avatar');
+    });
+
+    function LoadRequestFile(target) {
+        $.ajax({
+            url: '@Url.Action("RequestFile", "Files")',
+            data: {
+                Page: 1,
+                TragetKey: 'profile_avatar',
+                Type: '@FileType.Image',
+                IsFixedType: true,
+            },
+            type: "POST",
+            success: function (r) {
+                $('#' + target + '_con').html(r);
+            }
+        });
+    }
+</script>

@@ -325,10 +325,10 @@ namespace Squirrel.Service.Services
                 if (ordering.IsAscending)
                 {
                     return
-                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await items.OrderBy(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
                 }
                 return
-                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await items.OrderByDescending(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
             }
             catch (Exception)
             {
@@ -550,9 +550,23 @@ namespace Squirrel.Service.Services
 
         private static int? ReplaceFile(string newPath, string oldPath)
         {
-            if (!System.IO.File.Exists(newPath) || !System.IO.File.Exists(newPath))
+            if (!System.IO.File.Exists(newPath))
             {
                 return null;
+            }
+
+            if (!System.IO.File.Exists(oldPath))
+            {
+                var oldInfo = new FileInfo(oldPath);
+                var oldDir = oldInfo.DirectoryName;
+                if (oldDir == null)
+                {
+                    return null;
+                }
+                if (!Directory.Exists(oldPath))
+                {
+                    Directory.CreateDirectory(oldDir);
+                }
             }
 
             try

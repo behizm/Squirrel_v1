@@ -150,6 +150,8 @@
     <Compile Include="Areas\Author\Controllers\FilesController.cs" />
     <Compile Include="Areas\Author\Controllers\PanelController.cs" />
     <Compile Include="Areas\Author\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Author\Controllers\PublishController.cs" />
+    <Compile Include="Areas\Author\Controllers\TopicsController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -261,8 +263,10 @@
     <Content Include="Areas\Author\Views\Categories\Avatar.cshtml" />
     <Content Include="Areas\Author\Views\Profile\Index.cshtml" />
     <Content Include="Areas\Author\Views\Profile\Details.cshtml" />
-    <Content Include="Areas\Author\Views\Profile\Create.cshtml" />
-    <Content Include="Areas\Author\Views\Profile\_Details.cshtml" />
+    <Content Include="Areas\Author\Views\Profile\Avatar.cshtml" />
+    <Content Include="Areas\Author\Views\Publish\Index.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\List.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\Add.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

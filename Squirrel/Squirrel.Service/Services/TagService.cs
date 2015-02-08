@@ -31,10 +31,10 @@ namespace Squirrel.Service.Services
                 if (ordering.IsAscending)
                 {
                     return
-                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).Select(x => x.Name).ToListAsync();
+                        await items.OrderBy(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).Select(x => x.Name).ToListAsync();
                 }
                 return
-                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).Select(x => x.Name).ToListAsync();
+                        await items.OrderByDescending(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).Select(x => x.Name).ToListAsync();
             }
             catch (Exception)
             {

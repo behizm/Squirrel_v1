@@ -109,6 +109,53 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
+        public async Task ChangeAsync(ProfileEditModel model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            if (user.Profile == null)
+            {
+                var item = new Profile(user.Id, null)
+                {
+                    Firstname = model.Firstname,
+                    Lastname = model.Lastname,
+                };
+
+                await RepositoryContext.CreateAsync(item);
+                if (RepositoryContext.OperationResult.Succeeded)
+                {
+                    Result = OperationResult.Success;
+                    return;
+                }
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+
+            user.Profile.EditDate = DateTime.Now;
+            user.Profile.Firstname = model.Firstname;
+            user.Profile.Lastname = model.Lastname;
+
+            await RepositoryContext.UpdateAsync(user.Profile);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
         public async Task<Profile> FindByIdAsync(Guid userId)
         {
             var item = await RepositoryContext.RetrieveAsync<Profile>(x => x.UserId == userId);
@@ -143,10 +190,10 @@ namespace Squirrel.Service.Services
                 if (ordering.IsAscending)
                 {
                     return
-                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await items.OrderBy(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
                 }
                 return
-                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await items.OrderByDescending(ordering.OrderByKeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
             }
             catch (Exception)
             {
@@ -190,6 +237,41 @@ namespace Squirrel.Service.Services
             }
 
             user.Profile.AvatarId = fileId;
+            user.Profile.EditDate = DateTime.Now;
+
+            await RepositoryContext.UpdateAsync(user.Profile);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        public async Task ChangeAvatarAsync(ProfileAvatarModel model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            if (user.Profile == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.ProfileService_UserHasNotProfile);
+                return;
+            }
+
+            user.Profile.AvatarId = model.AvatarId;
+            user.Profile.EditDate = DateTime.Now;
 
             await RepositoryContext.UpdateAsync(user.Profile);
             if (RepositoryContext.OperationResult.Succeeded)

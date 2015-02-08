@@ -20,7 +20,14 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var task1 = RepositoryContext.RetrieveAsync<User>(x => x.Id == model.UserId);
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            var task1 = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
             var task2 = RepositoryContext.RetrieveAsync<Category>(x => x.Id == model.CategoryId);
 
             var user = await task1;
@@ -41,9 +48,10 @@ namespace Squirrel.Service.Services
             {
                 CategoryId = category.Id,
                 IsPublished = false,
-                PostsOrdering = model.PostsOrdering,
+                PostsOrdering = model.PostsOrdering ?? PostsOrdering.Newer,
                 Title = model.Title,
                 OwnerId = user.Id,
+                EditDate = DateTime.Now,
             };
             await RepositoryContext.CreateAsync(item);
             if (RepositoryContext.OperationResult.Succeeded)
@@ -54,7 +62,7 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task EditAsync(TopicEditModel model, Guid userId)
+        public async Task EditAsync(TopicEditModel model)
         {
             if (model == null || string.IsNullOrEmpty(model.Title))
             {
@@ -62,9 +70,16 @@ namespace Squirrel.Service.Services
                 return;
             }
 
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
             var isChanged = false;
 
-            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
             var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.Id);
 
             var user = await taskUser;
@@ -106,7 +121,7 @@ namespace Squirrel.Service.Services
             }
 
             topic.Title = model.Title;
-            topic.PostsOrdering = model.PostsOrdering;
+            topic.PostsOrdering = model.PostsOrdering ?? PostsOrdering.Newer;
             topic.EditDate = DateTime.Now;
             await RepositoryContext.UpdateAsync(topic);
             if (RepositoryContext.OperationResult.Succeeded)
@@ -184,7 +199,7 @@ namespace Squirrel.Service.Services
                     RepositoryContext.SearchAsync<Topic>(x =>
                         (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
                         (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
+                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username.ToLower()) &&
                         (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
                         (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
 
@@ -200,10 +215,22 @@ namespace Squirrel.Service.Services
                 if (ordering.IsAscending)
                 {
                     return
-                        await items.OrderBy(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                        await
+                            items
+                                .OrderBy(ordering.OrderByKeySelector)
+                                .ThenBy(ordering.ThenByKeySelector)
+                                .Skip(ordering.Skip)
+                                .Take(ordering.Take)
+                                .ToListAsync();
                 }
                 return
-                        await items.OrderByDescending(ordering.KeySelector).Skip(ordering.Skip).Take(ordering.Take).ToListAsync();
+                    await
+                        items
+                            .OrderByDescending(ordering.OrderByKeySelector)
+                            .ThenByDescending(ordering.ThenByKeySelector)
+                            .Skip(ordering.Skip)
+                            .Take(ordering.Take)
+                            .ToListAsync();
             }
             catch (Exception)
             {
@@ -225,7 +252,7 @@ namespace Squirrel.Service.Services
                     RepositoryContext.CountAsync<Topic>(x =>
                         (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
                         (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
+                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username.ToLower()) &&
                         (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
                         (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
 
@@ -244,15 +271,88 @@ namespace Squirrel.Service.Services
             await ChangePublishAsync(id, userId, true);
         }
 
+        public async Task PublishAsync(Guid id, string username)
+        {
+            await ChangePublishAsync(id, username, true);
+        }
+
         public async Task UnPublishAsync(Guid id, Guid userId)
         {
             await ChangePublishAsync(id, userId, false);
+        }
+
+        public async Task UnPublishAsync(Guid id, string username)
+        {
+            await ChangePublishAsync(id, username, false);
         }
 
 
         private async Task ChangePublishAsync(Guid id, Guid userId, bool publishState)
         {
             var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+
+            var user = await taskUser;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            var topic = await taskTopic;
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            if (!user.IsAdmin && user.Id != topic.OwnerId)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_NoAccess);
+                return;
+            }
+
+            if (topic.IsPublished == publishState)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+
+            if (publishState)
+            {
+                if (topic.Posts == null || !topic.Posts.Any())
+                {
+                    Result = OperationResult.Failed(ServiceMessages.TopicService_NoPostToPublish);
+                    return;
+                }
+                if (topic.Posts.All(p => !p.IsPublic))
+                {
+                    Result = OperationResult.Failed(ServiceMessages.TopicService_NoPublicPostToPublish);
+                    return;
+                }
+            }
+
+            topic.IsPublished = publishState;
+            topic.EditDate = DateTime.Now;
+            await RepositoryContext.UpdateAsync(topic);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        private async Task ChangePublishAsync(Guid id, string username, bool publishState)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            username = username.ToLower();
+
+            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == username);
             var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
 
             var user = await taskUser;

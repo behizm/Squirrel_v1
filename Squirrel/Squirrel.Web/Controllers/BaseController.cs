@@ -65,6 +65,19 @@ namespace Squirrel.Web.Controllers
             get { return _fileService2 ?? (_fileService2 = ServiceIOC.Get<IFileService>()); }
         }
 
+        //
+        private ITopicService _topicService;
+        protected ITopicService TopicService
+        {
+            get { return _topicService ?? (_topicService = ServiceIOC.Get<ITopicService>()); }
+        }
+
+        private ITopicService _topicService2;
+        protected ITopicService TopicService2
+        {
+            get { return _topicService2 ?? (_topicService2 = ServiceIOC.Get<ITopicService>()); }
+        }
+
         // Methods
         protected async Task<string> EncryptAsync(string code)
         {

@@ -70,6 +70,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to هیچ عکسی انتخاب نشده است..
+        /// </summary>
+        public static string General_NoPictureChoiced {
+            get {
+                return ResourceManager.GetString("General_NoPictureChoiced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} را به درستی وارد کنید..
         /// </summary>
         public static string General_RegularExperssion {

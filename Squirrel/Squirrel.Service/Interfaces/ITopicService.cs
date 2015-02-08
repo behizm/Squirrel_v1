@@ -11,12 +11,14 @@ namespace Squirrel.Service
     public interface ITopicService : IBaseService
     {
         Task AddAsync(TopicAddModel model);
-        Task EditAsync(TopicEditModel model, Guid userId);
+        Task EditAsync(TopicEditModel model);
         Task DeleteAsync(TopicDeleteModel model, Guid userId);
         Task<Topic> FindByIdAsync(Guid id);
         Task<List<Topic>> SearchAsync(TopicSearchModel model, OrderingModel<Topic> ordering);
         Task<int?> CountAsync(TopicSearchModel model);
         Task PublishAsync(Guid id, Guid userId);
+        Task PublishAsync(Guid id, string username);
         Task UnPublishAsync(Guid id, Guid userId);
+        Task UnPublishAsync(Guid id, string username);
     }
 }

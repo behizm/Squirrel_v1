@@ -53,7 +53,7 @@ namespace Squirrel.Domain.ViewModels
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = @"هیچ عکسی انتخاب نشده است.")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_NoPictureChoiced", ErrorMessage = null)]
         public Guid? FileId { get; set; }
     }
 

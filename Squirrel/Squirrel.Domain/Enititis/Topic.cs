@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -45,9 +46,16 @@ namespace Squirrel.Domain.Enititis
 
     public enum PostsOrdering
     {
+        [Description(@"مطلب جدیدتر اول باشد.")]
         Newer = 0,
+
+        [Description(@"مطلب قدیمی تر اول باشد.")]
         Older = 1,
+
+        [Description(@"مطلب پربازدیدتر اول باشد.")]
         Popular = 2,
+
+        [Description(@"آخرین مطلبی که ویرایش شده اول باشد.")]
         LastEdited = 3,
     }
 }
