@@ -9,8 +9,8 @@
             var item = topic;
             <tr>
                 <td>
-                    <p>@Html.DisplayFor(m => item.Title)</p>
-                    <div style="font-size: 11px;">
+                    <div>@Html.DisplayFor(m => item.Title)</div>
+                    <div style="font-size: 11px; margin-top: 15px;">
                         C:@(((PersianDate)item.CreateDate).ToStringDateTime())
                         
                         @if (item.EditDate.HasValue)
@@ -19,6 +19,23 @@
                                 E:@(((PersianDate)item.EditDate.Value).ToStringDateTime())
                             </span>
                         }
+                        
+                        <span style="margin-left: 5px;">
+                            G:@Html.DisplayFor(m => item.Category.Name)
+                        </span>
+                        
+                        <span style="margin-left: 5px;">
+                            V:@Html.DisplayFor(m => item.View)
+                        </span>
+                        
+                        <span style="margin-left: 5px;">
+                            P:@item.Posts.Count()
+                        </span>
+
+                        <button type="button" style="margin-left: 5px;">Edit</button>
+                    </div>
+                    <div>
+                        
                     </div>
                 </td>
                 <td>

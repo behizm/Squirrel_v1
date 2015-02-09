@@ -26,5 +26,6 @@ namespace Squirrel.Service
         Task<List<Topic>> TopicsAsync(string name, bool isFamilyGet, int skip = 0, int take = 10);
         Task ChangeAvatarAsync(Guid categoryId, Guid fileId);
         Task<List<CategoryTreeModel>> FamilyTree();
+        Task<List<CategorySimpleTreeModel>> SimpleFamilyTree();
     }
 }

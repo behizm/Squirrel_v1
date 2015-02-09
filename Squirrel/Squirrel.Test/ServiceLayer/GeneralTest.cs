@@ -81,8 +81,8 @@ namespace Squirrel.Test.ServiceLayer
             Assert.IsTrue(TopicService.Result.Succeeded, TopicService.Result.Errors.FirstOrDefault());
 
             var topics =
-                TopicService.SearchAsync(new TopicSearchModel {Title = "Game Topic 1"},
-                    new OrderingModel<Topic> {OrderByKeySelector = x => x.Title})
+                TopicService.SearchAsync(new TopicSearchModel { Title = "Game Topic 1" },
+                    new OrderingModel<Topic> { OrderByKeySelector = x => x.Title })
                     .Result;
             Assert.IsNotNull(topics, TopicService.Result.Errors.FirstOrDefault());
             Assert.IsTrue(topics.Any(), "No Topic.");

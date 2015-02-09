@@ -186,7 +186,7 @@ namespace Squirrel.Service.Services
             return item;
         }
 
-        public async Task<List<Topic>> SearchAsync(TopicSearchModel model, OrderingModel<Topic> ordering)
+        public async Task<List<Topic>> SearchAsync<TKey>(TopicSearchModel model, OrderingModel<Topic, TKey> ordering)
         {
             if (model == null || ordering == null)
             {
@@ -218,7 +218,6 @@ namespace Squirrel.Service.Services
                         await
                             items
                                 .OrderBy(ordering.OrderByKeySelector)
-                                .ThenBy(ordering.ThenByKeySelector)
                                 .Skip(ordering.Skip)
                                 .Take(ordering.Take)
                                 .ToListAsync();
@@ -227,12 +226,11 @@ namespace Squirrel.Service.Services
                     await
                         items
                             .OrderByDescending(ordering.OrderByKeySelector)
-                            .ThenByDescending(ordering.ThenByKeySelector)
                             .Skip(ordering.Skip)
                             .Take(ordering.Take)
                             .ToListAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;

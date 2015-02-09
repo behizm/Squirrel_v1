@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
 
@@ -13,11 +14,10 @@ namespace Squirrel.Web.Areas.Author.Controllers
     {
         public async Task<ActionResult> Search(TopicSearchModel model, int page = 1)
         {
-            var ordering = new OrderingModel<Topic>
+            var ordering = new OrderingModel<Topic, DateTime>
             {
                 IsAscending = false,
-                OrderByKeySelector = x => x.CreateDate.ToString(),
-                ThenByKeySelector = x => x.Title,
+                OrderByKeySelector = x => x.CreateDate,
                 Skip = (page - 1) * 10,
                 Take = 10,
             };
@@ -75,6 +75,27 @@ namespace Squirrel.Web.Areas.Author.Controllers
         public ActionResult Add()
         {
             return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Add(TopicAddModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            model.Username = User.Identity.Name;
+            await TopicService.AddAsync(model);
+            if (TopicService.Result.Succeeded)
+            {
+                return Json(new { result = true, message = "عنوان با موفقیت افزوده شد." },
+                JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+                JsonRequestBehavior.AllowGet);
         }
 
     }

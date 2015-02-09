@@ -57,18 +57,16 @@ namespace Squirrel.Domain.ViewModels
         public Guid? FileId { get; set; }
     }
 
-    public class SimpleCategory
+    public class CategorySimpleNode
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string ParentName { get; set; }
         public string AvatarUrl { get; set; }
-        public int TopicCount { get; set; }
-        public int ChildTopicCount { get; set; }
 
-        public static implicit operator SimpleCategory(Category category)
+        public static implicit operator CategorySimpleNode(Category category)
         {
-            return new SimpleCategory
+            return new CategoryNode
             {
                 AvatarUrl = category.AvatarId == null ? null : category.Avatar.Address,
                 Id = category.Id,
@@ -78,9 +76,32 @@ namespace Squirrel.Domain.ViewModels
         }
     }
 
+    public class CategoryNode : CategorySimpleNode
+    {
+        public int TopicCount { get; set; }
+        public int ChildTopicCount { get; set; }
+
+        public static implicit operator CategoryNode(Category category)
+        {
+            return new CategoryNode
+            {
+                AvatarUrl = category.AvatarId == null ? null : category.Avatar.Address,
+                Id = category.Id,
+                Name = category.Name,
+                ParentName = category.ParentId == null ? null : category.Parent.Name,
+            };
+        }
+    }
+
+    public class CategorySimpleTreeModel
+    {
+        public CategorySimpleNode Node { get; set; }
+        public List<CategorySimpleTreeModel> Childs { get; set; }
+    }
+
     public class CategoryTreeModel
     {
-        public SimpleCategory Node { get; set; }
+        public CategoryNode Node { get; set; }
         public List<CategoryTreeModel> Childs { get; set; }
     }
 }

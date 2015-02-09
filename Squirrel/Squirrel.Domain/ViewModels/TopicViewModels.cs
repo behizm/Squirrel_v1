@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 
@@ -20,7 +15,6 @@ namespace Squirrel.Domain.ViewModels
         [Display(Name = @"ساختار مرتب سازی مطالب")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         public PostsOrdering? PostsOrdering { get; set; }
-        public PostsOrdering PostsOrdering2 { get; set; }
 
         [Display(Name = @"گروه")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]

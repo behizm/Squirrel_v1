@@ -138,6 +138,16 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView(model);
         }
 
+        public async Task<ActionResult> SimpleTree(string targetKeyName)
+        {
+            ViewBag.TreeTargetKeyName = targetKeyName;
+            var tree = await CategoryService.SimpleFamilyTree();
+            if (tree != null)
+                return PartialView(tree);
+            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
+            return PartialView("_Message");
+        }
+
 
 
         // Json

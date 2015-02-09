@@ -577,6 +577,20 @@ namespace Squirrel.Service.Services
             return originNodes.Select(x => CreateTreeNode(x, cats)).ToList();
         }
 
+        public async Task<List<CategorySimpleTreeModel>> SimpleFamilyTree()
+        {
+            var items = await RepositoryContext.SearchAsync<Category>(x => true);
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            var cats = await items.ToListAsync();
+            var originNodes = cats.Where(x => x.ParentId == null).ToList();
+            return originNodes.Select(x => CreateSimpleTreeNode(x, cats)).ToList();
+        }
+
 
 
         private async Task UpdateAsync(Category category)
@@ -648,6 +662,23 @@ namespace Squirrel.Service.Services
             }
             node.Childs = childs.Select(c => CreateTreeNode(c, categoryList)).ToList();
             node.Node.ChildTopicCount = node.Childs.Sum(x => x.Node.TopicCount + x.Node.ChildTopicCount);
+            return node;
+        }
+
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+        private CategorySimpleTreeModel CreateSimpleTreeNode(Category item, List<Category> categoryList)
+        {
+            var node = new CategorySimpleTreeModel
+            {
+                Node = item
+            };
+
+            var childs = categoryList.Where(x => x.ParentId == item.Id).ToList();
+            if (!childs.Any())
+            {
+                return node;
+            }
+            node.Childs = childs.Select(c => CreateSimpleTreeNode(c, categoryList)).ToList();
             return node;
         }
 

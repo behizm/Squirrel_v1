@@ -1,69 +1,68 @@
-﻿@using Squirrel.Domain.Enititis
-@using Squirrel.Utility.Helpers
+﻿@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.TopicAddModel
 
-<div style="border: 1px solid #ddd; margin: 15px; padding: 15px;">
-    <div style="color: orangered" class="error-massage"></div>
+<div style="border: 1px solid #ddd;" class="col-lg-12">
+    <div style="color: orangered; text-align: center;" class="col-lg-12" id="addtopic_error_massage"></div>
 
     @using (Ajax.BeginForm("Add", "Topics", null, new AjaxOptions { OnSuccess = "onAddTopicSuccess" }, new { id = "topic_add_form" }))
     {
         @Html.AntiForgeryToken()
-
-        <p class="form-group">
-            @Html.LabelFor(m => m.Title)
-            <br />
-            @Html.TextBoxFor(m => m.Title)
-            @Html.ValidationMessageFor(m => m.Title)
-        </p>
-
-        <p class="form-group">
-            @Html.LabelFor(m => m.CategoryId)
-            <br />
-            @Html.TextBox("category_addtopic")
-            @Html.HiddenFor(m => m.CategoryId)
-            @Html.ValidationMessageFor(m => m.CategoryId)
-        </p>
-
-        <p class="form-group">
-            @Html.LabelFor(m => m.PostsOrdering)
-            <br />
-            @Html.EnumDropDownListFor(m => m.PostsOrdering)
-            @Html.ValidationMessageFor(m => m.PostsOrdering)
-
-            @Html.EnumDropDownListFor(m => m.PostsOrdering, textIsDescription: true)
-            @Html.EnumDropDownListFor(m => m.PostsOrdering2, textIsDescription: true)
-        </p>
-
-        <p>
-            <button type="submit" class="btn btn-default">افزودن</button>
-            <button type="button" class="btn btn-default" onclick="cancelAddTopic()">انصراف</button>
-        </p>
+        <div class="col-lg-6">
+            <p class="form-group">
+                @Html.LabelFor(m => m.Title)
+                <br />
+                @Html.TextBoxFor(m => m.Title)
+                @Html.ValidationMessageFor(m => m.Title)
+            </p>
+            <p class="form-group">
+                @Html.LabelFor(m => m.PostsOrdering)
+                <br />
+                @Html.EnumDropDownListFor(m => m.PostsOrdering, true)
+                @Html.ValidationMessageFor(m => m.PostsOrdering)
+            </p>
+            <p class="form-group">
+                @Html.LabelFor(m => m.CategoryId)
+                <br />
+                @Html.TextBox("category_addtopic_name", null, new { @readonly = "readonly" })
+                @Html.HiddenFor(m => m.CategoryId, new { id = "category_addtopic_id" })
+                @Html.ValidationMessageFor(m => m.CategoryId)
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <div id="topicadd_categories_con"></div>
+        </div>
+        <div class="col-lg-12" style="text-align: center;">
+            <hr />
+            <p>
+                <button type="submit" class="btn btn-default">افزودن</button>
+                <button type="button" class="btn btn-default" onclick="cancelAddTopic()">انصراف</button>
+            </p>
+        </div>
     }
 </div>
+<div style="clear: both;"></div>
 
 <script type="text/javascript">
     $(function () {
         $.validator.unobtrusive.parse("#topic_add_form");
         $("#topic_add_form").data("validator").settings.ignore = "";
 
-        @*$("#category_addtopic").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: "@Url.Action("NameJson", "Categories")",
-                    dataType: "json",
-                    data: { id: request.term },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            return {
-                                label: item.Name,
-                                ID: item.Id
-                            };
-                        }));
-                    },
-                    //error: function () { alert('خطا'); }
-                });
+        loadCategories("category_addtopic");
+
+        $('#category_addtopic_id').on('change', function () {
+            $(this).valid();
+        });
+    });
+
+    function loadCategories(targetKeyName) {
+        $.ajax({
+            url: '@Url.Action("SimpleTree", "Categories")',
+            data: {
+                targetKeyName : targetKeyName,
             },
-            minLength: 2,
-        });*@
-    })
+            success: function(r) {
+                $('#topicadd_categories_con').html(r);
+            },
+        });
+    }
 </script>

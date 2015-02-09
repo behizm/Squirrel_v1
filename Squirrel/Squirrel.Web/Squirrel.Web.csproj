@@ -267,6 +267,7 @@
     <Content Include="Areas\Author\Views\Publish\Index.cshtml" />
     <Content Include="Areas\Author\Views\Topics\List.cshtml" />
     <Content Include="Areas\Author\Views\Topics\Add.cshtml" />
+    <Content Include="Areas\Author\Views\Categories\SimpleTree.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
