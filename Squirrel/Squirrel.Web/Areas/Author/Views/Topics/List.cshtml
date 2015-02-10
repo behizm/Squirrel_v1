@@ -1,5 +1,4 @@
 ﻿@using Squirrel.Domain.ViewModels
-@using Squirrel.Utility.FarsiTools
 @model List<Squirrel.Domain.Enititis.Topic>
 
 <table class="table">
@@ -7,42 +6,17 @@
         @foreach (var topic in Model)
         {
             var item = topic;
+            var style1 = string.Empty;
+            var style2 = string.Empty;
+
             <tr>
                 <td>
-                    <div>@Html.DisplayFor(m => item.Title)</div>
-                    <div style="font-size: 11px; margin-top: 15px;">
-                        C:@(((PersianDate)item.CreateDate).ToStringDateTime())
-                        
-                        @if (item.EditDate.HasValue)
-                        {
-                            <span style="margin-left: 5px;">
-                                E:@(((PersianDate)item.EditDate.Value).ToStringDateTime())
-                            </span>
-                        }
-                        
-                        <span style="margin-left: 5px;">
-                            G:@Html.DisplayFor(m => item.Category.Name)
-                        </span>
-                        
-                        <span style="margin-left: 5px;">
-                            V:@Html.DisplayFor(m => item.View)
-                        </span>
-                        
-                        <span style="margin-left: 5px;">
-                            P:@item.Posts.Count()
-                        </span>
-
-                        <button type="button" style="margin-left: 5px;">Edit</button>
+                    <div id="@string.Format("listitem_con_{0}",item.Id)">
+                        @Html.Partial("ListItem", item)
                     </div>
-                    <div>
-                        
-                    </div>
+                    <div class="topic-options" id="@string.Format("op_con_{0}",item.Id)" style="display: none; padding: 15px 0;"></div>
                 </td>
                 <td>
-                    @{
-                        var style1 = string.Empty;
-                        var style2 = string.Empty;
-                    }
                     @if (item.IsPublished)
                     {
                         style1 = "display:none;";
@@ -54,6 +28,7 @@
                     <span style="color: #cccccc; @style1" onclick="publishTopic(this, '@item.Id')">Published</span>
                     <span style="color: #7b68ee; @style2" onclick="unpublishTopic(this, '@item.Id')">Published</span>
                 </td>
+
             </tr>
         }
     </tbody>

@@ -1,0 +1,31 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Topic
+           
+<div>@Html.DisplayFor(m => m.Title)</div>
+<div style="font-size: 11px; margin-top: 15px;">
+    C:@(((PersianDate)Model.CreateDate).ToStringDateTime())
+
+    @if (Model.EditDate.HasValue)
+    {
+        <span style="margin-left: 5px;">
+            E:@(((PersianDate)Model.EditDate.Value).ToStringDateTime())
+        </span>
+    }
+
+    <span style="margin-left: 5px;">
+        G:@Html.DisplayFor(m => m.Category.Name)
+    </span>
+
+    <span style="margin-left: 5px;">
+        V:@Html.DisplayFor(m => m.View)
+    </span>
+
+    <span style="margin-left: 5px;">
+        P:@Model.Posts.Count()
+    </span>
+
+    <button type="button" class="btn btn-default" style="margin-left: 5px;" onclick="loadEditTopic('@Model.Id')">ویرایش</button>
+    <button type="button" class="btn btn-default" style="margin-left: 5px;" onclick="loadTopicPosts('@Model.Id')">مطالب</button>
+    <button type="button" class="btn btn-default" style="margin-left: 5px;">حذف</button>
+</div>
+

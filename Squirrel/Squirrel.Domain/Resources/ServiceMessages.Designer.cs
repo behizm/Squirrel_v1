@@ -295,6 +295,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این عنوان هیچ مطلبی ندارد..
+        /// </summary>
+        public static string TopicService_TopicHasNoPost {
+            get {
+                return ResourceManager.GetString("TopicService_TopicHasNoPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to عنوان مورد نظر یافت نشد..
         /// </summary>
         public static string TopicService_TopicNotFound {

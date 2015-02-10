@@ -104,6 +104,7 @@ namespace Squirrel.Utility.Helpers
             }
 
             // Set options
+            var value = ModelMetadata.FromLambdaExpression(expression, (ViewDataDictionary<TModel>) helper.ViewData);
             var innerOptions = string.Empty;
             try
             {
@@ -119,6 +120,10 @@ namespace Squirrel.Utility.Helpers
                     var option = new TagBuilder("option");
                     option.SetInnerText(textIsDescription ? item.Description() : item.ToString());
                     option.MergeAttribute("value", item.ToString());
+                    if (item.Equals(value.Model))
+                    {
+                        option.MergeAttribute("selected", "selected");
+                    }
                     innerOptions += option.ToString();
                 }
             }

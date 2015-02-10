@@ -1,0 +1,25 @@
+﻿@model List<Squirrel.Domain.Enititis.Post>
+
+<div>
+    @if (ViewBag.ErrorMessage == null)
+    {
+        foreach (var post in Model)
+        {
+            var item = post;
+            <div>
+                <span>@Html.DisplayFor(m => item.IsPublic)</span>
+                @Html.DisplayFor(m => item.CreateDate)
+            </div>
+        }
+    }
+    else
+    {
+        <div style="color: orangered;">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    <div>
+        <a type="button" class="btn btn-default" href="@Url.Action("Add", "Posts", new { id = ViewBag.TopicId })">مطلب جدید</a>
+        <button type="button" class="btn btn-default" onclick="hideTopicOptionBox()">انصراف</button>
+    </div>
+</div>

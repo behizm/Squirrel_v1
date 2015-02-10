@@ -26,6 +26,7 @@ namespace Squirrel.Domain.ViewModels
     public class TopicEditModel : TopicAddModel
     {
         public Guid Id { get; set; }
+        public string CategoryName { get; set; }
     }
 
     public class TopicDeleteModel

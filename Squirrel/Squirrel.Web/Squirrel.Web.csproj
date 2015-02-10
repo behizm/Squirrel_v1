@@ -149,6 +149,7 @@
     <Compile Include="Areas\Author\Controllers\CategoriesController.cs" />
     <Compile Include="Areas\Author\Controllers\FilesController.cs" />
     <Compile Include="Areas\Author\Controllers\PanelController.cs" />
+    <Compile Include="Areas\Author\Controllers\PostsController.cs" />
     <Compile Include="Areas\Author\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Author\Controllers\PublishController.cs" />
     <Compile Include="Areas\Author\Controllers\TopicsController.cs" />
@@ -268,6 +269,10 @@
     <Content Include="Areas\Author\Views\Topics\List.cshtml" />
     <Content Include="Areas\Author\Views\Topics\Add.cshtml" />
     <Content Include="Areas\Author\Views\Categories\SimpleTree.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\Edit.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\ListItem.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\Posts.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Add.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.ExtensionMethods;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
@@ -282,6 +283,40 @@ namespace Squirrel.Service.Services
         public async Task UnPublishAsync(Guid id, string username)
         {
             await ChangePublishAsync(id, username, false);
+        }
+
+        public async Task<List<Post>> Posts(Guid id)
+        {
+            var topic = await RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return null;
+            }
+
+            if (topic.Posts == null || !topic.Posts.Any())
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicHasNoPost);
+                return null;
+            }
+
+            switch (topic.PostsOrdering)
+            {
+                case PostsOrdering.LastEdited:
+                    return topic.Posts.OrderByDescending(x => x.EditDate.HasValue ? x.EditDate.Value : x.CreateDate).ToList();
+
+                case PostsOrdering.Newer:
+                    return topic.Posts.OrderByDescending(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Older:
+                    return topic.Posts.OrderBy(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Popular:
+                    return topic.Posts.OrderByDescending(x => x.Votes.Summery()).ToList();
+
+                default:
+                    return topic.Posts.ToList();
+            }
         }
 
 

@@ -195,6 +195,9 @@
   <data name="TopicService_NoPublicPostToPublish" xml:space="preserve">
     <value>این عنوان هیچ پست عمومی ندارد و قابل انتشار نیست.</value>
   </data>
+  <data name="TopicService_TopicHasNoPost" xml:space="preserve">
+    <value>این عنوان هیچ مطلبی ندارد.</value>
+  </data>
   <data name="TopicService_TopicNotFound" xml:space="preserve">
     <value>عنوان مورد نظر یافت نشد.</value>
   </data>

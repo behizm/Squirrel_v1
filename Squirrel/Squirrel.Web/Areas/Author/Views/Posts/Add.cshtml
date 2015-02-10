@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "افزودن مطلب";
+}
+
+<div class="col-lg-12">
+    <div id="addpost_message" style="color: #3cb371; background-color: #fafad2; display: none; text-align: center; padding: 10px;"></div>
+</div>
+
+<div class="col-lg-12">
+    <h2>افزودن مطلب به :</h2>
+    <h3>@ViewBag.TopicTitle</h3>
+    <hr />
+</div>
+
+<div class="col-lg-12">
+    ...
+    @Html.Hidden("TopicId", (Guid)ViewBag.TopicId)
+</div>

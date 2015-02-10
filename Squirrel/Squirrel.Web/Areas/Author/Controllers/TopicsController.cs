@@ -98,5 +98,71 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            var item = await TopicService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            ViewData.Model = new TopicEditModel
+            {
+                CategoryId = item.CategoryId,
+                CategoryName = item.Category.Name,
+                PostsOrdering = item.PostsOrdering,
+                Title = item.Title,
+                Id = item.Id,
+            };
+            return PartialView();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(TopicEditModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            model.Username = User.Identity.Name;
+            await TopicService.EditAsync(model);
+            if (TopicService.Result.Succeeded)
+            {
+                return Json(new { result = true, message = "عنوان با موفقیت ویرایش شد.", itemId = model.Id.ToString() },
+                JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> ListItem(Guid id)
+        {
+            var item = await TopicService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+            ViewData.Model = item;
+            return PartialView();
+        }
+
+        public async Task<ActionResult> Posts(Guid id)
+        {
+            var items = await TopicService.Posts(id);
+            if (items == null)
+            {
+                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
+            }
+
+            ViewBag.TopicId = id;
+            ViewData.Model = items;
+            return PartialView();
+        }
+
     }
 }

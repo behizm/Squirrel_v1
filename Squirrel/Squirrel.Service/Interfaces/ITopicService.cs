@@ -20,5 +20,6 @@ namespace Squirrel.Service
         Task PublishAsync(Guid id, string username);
         Task UnPublishAsync(Guid id, Guid userId);
         Task UnPublishAsync(Guid id, string username);
+        Task<List<Post>> Posts(Guid id);
     }
 }
