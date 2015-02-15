@@ -52,7 +52,7 @@ namespace Squirrel.Test.ServiceLayer
             {
                 Body = "This is test of post content for game Topic.",
                 TopicId = Guid.Parse("ab6f4352-5104-4149-89da-144f7bb9f433"),
-                UserId = user.Id,
+                Username = user.Username,
                 Tags = new List<string> { "game", " pc uk " },
             };
             var task = PostService.AddAsync(post);
@@ -73,7 +73,7 @@ namespace Squirrel.Test.ServiceLayer
                 TopicId = Guid.Parse("0fda4045-319a-4b24-9b07-1bae7f85c23e"),
                 Tags = new List<string> { "fps", "Game", "Cod" },
             };
-            var task = PostService.EditAsync(post, user.Id);
+            var task = PostService.EditAsync(post);
             task.Wait();
             Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
         }
@@ -91,10 +91,7 @@ namespace Squirrel.Test.ServiceLayer
         [TestMethod]
         public void Delete()
         {
-            var user = UserService.FindByUsernameAsync("behi8303").Result;
-            Assert.IsNotNull(user, UserService.Result.Errors.FirstOrDefault());
-
-            var task = PostService.DeleteAsync(new PostRemoveModel { Id = Guid.Parse("eed66d6b-10f2-43d3-926b-5219bb287d1b") }, user.Id);
+            var task = PostService.DeleteAsync(new PostRemoveModel { Id = Guid.Parse("eed66d6b-10f2-43d3-926b-5219bb287d1b"), Username = "behi8303" });
             task.Wait();
             Assert.IsTrue(PostService.Result.Succeeded, PostService.Result.Errors.FirstOrDefault());
         }

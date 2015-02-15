@@ -164,5 +164,22 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView();
         }
 
+        public async Task<JsonResult> AddPost(Guid id)
+        {
+            var post = new PostAddSimpleModel
+            {
+                Body = ".",
+                Username = User.Identity.Name,
+                TopicId = id,
+            };
+            await PostService.AddAsync(post);
+            if (PostService.Result.Succeeded)
+            {
+                return Json(new { result = true, message = "مطلب با موفقیت افزوده شد." }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
+                JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

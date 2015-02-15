@@ -272,7 +272,7 @@
     <Content Include="Areas\Author\Views\Topics\Edit.cshtml" />
     <Content Include="Areas\Author\Views\Topics\ListItem.cshtml" />
     <Content Include="Areas\Author\Views\Topics\Posts.cshtml" />
-    <Content Include="Areas\Author\Views\Posts\Add.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -11,9 +11,10 @@ namespace Squirrel.Service
 {
     public interface IPostService : IBaseService
     {
+        Task AddAsync(PostAddSimpleModel model);
         Task AddAsync(PostAddModel model);
-        Task EditAsync(PostEditModel model, Guid userId);
-        Task DeleteAsync(PostRemoveModel model, Guid userId);
+        Task EditAsync(PostEditModel model);
+        Task DeleteAsync(PostRemoveModel model);
         Task<Post> FindByIdAsync(Guid id);
         Task<List<Post>> SearchAsync(PostSearchModel model, OrderingModel<Post> ordering);
         Task<int?> CountAsync(PostSearchModel model);

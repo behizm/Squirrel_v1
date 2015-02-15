@@ -1,14 +1,19 @@
 ﻿@model List<Squirrel.Domain.Enititis.Post>
 
+<div style="color: orangered;" class="inline-error-message"></div>
+<div style="color: #32cd32;" class="inline-success-message"></div>
+
 <div>
     @if (ViewBag.ErrorMessage == null)
     {
         foreach (var post in Model)
         {
             var item = post;
-            <div>
+            <div style="padding-bottom: 10px;">
                 <span>@Html.DisplayFor(m => item.IsPublic)</span>
                 @Html.DisplayFor(m => item.CreateDate)
+                <a style="text-decoration: underline;" href="@Url.Action("Item", "Posts", new { id = item.Id })">ویرایش</a>
+                <span style="text-decoration: underline;" onclick="removePostFromTopic(this, '@item.Id', '@ViewBag.TopicId')">حذف</span>
             </div>
         }
     }
@@ -19,7 +24,7 @@
         </div>
     }
     <div>
-        <a type="button" class="btn btn-default" href="@Url.Action("Add", "Posts", new { id = ViewBag.TopicId })">مطلب جدید</a>
+        <button type="button" class="btn btn-default" onclick="addPostToTopic('@ViewBag.TopicId')">مطلب جدید</button>
         <button type="button" class="btn btn-default" onclick="hideTopicOptionBox()">انصراف</button>
     </div>
 </div>

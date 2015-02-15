@@ -92,7 +92,7 @@ namespace Squirrel.Test.ServiceLayer
             {
                 Body = "This is test of post content for game Topic.",
                 TopicId = topics.First().Id,
-                UserId = user.Id,
+                Username = user.Username,
                 Tags = new List<string> { "game", "shooter", "fps" },
             };
             var task = PostService.AddAsync(post);

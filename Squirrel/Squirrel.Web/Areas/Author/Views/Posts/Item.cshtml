@@ -1,0 +1,189 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.ViewModels.PostEditModel
+
+@{
+    ViewBag.Title = "ویرایش مطلب";
+    Post thisPost = ViewBag.CurrentPost;
+}
+
+<div class="col-lg-12" style="height: 40px; line-height: 40px; margin-bottom: 10px;">
+    <div id="editpost_success_message" style="color: #3cb371; background-color: #fafad2; display: none; text-align: center;"></div>
+    <div id="editpost_error_message" style="color: #ff7f50; background-color: #fafad2; display: none; text-align: center;"></div>
+</div>
+
+<div class="col-lg-8">
+    <div>
+        عنوان :
+        @Html.DisplayFor(m => thisPost.Topic.Title)
+        <button type="button">تغییر</button>
+    </div>
+    <hr />
+    @using (Ajax.BeginForm("Edit", "Posts", null, new AjaxOptions { OnSuccess = "onEditPostSuccess" }, new { id = "post_edit_form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.TopicId)
+        @Html.HiddenFor(m => m.IsPublic)
+        @Html.HiddenFor(m => m.FlatedTags)
+
+        <div>
+            خلاصه :
+            <p>
+                @Html.TextAreaFor(m => m.Abstract)
+            </p>
+        </div>
+        <hr />
+        <div>
+            محتوا :
+            <p>
+                @Html.TextAreaFor(m => m.Body)
+            </p>
+        </div>
+    }
+</div>
+
+<div class="col-lg-4">
+    <div style="padding: 20px;text-align: center; background-color: #eee;">
+        <div>
+            تاریخ ایجاد :
+            <p>@(((PersianDate)thisPost.CreateDate).ToStringDateTime())</p>
+        </div>
+        @if (thisPost.EditDate.HasValue)
+        {
+            <div>
+                تاریخ ویرایش :
+                <p id="post_editdate">
+                    @(((PersianDate)thisPost.EditDate).ToStringDateTime())
+                </p>
+            </div>
+        }
+        <div>
+            نویسنده :
+            <p>
+                @Html.DisplayFor(m => thisPost.Author.Username)
+            </p>
+        </div>
+        <p>
+            <button type="button" class="btn btn-success" style="width: 200px;" onclick="savePost()">ذخیره کردن</button>
+        </p>
+        <p>
+            <button type="button" class="btn btn-success" style="width: 200px;">پیش نمایش</button>
+        </p>
+        <p>
+            @if (thisPost.IsPublic)
+            {
+                <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">انتشار</button>
+                <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">خصوصی سازی</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">انتشار</button>
+                <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">خصوصی سازی</button>
+            }
+        </p>
+    </div>
+    <br />
+    <div>
+        عکس اصلی :
+    </div>
+    <hr />
+    <div>
+        برچسب ها :
+        <div>
+            <p class="tags-con-box">
+                @foreach (var tag in Model.Tags)
+                {
+                    var item = tag;
+                    <span>
+                        @Html.DisplayFor(m => item)
+                    </span>
+                }
+            </p>
+            <p>
+                @Html.TextBox("addTagBox")
+                <button type="button" onclick="addTag()">add</button>
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div>
+        فایل های ضمیمه :
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var tags;
+        $(function() {
+            tags = '@Model.FlatedTags';
+            ('#addTagBox').on('focus', function() {
+                
+            });
+        });
+
+        function addTag() {
+            var tag = $('#addTagBox').val().replace("#", "").trim();
+            if (tag != '' && tags.toLowerCase().search('#' + tag.toLowerCase()) == -1) {
+                tags += '#' + tag;
+                var html = '<span>' + tag + '</span>';
+                $('.tags-con-box').append(html);
+                $('#FlatedTags').val(tags);
+            }
+            $('#addTagBox').val('').focus();
+        }
+
+        function savePost() {
+            $('#post_edit_form').submit();
+        }
+
+        function publishPost(e) {
+            $('#IsPublic').val('True');
+            $(e).hide();
+            $(e).next().show();
+            savePost();
+        }
+
+        function privatePost(e) {
+            $('#IsPublic').val('False');
+            $(e).hide();
+            $(e).prev().show();
+            savePost();
+        }
+
+        function onEditPostSuccess(data) {
+            if (data.result == true) {
+                showMessage(data.message, '');
+                $('#post_editdate').text(data.date);
+            } else {
+                showMessage('', data.message);
+            }
+        }
+
+        function showMessage(success, error) {
+            $('#editpost_success_message').text('').hide();
+            $('#editpost_error_message').text('').hide();
+
+            if (success != '') {
+                $('#editpost_success_message').text(success).slideDown(100);
+            }
+            if (error != '') {
+                $('#editpost_error_message').text(error).slideDown(100);
+            }
+        }
+    </script>
+}
+
+<style type="text/css">
+    .tags-con-box {
+        font-size: 0;
+    }
+
+        .tags-con-box > span {
+            display: inline-block;
+            background-color: #eee8aa;
+            padding: 5px;
+            font-size: 12px;
+            margin: 0 5px 5px 0;
+        }
+</style>

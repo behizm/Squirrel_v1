@@ -13,13 +13,14 @@ namespace Squirrel.Service.Services
 {
     class PostService : BaseService, IPostService
     {
-        public async Task AddAsync(PostAddModel model)
+        public async Task AddAsync(PostAddSimpleModel model)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrEmpty(model.Username))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
+            model.Username = model.Username.ToLower();
 
             if (string.IsNullOrEmpty(model.Body))
             {
@@ -27,7 +28,55 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == model.UserId);
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
+            var topicTask = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.TopicId);
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            var topic = await topicTask;
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            var post = new Post
+            {
+                Body = model.Body,
+                IsPublic = false,
+                TopicId = topic.Id,
+                AuthorId = user.Id,
+            };
+            await RepositoryContext.CreateAsync(post);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        public async Task AddAsync(PostAddModel model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+            model.Username = model.Username.ToLower();
+
+            if (string.IsNullOrEmpty(model.Body))
+            {
+                Result = OperationResult.Failed(ServiceMessages.PostService_EmptyPostBody);
+                return;
+            }
+
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
             var topicTask = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.TopicId);
 
             var user = await userTask;
@@ -70,13 +119,14 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task EditAsync(PostEditModel model, Guid userId)
+        public async Task EditAsync(PostEditModel model)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrEmpty(model.Username))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
+            model.Username = model.Username.ToLower();
 
             if (string.IsNullOrEmpty(model.Body))
             {
@@ -85,7 +135,7 @@ namespace Squirrel.Service.Services
             }
 
             var postTask = RepositoryContext.RetrieveAsync<Post>(x => x.Id == model.Id);
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username.ToLower() == model.Username);
             var topicTask = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.TopicId);
 
             var post = await postTask;
@@ -151,20 +201,22 @@ namespace Squirrel.Service.Services
             post.HeaderImageId = model.HeaderImageId;
             post.TopicId = topic.Id;
             post.AuthorId = user.Id;
+            post.IsPublic = model.IsPublic;
 
             await UpdateAsync(post);
         }
 
-        public async Task DeleteAsync(PostRemoveModel model, Guid userId)
+        public async Task DeleteAsync(PostRemoveModel model)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrEmpty(model.Username))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
             }
+            model.Username = model.Username.ToLower();
 
             var postTask = WarehouseContext.RetrieveAsync<Post>(x => x.Id == model.Id);
-            var userTask = WarehouseContext.RetrieveAsync<User>(x => x.Id == userId);
+            var userTask = WarehouseContext.RetrieveAsync<User>(x => x.Username == model.Username);
 
             var post = await postTask;
             if (post == null)
@@ -191,7 +243,7 @@ namespace Squirrel.Service.Services
             if (post.Votes != null && post.Votes.Any())
                 WarehouseContext.Delete(post.Votes);
 
-            if (post.Topic.Posts.All(p => p.Id == post.Id))
+            if (post.IsPublic && !post.Topic.Posts.Any(p => p.Id != post.Id && p.IsPublic))
             {
                 post.Topic.IsPublished = false;
                 WarehouseContext.Update(post.Topic);
