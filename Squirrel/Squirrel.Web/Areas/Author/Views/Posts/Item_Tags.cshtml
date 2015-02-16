@@ -1,0 +1,88 @@
+﻿@model Squirrel.Domain.ViewModels.PostEditModel
+
+برچسب ها :
+<div>
+    <p class="tags-con-box">
+        @foreach (var tag in Model.Tags)
+        {
+            var item = tag;
+            <span>@Html.DisplayFor(m => item)</span>
+        }
+    </p>
+    <p>
+        @Html.TextBox("addTagBox")
+        <button type="button" onclick="addTag()">add</button>
+    </p>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#addTagBox').on('keypress', function (e) {
+            if (e.keyCode == 13) {
+                addTag();
+            }
+        });
+
+        $('.tags-con-box').on('click', 'span', function () {
+            removeTag($(this).text().trim());
+            $(this).remove();
+        });
+    });
+
+    function addTag() {
+        var tags = $('#FlatedTags').val();
+        var tag = $('#addTagBox').val().replace("#", "").trim();
+        if (tag != '' && tags.toLowerCase().search('#' + tag.toLowerCase() + '#') == -1) {
+            tags += tag + '#';
+            var html = '<span>' + tag + '</span>';
+            $('.tags-con-box').append(html);
+            $('#FlatedTags').val(tags);
+        }
+        $('#addTagBox').val('').focus();
+    }
+
+    function removeTag(name) {
+        console.log(name);
+        var tags = $('#FlatedTags').val();
+        var thisTag = "#" + name + "#";
+        tags = tags.replace(thisTag, "#");
+        $('#FlatedTags').val(tags);
+    }
+</script>
+
+<style type="text/css">
+    .tags-con-box {
+        font-size: 0;
+    }
+
+        .tags-con-box > span {
+            display: inline-block;
+            background-color: #eee8aa;
+            padding: 5px;
+            font-size: 12px;
+            margin: 0 5px 5px 0;
+            cursor: pointer;
+            position: relative;
+            text-align: center;
+            height: 27px;
+            line-height: 17px;
+        }
+
+            .tags-con-box > span:before {
+                content: "X";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                font-size: 25px;
+                height: 27px;
+                line-height: 27px;
+                opacity: 0;
+            }
+
+            .tags-con-box > span:hover:before {
+                opacity: .6;
+            }
+</style>

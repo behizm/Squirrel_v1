@@ -34,7 +34,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 Tags = post.Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
                 TopicId = post.TopicId,
                 IsPublic = post.IsPublic,
-                FlatedTags = post.Tags.Any() ? "#" + post.Tags.Select(x => x.Name).Aggregate((i, s) => i + "#" + s) : string.Empty,
+                FlatedTags = post.Tags.Any() ? "#" + post.Tags.Select(x => x.Name).Aggregate((i, s) => i + "#" + s) + "#" : string.Empty,
             };
             return View();
         }

@@ -1,0 +1,26 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.Enititis.Topic>
+
+<table class="table">
+    <tbody>
+        @foreach (var topic in Model)
+        {
+            var item = topic;
+            <tr>
+                <td onclick="onTopicClicked(this,'@item.Id', '@item.Title')" id='@string.Format("topic_row_{0}", item.Id)'>
+                    <div>
+                        @Html.DisplayFor(m => item.Title)
+                        <span style="font-size: 11px; margin-left: 15px;">
+                            (@Html.DisplayFor(m => item.Category.Name))
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+}

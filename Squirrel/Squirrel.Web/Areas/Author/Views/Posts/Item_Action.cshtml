@@ -1,0 +1,46 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.ViewModels.PostEditModel
+    
+@{
+    Post thisPost = ViewBag.CurrentPost;
+}
+
+<div>
+    تاریخ ایجاد :
+    <p>@(((PersianDate)thisPost.CreateDate).ToStringDateTime())</p>
+</div>
+@if (thisPost.EditDate.HasValue)
+{
+    <div>
+        تاریخ ویرایش :
+        <p id="post_editdate">
+            @(((PersianDate)thisPost.EditDate).ToStringDateTime())
+        </p>
+    </div>
+}
+<div>
+    نویسنده :
+    <p>
+        @Html.DisplayFor(m => thisPost.Author.Username)
+    </p>
+</div>
+<p>
+    <button type="button" class="btn btn-success" style="width: 200px;" onclick="savePost()">ذخیره کردن</button>
+</p>
+<p>
+    <button type="button" class="btn btn-success" style="width: 200px;">پیش نمایش</button>
+</p>
+<p>
+    @if (thisPost.IsPublic)
+    {
+        <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">انتشار</button>
+        <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">خصوصی سازی</button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">انتشار</button>
+        <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">خصوصی سازی</button>
+    }
+</p>
+

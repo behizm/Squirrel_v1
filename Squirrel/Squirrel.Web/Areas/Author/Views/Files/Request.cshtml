@@ -7,12 +7,12 @@
     FileRequestModel filterModel = ViewBag.RequestFileFilter;
 }
 
-@using (Ajax.BeginForm("RequestFile", "Files", null, new AjaxOptions { UpdateTargetId = filterModel.TragetKey + "_con" }, new { id = "request_file_form" }))
+@using (Ajax.BeginForm("RequestFile", "Files", null, new AjaxOptions { UpdateTargetId = filterModel.TargetKey + "_con" }, new { id = "request_file_form" }))
 {
     <div>
         @Html.HiddenFor(m => filterModel.Page, new { id = "request_file_filter_page" })
         @Html.HiddenFor(m => filterModel.IsFixedType)
-        @Html.HiddenFor(m => filterModel.TragetKey)
+        @Html.HiddenFor(m => filterModel.TargetKey)
 
         @Html.TextBoxFor(m => filterModel.Name, new { id = "request_file_filter_name", placeholder = "Name" })
         @Html.TextBoxFor(m => filterModel.Category, new { id = "request_file_filter_category", placeholder = "Category" })
@@ -62,7 +62,7 @@
     function ChoosedFile(e, id) {
         $('.choosedfile').css('background-color', '#eee');
         $(e).css('background-color', '#ddd');
-        var $targetId = $('#' + '@filterModel.TragetKey' + '_id');
+        var $targetId = $('#' + '@filterModel.TargetKey' + '_id');
         $targetId.val(id);
         $targetId.valid();
     }

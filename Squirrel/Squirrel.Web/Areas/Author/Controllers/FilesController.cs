@@ -493,6 +493,50 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView("Request", items);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Popup(FileRequestModel filterModel)
+        {
+            const int countInPage = 3;
+            filterModel.Page = filterModel.Page < 1 ? 1 : filterModel.Page;
+            var orderingModel = new OrderingModel<Domain.Enititis.File>
+            {
+                IsAscending = false,
+                OrderByKeySelector = x => x.CreateDate.ToString(),
+                Skip = (filterModel.Page - 1) * countInPage,
+                Take = countInPage,
+            };
+
+            var searchModel = new FileSearchModel
+            {
+                Category = filterModel.Category,
+                Name = filterModel.Name,
+                Type = filterModel.Type,
+                Username = User.Identity.Name,
+            };
+            var itemsTask = FileService.SearchAsync(searchModel, orderingModel);
+            var countTask = FileService2.CountAsync(searchModel);
+
+            var items = await itemsTask;
+            if (items == null)
+            {
+                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            var count = await countTask;
+            if (!count.HasValue)
+                return PartialView(items);
+
+            ViewBag.Paging = new PagingModel
+            {
+                CurrentPage = filterModel.Page,
+                PageCount = count.Value % countInPage == 0 ? count.Value / countInPage : (count.Value / countInPage) + 1,
+                PagingMethod = "LoadPopupFileList(#)"
+            };
+            ViewBag.RequestFileFilter = filterModel;
+            return PartialView(items);
+        }
+
 
 
         // Json

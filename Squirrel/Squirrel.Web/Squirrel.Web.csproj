@@ -273,6 +273,12 @@
     <Content Include="Areas\Author\Views\Topics\ListItem.cshtml" />
     <Content Include="Areas\Author\Views\Topics\Posts.cshtml" />
     <Content Include="Areas\Author\Views\Posts\Item.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item_Tags.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item_Topic.cshtml" />
+    <Content Include="Areas\Author\Views\Topics\SimpleList .cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item_Action.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item_Image.cshtml" />
+    <Content Include="Areas\Author\Views\Files\Popup.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

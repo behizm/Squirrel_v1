@@ -44,10 +44,48 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 {
                     CurrentPage = page,
                     PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
-                    PagingMethod = "LoadList(#)"
+                    PagingMethod = "loadTopics(#)"
                 };
             }
             return PartialView("List", items);
+        }
+
+        public async Task<ActionResult> SimpleSearch(TopicSearchModel model, int page = 1)
+        {
+            var ordering = new OrderingModel<Topic, DateTime>
+            {
+                IsAscending = false,
+                OrderByKeySelector = x => x.CreateDate,
+                Skip = (page - 1) * 10,
+                Take = 10,
+            };
+
+            if (!User.Identity.IsAdmin)
+            {
+                model.Username = User.Identity.Name;
+            }
+
+            var itemsTask = TopicService.SearchAsync(model, ordering);
+            var countTask = TopicService2.CountAsync(model);
+
+            var items = await itemsTask;
+            if (items == null)
+            {
+                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            var count = await countTask;
+            if (count.HasValue)
+            {
+                ViewBag.Paging = new PagingModel
+                {
+                    CurrentPage = page,
+                    PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
+                    PagingMethod = "loadTopics(#)"
+                };
+            }
+            return PartialView("SimpleList ", items);
         }
 
         public async Task<JsonResult> Publish(Guid id)

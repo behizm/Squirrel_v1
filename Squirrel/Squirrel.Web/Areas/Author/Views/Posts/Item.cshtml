@@ -1,5 +1,4 @@
 ﻿@using Squirrel.Domain.Enititis
-@using Squirrel.Utility.FarsiTools
 @model Squirrel.Domain.ViewModels.PostEditModel
 
 @{
@@ -14,9 +13,7 @@
 
 <div class="col-lg-8">
     <div>
-        عنوان :
-        @Html.DisplayFor(m => thisPost.Topic.Title)
-        <button type="button">تغییر</button>
+        @Html.Partial("Item_Topic")
     </div>
     <hr />
     @using (Ajax.BeginForm("Edit", "Posts", null, new AjaxOptions { OnSuccess = "onEditPostSuccess" }, new { id = "post_edit_form" }))
@@ -26,6 +23,7 @@
         @Html.HiddenFor(m => m.TopicId)
         @Html.HiddenFor(m => m.IsPublic)
         @Html.HiddenFor(m => m.FlatedTags)
+        @Html.HiddenFor(m => m.HeaderImageId)
 
         <div>
             خلاصه :
@@ -45,66 +43,15 @@
 
 <div class="col-lg-4">
     <div style="padding: 20px;text-align: center; background-color: #eee;">
-        <div>
-            تاریخ ایجاد :
-            <p>@(((PersianDate)thisPost.CreateDate).ToStringDateTime())</p>
-        </div>
-        @if (thisPost.EditDate.HasValue)
-        {
-            <div>
-                تاریخ ویرایش :
-                <p id="post_editdate">
-                    @(((PersianDate)thisPost.EditDate).ToStringDateTime())
-                </p>
-            </div>
-        }
-        <div>
-            نویسنده :
-            <p>
-                @Html.DisplayFor(m => thisPost.Author.Username)
-            </p>
-        </div>
-        <p>
-            <button type="button" class="btn btn-success" style="width: 200px;" onclick="savePost()">ذخیره کردن</button>
-        </p>
-        <p>
-            <button type="button" class="btn btn-success" style="width: 200px;">پیش نمایش</button>
-        </p>
-        <p>
-            @if (thisPost.IsPublic)
-            {
-                <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">انتشار</button>
-                <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">خصوصی سازی</button>
-            }
-            else
-            {
-                <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">انتشار</button>
-                <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">خصوصی سازی</button>
-            }
-        </p>
+        @Html.Partial("Item_Action")
     </div>
     <br />
     <div>
-        عکس اصلی :
+        @Html.Partial("Item_Image")
     </div>
     <hr />
     <div>
-        برچسب ها :
-        <div>
-            <p class="tags-con-box">
-                @foreach (var tag in Model.Tags)
-                {
-                    var item = tag;
-                    <span>
-                        @Html.DisplayFor(m => item)
-                    </span>
-                }
-            </p>
-            <p>
-                @Html.TextBox("addTagBox")
-                <button type="button" onclick="addTag()">add</button>
-            </p>
-        </div>
+        @Html.Partial("Item_Tags")
     </div>
     <hr />
     <div>
@@ -114,24 +61,8 @@
 
 @section scripts{
     <script type="text/javascript">
-        var tags;
-        $(function() {
-            tags = '@Model.FlatedTags';
-            ('#addTagBox').on('focus', function() {
-                
-            });
+        $(function () {
         });
-
-        function addTag() {
-            var tag = $('#addTagBox').val().replace("#", "").trim();
-            if (tag != '' && tags.toLowerCase().search('#' + tag.toLowerCase()) == -1) {
-                tags += '#' + tag;
-                var html = '<span>' + tag + '</span>';
-                $('.tags-con-box').append(html);
-                $('#FlatedTags').val(tags);
-            }
-            $('#addTagBox').val('').focus();
-        }
 
         function savePost() {
             $('#post_edit_form').submit();
@@ -171,19 +102,25 @@
                 $('#editpost_error_message').text(error).slideDown(100);
             }
         }
+
+        function loadTopics(p) {
+            $.ajax({
+                url: '@Url.Action("SimpleSearch", "Topics")',
+                data: {
+                    page: p,
+                },
+                success: function (r) {
+                    $('#change_topic_con #change_topic').html(r);
+                    $('#change_topic_con').css('display', 'flex');
+                    $('#topic_row_' + $('#TopicId').val()).css('color', 'blueviolet');
+                },
+            });
+        }
+
+        function onTopicClicked(e, id, title) {
+            $('#TopicId').val(id);
+            $('#topic_title').text(title);
+            $('#change_topic_con').css('display', 'none');
+        }
     </script>
 }
-
-<style type="text/css">
-    .tags-con-box {
-        font-size: 0;
-    }
-
-        .tags-con-box > span {
-            display: inline-block;
-            background-color: #eee8aa;
-            padding: 5px;
-            font-size: 12px;
-            margin: 0 5px 5px 0;
-        }
-</style>
