@@ -496,7 +496,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         [HttpPost]
         public async Task<ActionResult> Popup(FileRequestModel filterModel)
         {
-            const int countInPage = 3;
+            const int countInPage = 6;
             filterModel.Page = filterModel.Page < 1 ? 1 : filterModel.Page;
             var orderingModel = new OrderingModel<Domain.Enititis.File>
             {

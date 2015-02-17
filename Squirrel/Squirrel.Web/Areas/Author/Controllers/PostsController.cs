@@ -34,7 +34,14 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 Tags = post.Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
                 TopicId = post.TopicId,
                 IsPublic = post.IsPublic,
-                FlatedTags = post.Tags.Any() ? "#" + post.Tags.Select(x => x.Name).Aggregate((i, s) => i + "#" + s) + "#" : string.Empty,
+                FlatedTags =
+                    post.Tags.Any()
+                        ? "#" + post.Tags.Select(x => x.Name).Aggregate((i, s) => i + "#" + s) + "#"
+                        : "#",
+                FlatedAttachments =
+                    post.Attachments.Any()
+                        ? "#" + post.Attachments.Select(x => x.Id.ToString()).Aggregate((i, s) => i + "#" + s) + "#"
+                        : "#",
             };
             return View();
         }
@@ -58,6 +65,26 @@ namespace Squirrel.Web.Areas.Author.Controllers
                         if (!string.IsNullOrEmpty(x.Trim()))
                         {
                             model.Tags.Add(x.Trim());
+                        }
+                    });
+                }
+            }
+
+            model.Attachments = new List<Guid>();
+            if (!string.IsNullOrEmpty(model.FlatedAttachments) && !string.IsNullOrWhiteSpace(model.FlatedAttachments))
+            {
+                var attachs = model.FlatedAttachments.Split('#');
+                if (attachs.Any())
+                {
+                    attachs.ForEach(x =>
+                    {
+                        if (string.IsNullOrEmpty(x.Trim()))
+                            return;
+
+                        Guid attach;
+                        if (Guid.TryParse(x.Trim(), out attach))
+                        {
+                            model.Attachments.Add(attach);
                         }
                     });
                 }

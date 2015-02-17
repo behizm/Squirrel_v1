@@ -42,7 +42,7 @@
                         var item = Model[counter];
                         <td style="padding: 5px;">
                             <div style="background-color: #eee; padding: 10px;"
-                                 onclick="ChoosedFile(this,'@Model[counter].Id', '@Model[counter].Name', '@Model[counter].Address')" class="choosedfile">
+                                 onclick="ChoosedFile(this,'@Model[counter].Id', '@Model[counter].Name', '@Model[counter].Address', '@Model[counter].Size', '@Model[counter].Filename')" class="choosedfile">
                                 @Html.DisplayFor(m => item.Name)
                             </div>
                         </td>
@@ -60,12 +60,14 @@
         $('#popup_file_form').submit();
     }
 
-    function ChoosedFile(e, id, name, address) {
+    function ChoosedFile(e, id, name, address, size, filename) {
         $.event.trigger({
             type: '@string.Format("on{0}Choice",filterModel.TargetKey)',
             id: id,
             name: name,
             address: address,
+            size: size,
+            filename: filename,
             element: e,
         });
 

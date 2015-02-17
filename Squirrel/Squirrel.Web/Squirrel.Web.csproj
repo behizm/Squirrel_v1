@@ -279,6 +279,7 @@
     <Content Include="Areas\Author\Views\Posts\Item_Action.cshtml" />
     <Content Include="Areas\Author\Views\Posts\Item_Image.cshtml" />
     <Content Include="Areas\Author\Views\Files\Popup.cshtml" />
+    <Content Include="Areas\Author\Views\Posts\Item_Attachments.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

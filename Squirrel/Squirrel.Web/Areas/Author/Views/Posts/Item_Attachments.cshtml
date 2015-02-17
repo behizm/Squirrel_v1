@@ -1,0 +1,140 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.ViewModels.PostEditModel
+
+@{
+    Post thisPost = ViewBag.CurrentPost;
+}
+
+فایل های ضمیمه :
+
+<div id="post_attach_list">
+    @if (thisPost.Attachments != null && thisPost.Attachments.Any())
+    {
+        foreach (var attachment in thisPost.Attachments)
+        {
+            var item = attachment;
+            <p id='@string.Format("attach_con_{0}",item.Id)'>
+                @Html.DisplayFor(m => item.Filename)
+                <span>(@Html.DisplayFor(m => item.Size))</span>
+                <button type="button" onclick="removeAttach(this,'@item.Id')">X</button>
+            </p>
+        }
+    }
+</div>
+<div>
+    <button type="button" onclick="loadFilesPopup()">+</button>
+</div>
+
+<div id="add_post_attach_con">
+    <div class="add-post-attach">
+        <div>فایل مورد نظر خود را انتخاب کنید.</div>
+        <div id="add_post_attach"></div>
+        <button type="button" class="btn btn-success" onclick="confirmFilesPopup()">ثبت</button>
+        <button type="button" class="btn btn-warning" onclick="closeFilesPopup()">بستن</button>
+    </div>
+</div>
+
+@{
+    const string targetKey = "AttachmentFile";
+}
+@Html.Hidden(string.Format("{0}_id", targetKey))
+@Html.Hidden(string.Format("{0}_filename", targetKey))
+@Html.Hidden(string.Format("{0}_size", targetKey))
+
+<script type="text/javascript">
+    $(function () {
+        $(document).on('@string.Format("on{0}Choice", targetKey)', attachFileChoiceHandler);
+        $(document).on('@string.Format("on{0}Pager", targetKey)', attachFilePagerHandler);
+    });
+
+    function loadFilesPopup() {
+        $.ajax({
+            url: '@Url.Action("Popup", "Files")',
+            data: {
+                Page: 1,
+                TargetKey: '@targetKey',
+                IsFixedType: false,
+            },
+            type: "POST",
+            success: function (r) {
+                $('#add_post_attach').html(r);
+                $('#add_post_attach_con').css('display', 'flex');
+            }
+        });
+    }
+
+    function attachFileChoiceHandler(e) {
+        $('@string.Format("#{0}_id", targetKey)').val(e.id);
+        $('@string.Format("#{0}_filename", targetKey)').val(e.filename);
+        $('@string.Format("#{0}_size", targetKey)').val(e.size);
+    }
+
+    function attachFilePagerHandler(e) {
+        $('#add_post_attach').html(e.content);
+    }
+
+    function closeFilesPopup() {
+        $('@string.Format("#{0}_id", targetKey)').val('');
+        $('@string.Format("#{0}_filename", targetKey)').val('');
+        $('@string.Format("#{0}_size", targetKey)').val('');
+        $('#add_post_attach_con').css('display', 'none');
+    }
+
+    function confirmFilesPopup() {
+        var fileId = $('@string.Format("#{0}_id", targetKey)').val();
+        if (!addFileIdToAttachments(fileId)) {
+            closeFilesPopup();
+            return;
+        }
+
+        var filename = $('@string.Format("#{0}_filename", targetKey)').val();
+        var filesize = $('@string.Format("#{0}_size", targetKey)').val();
+        var html = "<p id='attach_con_{0}'>{1}<span> ({2}) </span><button type='button' onclick=\"removeAttach(this,'{3}')\">X</button></p>";
+        html = html.replace("{0}", fileId).replace("{1}", filename).replace("{2}", filesize).replace("{3}", fileId);
+        $('#post_attach_list').append(html);
+        closeFilesPopup();
+    }
+
+    function addFileIdToAttachments(id) {
+        var code = "#" + id + "#";
+        var fAttachs = $('#FlatedAttachments').val();
+        if (fAttachs.search(code) > -1) {
+            return false;
+        }
+        fAttachs += id + "#";
+        $('#FlatedAttachments').val(fAttachs);
+        return true;
+    }
+
+    function removeAttach(e, id) {
+        var code = "#" + id + "#";
+        var fAttachs = $('#FlatedAttachments').val();
+        fAttachs = fAttachs.replace(code, "#");
+        $('#FlatedAttachments').val(fAttachs);
+        $('#attach_con_' + id).remove();
+    }
+</script>
+
+<style type="text/css">
+    #add_post_attach_con {
+        position: fixed;
+        z-index: 10000;
+        background-color: #000000;
+        background-color: rgba(0,0,0,.8);
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        /*display: flex;*/
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+        #add_post_attach_con .add-post-attach {
+            background-color: #fff;
+            width: 80%;
+            padding: 20px 30px;
+        }
+</style>

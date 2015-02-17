@@ -28,6 +28,7 @@ namespace Squirrel.Domain.ViewModels
         public Guid Id { get; set; }
         public bool IsPublic { get; set; }
         public string FlatedTags { get; set; }
+        public string FlatedAttachments { get; set; }
     }
 
     public class PostRemoveModel

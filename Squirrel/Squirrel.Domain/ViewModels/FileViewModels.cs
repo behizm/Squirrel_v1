@@ -89,7 +89,7 @@ namespace Squirrel.Domain.ViewModels
     {
         public string Name { get; set; }
         public string Category { get; set; }
-        public FileType Type { get; set; }
+        public FileType? Type { get; set; }
         public string TargetKey { get; set; }
         public int Page { get; set; }
         public bool IsFixedType { get; set; }
