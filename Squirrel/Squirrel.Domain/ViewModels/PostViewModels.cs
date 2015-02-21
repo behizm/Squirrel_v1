@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 
 namespace Squirrel.Domain.ViewModels
 {
     public class PostAddSimpleModel
     {
+        [AllowHtml]
         public string Body { get; set; }
         public Guid TopicId { get; set; }
         public string Username { get; set; }

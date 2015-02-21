@@ -16,7 +16,7 @@
         @Html.Partial("Item_Topic")
     </div>
     <hr />
-    @using (Ajax.BeginForm("Edit", "Posts", null, new AjaxOptions { OnSuccess = "onEditPostSuccess" }, new { id = "post_edit_form" }))
+    @using (Ajax.BeginForm("Edit", "Posts", null, new AjaxOptions { OnSuccess = "onEditPostSuccess", OnFailure = "onEditPostError" }, new { id = "post_edit_form" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
@@ -25,6 +25,7 @@
         @Html.HiddenFor(m => m.FlatedTags)
         @Html.HiddenFor(m => m.HeaderImageId)
         @Html.HiddenFor(m => m.FlatedAttachments)
+        @*@Html.HiddenFor(m => m.Body)*@
 
         <div>
             خلاصه :
@@ -34,10 +35,7 @@
         </div>
         <hr />
         <div>
-            محتوا :
-            <p>
-                @Html.TextAreaFor(m => m.Body)
-            </p>
+            @Html.Partial("Item_Content")
         </div>
     }
 </div>
@@ -66,6 +64,7 @@
         });
 
         function savePost() {
+            //onEditPostBegin();
             $('#post_edit_form').submit();
         }
 
@@ -83,6 +82,12 @@
             savePost();
         }
 
+        function onEditPostBegin() {
+            var content = $('#post_content').html();
+            alert(content);
+            $('#Body').val(content);
+        }
+
         function onEditPostSuccess(data) {
             if (data.result == true) {
                 showMessage(data.message, '');
@@ -90,6 +95,10 @@
             } else {
                 showMessage('', data.message);
             }
+        }
+
+        function onEditPostError() {
+            showMessage('', 'هنگام انجام درخواست خطا رخ داد.');
         }
 
         function showMessage(success, error) {

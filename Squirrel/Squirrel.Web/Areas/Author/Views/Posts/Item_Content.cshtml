@@ -1,0 +1,91 @@
+﻿@model Squirrel.Domain.ViewModels.PostEditModel
+
+<script src="~/ckeditor/ckeditor.js"></script>
+
+محتوا :
+
+@*<div id="post_content" contenteditable="true">
+    @Html.Raw(Model.Body)
+</div>*@
+@Html.TextAreaFor(m => m.Body, new { id = "post_content", contenteditable = "true" })
+
+<script type="text/javascript">
+    CKEDITOR.replace('post_content');
+</script>
+
+@*<script src="~/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/jquery-ui-core-1.11.3.min.js"></script>
+
+    محتوا :
+
+    <div class="inserter-con" id="unid_0">
+        <span class="new-editor" onclick="addEditorAfter(this)">
+            + add
+        </span>
+        <span class="remove-editor" onclick="removeEditorAfter(this)">
+            - remove
+        </span>
+    </div>
+
+    @Html.Raw(Model.Body)
+
+    <div id="inserter_con" style="display: none;">
+        <span class="new-editor" onclick="addEditorAfter(this)">
+            + add
+        </span>
+        <span class="remove-editor" onclick="removeEditorAfter(this)">
+            - remove
+        </span>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.inlinecontent').attr('contenteditable', 'true');
+            $('.inlinecontent').assignId();
+            $('.inlinecontent').each(function () {
+                addInserterAfter('#' + this.id);
+            });
+        });
+
+        var idCounter = 1;
+        $.fn.extend({
+            assignId: function () {
+                return this.each(function () {
+                    this.id = "unid_" + (idCounter++);
+                });
+            },
+        });
+
+        function addEditorAfter(e) {
+            var $newEditor = $('<div class="inlinecontent"></div>');
+            $newEditor.attr('contenteditable', 'true');
+            $newEditor.assignId();
+            $(e).parent().after($newEditor);
+            var thisId = $newEditor.attr('id');
+            CKEDITOR.inline(thisId);
+            addInserterAfter('#' + thisId);
+        }
+
+        function addInserterAfter(e) {
+            var inserterHtml = $('#inserter_con').html();
+            var $newInserter = $('<div class="inserter-con"></div>');
+            $newInserter.append(inserterHtml);
+            $newInserter.assignId();
+            $(e).after($newInserter);
+        }
+
+        function removeEditorAfter(e) {
+            var $parent = $(e).parent();
+            $parent.next('.inlinecontent').remove();
+            $parent.next('.inserter-con').remove();
+        }
+    </script>
+
+    <style type="text/css">
+        .inlinecontent {
+            border: 1px dashed #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+    </style>*@
