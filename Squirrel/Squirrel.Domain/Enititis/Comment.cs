@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Squirrel.Domain.Enititis
 {
@@ -23,7 +19,16 @@ namespace Squirrel.Domain.Enititis
         [Required]
         public string Body { get; set; }
 
+        [StringLength(50)]
+        public string Name { get; set; }
 
+        [StringLength(50)]
+        public string Email { get; set; }
+
+        public bool IsConfirmed { get; set; }
+
+        public DateTime? EditeDate { get; set; }
+        
 
         [ForeignKey("Post")]
         public Guid PostId { get; set; }
@@ -32,5 +37,9 @@ namespace Squirrel.Domain.Enititis
         [ForeignKey("Parent")]
         public Guid? ParentId { get; set; }
         public virtual Comment Parent { get; set; }
+
+        [ForeignKey("User")]
+        public Guid? UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

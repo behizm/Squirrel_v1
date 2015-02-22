@@ -73,7 +73,10 @@
     <Compile Include="Enititis\Category.cs" />
     <Compile Include="Enititis\Comment.cs" />
     <Compile Include="Enititis\Config.cs" />
+    <Compile Include="Enititis\Error.cs" />
     <Compile Include="Enititis\File.cs" />
+    <Compile Include="Enititis\Log.cs" />
+    <Compile Include="Enititis\LogInfo.cs" />
     <Compile Include="Enititis\Post.cs" />
     <Compile Include="Enititis\Profile.cs" />
     <Compile Include="Enititis\Tag.cs" />
@@ -95,8 +98,10 @@
     <Compile Include="ResultModels\OperationResult.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CategoryViewModels.cs" />
+    <Compile Include="ViewModels\CommentViewModels.cs" />
     <Compile Include="ViewModels\ConfigViewModels.cs" />
     <Compile Include="ViewModels\GeneralModels.cs" />
+    <Compile Include="ViewModels\LogViewModels.cs" />
     <Compile Include="ViewModels\PagingModel.cs" />
     <Compile Include="ViewModels\PostViewModels.cs" />
     <Compile Include="ViewModels\ProfileViewModels.cs" />

@@ -231,7 +231,7 @@ namespace Squirrel.Service.Services
                             .Take(ordering.Take)
                             .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;

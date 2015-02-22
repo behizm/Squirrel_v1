@@ -15,7 +15,10 @@ namespace Squirrel.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Config> Configs { get; set; }
+        public DbSet<Error> Errors { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<LogInfo> LogInfos { get; set; }
+        public DbSet<Log> Logs { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Tag> Tags { get; set; }

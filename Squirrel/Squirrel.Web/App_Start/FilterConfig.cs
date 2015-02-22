@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Squirrel.Web.Filters;
 
 namespace Squirrel.Web
 {
@@ -8,6 +9,8 @@ namespace Squirrel.Web
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new Filters.AreaAuthorizationFilter());
+
+            filters.Add(new LogFilter());
         }
     }
 }

@@ -58,6 +58,14 @@
     <Compile Include="DataIOC.cs" />
     <Compile Include="Interfaces\IRepositoryContext.cs" />
     <Compile Include="Interfaces\IWarehouseContext.cs" />
+    <Compile Include="Migrations\201502220824522_recreate.cs" />
+    <Compile Include="Migrations\201502220824522_recreate.Designer.cs">
+      <DependentUpon>201502220824522_recreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502221314185_editlog.cs" />
+    <Compile Include="Migrations\201502221314185_editlog.Designer.cs">
+      <DependentUpon>201502221314185_editlog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\WarehouseContext.cs" />
@@ -66,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +81,14 @@
       <Project>{9f182785-67c7-4abb-9306-b330af9b5fd3}</Project>
       <Name>Squirrel.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502220824522_recreate.resx">
+      <DependentUpon>201502220824522_recreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502221314185_editlog.resx">
+      <DependentUpon>201502221314185_editlog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,9 +5,9 @@
 محتوا :
 
 @*<div id="post_content" contenteditable="true">
-    @Html.Raw(Model.Body)
-</div>*@
-@Html.TextAreaFor(m => m.Body, new { id = "post_content", contenteditable = "true" })
+        @Html.Raw(Model.Body)
+    </div>*@
+@Html.TextArea("post_content", Model.Body)
 
 <script type="text/javascript">
     CKEDITOR.replace('post_content');

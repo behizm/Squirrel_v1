@@ -132,6 +132,9 @@
   <data name="CategoryService_ParentNotFount" xml:space="preserve">
     <value>پدری با این نام وجود ندارد.</value>
   </data>
+  <data name="CommentService_CommentNotFound" xml:space="preserve">
+    <value>نظر مورد نظر یافت نشد.</value>
+  </data>
   <data name="ConfigService_ConfigExisted" xml:space="preserve">
     <value>این تنظیم وجود دارد.</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="General_NoUserDefined" xml:space="preserve">
     <value>برای دسترسی به این مورد، کاربر باید مشخص باشد.</value>
+  </data>
+  <data name="LogService_LogNotFound" xml:space="preserve">
+    <value>لاگ مورد نظر یافت نشد.</value>
   </data>
   <data name="PostService_EmptyPostBody" xml:space="preserve">
     <value>محتوای پست نمی تواند خالی باشد.</value>

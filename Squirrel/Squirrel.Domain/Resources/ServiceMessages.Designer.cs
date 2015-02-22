@@ -106,6 +106,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to نظر مورد نظر یافت نشد..
+        /// </summary>
+        public static string CommentService_CommentNotFound {
+            get {
+                return ResourceManager.GetString("CommentService_CommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to این تنظیم وجود دارد..
         /// </summary>
         public static string ConfigService_ConfigExisted {
@@ -201,6 +210,15 @@ namespace Squirrel.Domain.Resources {
         public static string General_NoUserDefined {
             get {
                 return ResourceManager.GetString("General_NoUserDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لاگ مورد نظر یافت نشد..
+        /// </summary>
+        public static string LogService_LogNotFound {
+            get {
+                return ResourceManager.GetString("LogService_LogNotFound", resourceCulture);
             }
         }
         

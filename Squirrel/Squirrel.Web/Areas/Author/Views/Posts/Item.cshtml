@@ -25,7 +25,7 @@
         @Html.HiddenFor(m => m.FlatedTags)
         @Html.HiddenFor(m => m.HeaderImageId)
         @Html.HiddenFor(m => m.FlatedAttachments)
-        @*@Html.HiddenFor(m => m.Body)*@
+        @Html.HiddenFor(m => m.Body)
 
         <div>
             خلاصه :
@@ -64,7 +64,7 @@
         });
 
         function savePost() {
-            //onEditPostBegin();
+            onEditPostBegin();
             $('#post_edit_form').submit();
         }
 
@@ -83,8 +83,8 @@
         }
 
         function onEditPostBegin() {
-            var content = $('#post_content').html();
-            alert(content);
+            // For ajax forms
+            var content = CKEDITOR.instances.post_content.getData();
             $('#Body').val(content);
         }
 
