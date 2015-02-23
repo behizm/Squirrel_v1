@@ -28,6 +28,8 @@ namespace Squirrel.Domain.ViewModels
 
         public string ErrorMessage { get; set; }
 
+        public int LineNumber { get; set; }
+
         public string Username { get; set; }
     }
 

@@ -459,6 +459,10 @@ namespace Squirrel.Service.Services
             }
 
             post.IsPublic = isPublic;
+            if (isPublic && !post.PublishDate.HasValue)
+            {
+                post.PublishDate = DateTime.Now;
+            }
             await UpdateAsync(post);
         }
     }

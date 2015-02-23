@@ -31,6 +31,8 @@ namespace Squirrel.Domain.Enititis
 
         public bool IsPublic { get; set; }
 
+        public DateTime? PublishDate { get; set; }
+
 
         [ForeignKey("Topic")]
         public Guid TopicId { get; set; }

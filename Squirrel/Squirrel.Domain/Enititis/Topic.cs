@@ -30,6 +30,8 @@ namespace Squirrel.Domain.Enititis
 
         public bool IsPublished { get; set; }
 
+        public DateTime? PublishDate { get; set; }
+
 
 
         [ForeignKey("Category")]
@@ -57,5 +59,11 @@ namespace Squirrel.Domain.Enititis
 
         [Description(@"آخرین مطلبی که ویرایش شده اول باشد.")]
         LastEdited = 3,
+
+        [Description(@"جدیدترین مطلبی که منتشر شده اول باشد.")]
+        NewerPublish = 4,
+
+        [Description(@"قدیمی ترین مطلبی که منتشر شده اول باشد.")]
+        OlderPublish = 5,
     }
 }

@@ -16,5 +16,7 @@ namespace Squirrel.Domain.Enititis
         public bool IsPostMethod { get; set; }
 
         public string Message { get; set; }
+
+        public int LineNumber { get; set; }
     }
 }

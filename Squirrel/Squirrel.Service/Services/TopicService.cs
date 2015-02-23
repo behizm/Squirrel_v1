@@ -367,6 +367,10 @@ namespace Squirrel.Service.Services
 
             topic.IsPublished = publishState;
             topic.EditDate = DateTime.Now;
+            if (publishState && !topic.PublishDate.HasValue)
+            {
+                topic.PublishDate = DateTime.Now;
+            }
             await RepositoryContext.UpdateAsync(topic);
             if (RepositoryContext.OperationResult.Succeeded)
             {
@@ -430,6 +434,10 @@ namespace Squirrel.Service.Services
 
             topic.IsPublished = publishState;
             topic.EditDate = DateTime.Now;
+            if (publishState && !topic.PublishDate.HasValue)
+            {
+                topic.PublishDate = DateTime.Now;
+            }
             await RepositoryContext.UpdateAsync(topic);
             if (RepositoryContext.OperationResult.Succeeded)
             {

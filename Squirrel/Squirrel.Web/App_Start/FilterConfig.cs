@@ -11,6 +11,7 @@ namespace Squirrel.Web
             filters.Add(new Filters.AreaAuthorizationFilter());
 
             filters.Add(new LogFilter());
+            filters.Add(new ExceptionFilter());
         }
     }
 }

@@ -59,7 +59,8 @@ namespace Squirrel.Service.Services
                 var error = new Error
                 {
                     IsPostMethod = model.IsPostMethod,
-                    Message = model.ErrorMessage
+                    Message = model.ErrorMessage,
+                    LineNumber = model.LineNumber,
                 };
                 log.ErrorId = error.Id;
                 log.Error = error;
