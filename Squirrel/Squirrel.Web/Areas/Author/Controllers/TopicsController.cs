@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.FarsiTools;
+using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
 
 namespace Squirrel.Web.Areas.Author.Controllers
@@ -145,7 +147,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 return PartialView("_Message");
             }
 
-            ViewData.Model = new TopicEditModel
+            var model = new TopicEditModel
             {
                 CategoryId = item.CategoryId,
                 CategoryName = item.Category.Name,
@@ -153,7 +155,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 Title = item.Title,
                 Id = item.Id,
             };
-            return PartialView();
+            if (item.PublishDate.HasValue)
+            {
+                model.PublishPersianDate =
+                    ((PersianDate)item.PublishDate.Value).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS);
+            }
+            return PartialView(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -163,6 +170,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
             {
                 return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
                  JsonRequestBehavior.AllowGet);
+            }
+
+            if (model.PublishPersianDate.IsNotEmpty())
+            {
+                var date = model.PublishPersianDate.Split(' ')[0];
+                var time = model.PublishPersianDate.Split(' ')[1];
+                model.PublishDateTime = new PersianDate(date, time);
             }
 
             model.Username = User.Identity.Name;

@@ -26,6 +26,7 @@
         @Html.HiddenFor(m => m.HeaderImageId)
         @Html.HiddenFor(m => m.FlatedAttachments)
         @Html.HiddenFor(m => m.Body)
+        @Html.HiddenFor(m => m.PublishPersianDate)
 
         <div>
             خلاصه :
@@ -61,6 +62,8 @@
 @section scripts{
     <script type="text/javascript">
         $(function () {
+            $.validator.unobtrusive.parse("#post_edit_form");
+            $("#post_edit_form").data("validator").settings.ignore = "";
         });
 
         function savePost() {

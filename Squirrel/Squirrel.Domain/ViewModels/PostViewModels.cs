@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.Resources;
 
 namespace Squirrel.Domain.ViewModels
 {
@@ -31,6 +33,12 @@ namespace Squirrel.Domain.ViewModels
         public bool IsPublic { get; set; }
         public string FlatedTags { get; set; }
         public string FlatedAttachments { get; set; }
+
+        [Display(Name = @"زمان انتشار")]
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}", ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
+        public string PublishPersianDate { get; set; }
+
+        public DateTime? PublishDateTime { get; set; }
     }
 
     public class PostRemoveModel

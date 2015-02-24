@@ -1,0 +1,36 @@
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@model List<Squirrel.Domain.Enititis.Log>
+
+<table class="table">
+    <tbody>
+        @foreach (var log in Model)
+        {
+            var item = log;
+            var style = string.Empty;
+            if (item.IsAjax)
+            {
+                style = "color: #bbb;";
+            }
+            <tr style="@style">
+                <td>
+                    <span style="border-bottom: 1px solid;" onclick="loadLogDetails('@log.Id')">
+                        @(((PersianDate)item.CreateDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS))
+                    </span>
+                </td>
+                <td>@string.Format("{0}/{1}/{2}", item.Area, item.Controller, item.Action)</td>
+                <td>
+                    @if (item.ErrorId.HasValue)
+                    {
+                        <span>!</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+}

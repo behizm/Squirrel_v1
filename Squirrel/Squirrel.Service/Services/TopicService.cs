@@ -115,7 +115,8 @@ namespace Squirrel.Service.Services
                 isChanged = true;
             }
 
-            if (model.Title == topic.Title && model.PostsOrdering == topic.PostsOrdering && !isChanged)
+            if (model.Title == topic.Title && model.PostsOrdering == topic.PostsOrdering && 
+                !isChanged && topic.PublishDate == model.PublishDateTime)
             {
                 Result = OperationResult.Success;
                 return;
@@ -123,6 +124,7 @@ namespace Squirrel.Service.Services
 
             topic.Title = model.Title;
             topic.PostsOrdering = model.PostsOrdering ?? PostsOrdering.Newer;
+            topic.PublishDate = model.PublishDateTime;
             topic.EditDate = DateTime.Now;
             await RepositoryContext.UpdateAsync(topic);
             if (RepositoryContext.OperationResult.Succeeded)

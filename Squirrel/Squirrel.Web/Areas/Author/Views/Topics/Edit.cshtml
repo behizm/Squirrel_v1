@@ -1,5 +1,9 @@
-﻿@using Squirrel.Utility.Helpers
+﻿@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.TopicEditModel
+
+@Styles.Render("~/Content/PersianDatatimePicker")
+@Scripts.Render("~/bundles/PersianDatatimePicker")
 
 <div style="border: 1px solid #ddd;" class="col-lg-12">
     <div style="color: orangered; text-align: center;" class="col-lg-12" id="edittopic_error_massage"></div>
@@ -8,6 +12,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.PublishPersianDate)
 
         <div class="col-lg-6">
             <p class="form-group">
@@ -28,6 +33,12 @@
                 @Html.TextBoxFor(m => m.CategoryName, new { @readonly = "readonly", id = "category_edittopic_name" })
                 @Html.HiddenFor(m => m.CategoryId, new { id = "category_edittopic_id" })
                 @Html.ValidationMessageFor(m => m.CategoryId)
+            </p>
+            <p class="form-group">
+                @Html.LabelFor(m => m.PublishPersianDate)
+                <br />
+                @Html.TextBox("publishpdate_edit", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })
+                @Html.ValidationMessageFor(m => m.PublishPersianDate)
             </p>
         </div>
         <div class="col-lg-6">
@@ -54,6 +65,21 @@
         $('#category_edittopic_id').on('change', function () {
             $(this).valid();
         });
+    });
+
+    $('#publishpdate_edit').MdPersianDateTimePicker({
+        Placement: 'bottom', // default is 'bottom'
+        Trigger: 'focus', // default is 'focus',
+        EnableTimePicker: true, // default is true,
+        TargetSelector: '', // default is empty,
+        GroupId: '', // default is empty,
+        ToDate: false, // default is false,
+        FromDate: false, // default is false,
+    });
+
+    $('#publishpdate_edit').on('change', function () {
+        var dateVal = $(this).val();
+        $('#PublishPersianDate').val(toEnglishDigits(dateVal));
     });
 
     function loadCategories(targetKeyName) {

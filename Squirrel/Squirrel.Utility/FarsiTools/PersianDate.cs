@@ -128,10 +128,10 @@ namespace Squirrel.Utility.FarsiTools
                     return string.Format("{0}{1}{2}", Hour.ToString("00"), seprator, Minute.ToString("00"));
 
                 case PersianTimeFormat.HH_MM_SS:
-                    return string.Format("{0}{1}{2}{3}", Hour.ToString("00"), seprator, Minute.ToString("00"), Second.ToString("00"));
+                    return string.Format("{0}{1}{2}{3}{4}", Hour.ToString("00"), seprator, Minute.ToString("00"), seprator, Second.ToString("00"));
 
                 case PersianTimeFormat.HH_MM_SS_MilliSecond:
-                    return string.Format("{0}{1}{2}{3}{4}", Hour.ToString("00"), seprator, Minute.ToString("00"), Second.ToString("00"), MilliSecond);
+                    return string.Format("{0}{1}{2}{3}{4}{5}{6}", Hour.ToString("00"), seprator, Minute.ToString("00"), seprator, Second.ToString("00"), seprator, MilliSecond);
             }
             return null;
         }

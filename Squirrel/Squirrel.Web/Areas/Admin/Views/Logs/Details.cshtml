@@ -1,0 +1,54 @@
+﻿@model Squirrel.Domain.Enititis.Log
+
+<p>
+    @Html.DisplayNameFor(m => m.IsAjax) :
+    <b>@Html.DisplayFor(m => m.IsAjax)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Info.FullUrl) :
+    <b>@Html.DisplayFor(m => m.Info.FullUrl)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Info.Ip) :
+    <b>@Html.DisplayFor(m => m.Info.Ip)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Info.Port) :
+    <b>@Html.DisplayFor(m => m.Info.Port)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Info.ReferredUrl) :
+    <b>@Html.DisplayFor(m => m.Info.ReferredUrl)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.Info.UserAgent) :
+    <b>@Html.DisplayFor(m => m.Info.UserAgent)</b>
+</p>
+
+<p>
+    @Html.DisplayNameFor(m => m.User.Username) :
+    <b>@Html.DisplayFor(m => m.User.Username)</b>
+</p>
+
+@if (Model.ErrorId.HasValue)
+{
+    <p>
+        @Html.DisplayNameFor(m => m.Error.IsPostMethod) :
+        <b>@Html.DisplayFor(m => m.Error.IsPostMethod)</b>
+    </p>
+
+    <p>
+        @Html.DisplayNameFor(m => m.Error.LineNumber) :
+        <b>@Html.DisplayFor(m => m.Error.LineNumber)</b>
+    </p>
+
+    <p>
+        @Html.DisplayNameFor(m => m.Error.Message) :
+        <b>@Html.DisplayFor(m => m.Error.Message)</b>
+    </p>
+}

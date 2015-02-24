@@ -14,5 +14,6 @@ namespace Squirrel.Service
         Task<Log> FindByIdAsync(Guid id);
         Task<List<Log>> SearchAsync<TKey>(LogSearchModel model, OrderingModel<Log, TKey> ordering);
         Task<int?> CountAsync(LogSearchModel model);
+        Task CleanAsync(LogCleanModel model);
     }
 }

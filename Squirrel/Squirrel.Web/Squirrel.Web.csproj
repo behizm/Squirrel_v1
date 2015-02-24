@@ -4456,9 +4456,15 @@
     <Content Include="ckeditor\plugins\codesnippet\lib\highlight\LICENSE" />
     <Content Include="ckeditor\plugins\codesnippet\lib\highlight\README.md" />
     <Content Include="ckeditor\plugins\codesnippet\lib\highlight\README.ru.md" />
+    <Content Include="Areas\Admin\Views\Logs\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Logs\SearchFilter.cshtml" />
+    <Content Include="Areas\Admin\Views\Logs\List.cshtml" />
+    <Content Include="Areas\Admin\Views\Logs\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Logs\Clean.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\General\CommonMethods.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
@@ -4504,6 +4510,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
     <Content Include="Views\Shared\Admin\_Message.cshtml" />
+    <Content Include="Scripts\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.min.js.map">
+      <DependentUpon>jquery.Bootstrap-PersianDateTimePicker.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">
@@ -4525,7 +4534,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\Logs\" />
     <Folder Include="Areas\Author\Models\" />
     <Folder Include="Content\Files\temp\" />
     <Folder Include="Views\Base\" />

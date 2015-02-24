@@ -1,10 +1,13 @@
 ﻿@using Squirrel.Domain.Enititis
 @using Squirrel.Utility.FarsiTools
 @model Squirrel.Domain.ViewModels.PostEditModel
-    
+
 @{
     Post thisPost = ViewBag.CurrentPost;
 }
+
+@Styles.Render("~/Content/PersianDatatimePicker")
+@Scripts.Render("~/bundles/PersianDatatimePicker")
 
 <div>
     تاریخ ایجاد :
@@ -19,6 +22,13 @@
         </p>
     </div>
 }
+<div>
+    تاریخ انتشار :
+    <p>
+        @Html.TextBox("publishdate_editpost", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })<br />
+        @Html.ValidationMessageFor(m => m.PublishPersianDate)
+    </p>
+</div>
 <div>
     نویسنده :
     <p>
@@ -44,3 +54,19 @@
     }
 </p>
 
+<script type="text/javascript">
+    $('#publishdate_editpost').MdPersianDateTimePicker({
+        Placement: 'bottom', // default is 'bottom'
+        Trigger: 'focus', // default is 'focus',
+        EnableTimePicker: true, // default is true,
+        TargetSelector: '', // default is empty,
+        GroupId: '', // default is empty,
+        ToDate: false, // default is false,
+        FromDate: false, // default is false,
+    });
+
+    $('#publishdate_editpost').on('change', function () {
+        var dateVal = $(this).val();
+        $('#PublishPersianDate').val(toEnglishDigits(dateVal));
+    });
+</script>

@@ -1,14 +1,14 @@
 ﻿@using Squirrel.Utility.FarsiTools
 @model Squirrel.Domain.Enititis.Topic
-           
+
 <div>@Html.DisplayFor(m => m.Title)</div>
 <div style="font-size: 11px; margin-top: 15px;">
     C:@(((PersianDate)Model.CreateDate).ToStringDateTime())
 
-    @if (Model.EditDate.HasValue)
+    @if (Model.PublishDate.HasValue)
     {
         <span style="margin-left: 5px;">
-            E:@(((PersianDate)Model.EditDate.Value).ToStringDateTime())
+            P:@(((PersianDate)Model.PublishDate.Value).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS))
         </span>
     }
 

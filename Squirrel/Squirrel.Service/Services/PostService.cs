@@ -202,7 +202,10 @@ namespace Squirrel.Service.Services
             post.TopicId = topic.Id;
             post.AuthorId = user.Id;
             post.IsPublic = model.IsPublic;
-
+            if (model.PublishDateTime.HasValue)
+            {
+                post.PublishDate = model.PublishDateTime;
+            }
             await UpdateAsync(post);
         }
 

@@ -20,7 +20,8 @@ namespace Squirrel.Web
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/jquery.validate.js",
-                "~/Scripts/jquery.validate.unobtrusive.js"));
+                "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/General/CommonMethods.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                 "~/Scripts/jquery-ui-1.11.2.js"));
@@ -48,6 +49,14 @@ namespace Squirrel.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            // Persian DateTimePicker
+            bundles.Add(new StyleBundle("~/Content/PersianDatatimePicker").Include(
+                      "~/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/PersianDatatimePicker").Include(
+                "~/Scripts/MdBootstrapPersianDateTimePicker/calendar.js",
+                "~/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"));
         }
     }
 }

@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "سیستم لاگ";
+}
+
+<h2>لاگ ها</h2>
+<hr />
+
+<div class="col-lg-6">
+    @Html.Partial("SearchFilter")
+    <div id="list_con"></div>
+    <hr />
+    <div>
+        <div id="cleanlog_message"></div>
+        <div id="cleanlog_loader">
+            <button type="button" class="btn btn-default" onclick="loadCleanLogs()">Clean Logs</button>
+        </div>
+        <div id="cleanlog_result" style="display: none;">
+            @Html.Partial("Clean")
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6">
+    <div id="option_con_1"></div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            beginSearch(1);
+        });
+
+        function beginSearch(p) {
+            $('#searchPage').val(p);
+            $('#log_search_from').submit();
+            $('#list_con').text('waiting ...');
+        }
+
+        function onSearchLogSuccess(data) {
+            $('#list_con').html(data);
+        }
+
+        function loadLogDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Logs")',
+                data: { id: id },
+                success: function (r) {
+                    $('#option_con_1').html(r);
+                }
+            });
+        }
+
+        function loadCleanLogs() {
+            $('#cleanlog_result').show();
+            $('#cleanlog_loader').hide();
+        }
+
+        function cancelCleanLogs() {
+            $('#CreatePersianDateFrom').val('');
+            $('#CreatePersianDateTo').val('');
+            $('#dateform_searchlog').val('');
+            $('#dateto_searchlog').val('');
+            $('#cleanlog_result').hide();
+            $('#cleanlog_loader').show();
+        }
+
+        function onCleanLogSuccess(data) {
+            if (data.result == true) {
+                cancelCleanLogs();
+                beginSearch(1);
+            }
+            $('#cleanlog_message').text(data.message);
+        }
+    </script>
+}

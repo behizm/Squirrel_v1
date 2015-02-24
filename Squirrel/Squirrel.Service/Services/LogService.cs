@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
@@ -121,24 +122,7 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.TrimAndLower();
 
-            var items =
-                await
-                    RepositoryContext.SearchAsync<Log>(x =>
-                        (model.Action.IsEmpty() || x.Action.Contains(model.Action)) &&
-                        (model.Area.IsEmpty() || x.Area.Contains(model.Area)) &&
-                        (model.Controller.IsEmpty() || x.Controller.Contains(model.Controller)) &&
-                        (model.ReferredHost.IsEmpty() || x.ReferredHost.Contains(model.ReferredHost)) &&
-                        (!model.IsAjax.HasValue || x.IsAjax == model.IsAjax) &&
-                        (model.FullUrl.IsEmpty() || (x.InfoId != null && x.Info.FullUrl.Contains(model.FullUrl))) &&
-                        (model.ReferredUrl.IsEmpty() || (x.InfoId != null && x.Info.ReferredUrl.Contains(model.ReferredUrl))) &&
-                        (model.UserAgent.IsEmpty() || (x.InfoId != null && x.Info.UserAgent.Contains(model.UserAgent))) &&
-                        (model.Ip.IsEmpty() || (x.InfoId != null && x.Info.Ip.Contains(model.Ip))) &&
-                        (model.Port.IsEmpty() || (x.InfoId != null && x.Info.Port.Contains(model.Port))) &&
-                        (!model.IsPostMethod.HasValue || (x.ErrorId != null && x.Error.IsPostMethod == model.IsPostMethod)) &&
-                        (model.ErrorMessage.IsEmpty() || (x.ErrorId != null && x.Error.Message.Contains(model.ErrorMessage))) &&
-                        (model.Username.IsEmpty() || (x.User != null && x.User.Username.Contains(model.Username))) &&
-                        (!model.UserId.HasValue || (x.User != null && x.User.Id == model.UserId)));
-
+            var items = await RepositoryContext.SearchAsync(GetSearchExpression(model));
             if (items == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -182,32 +166,68 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.TrimAndLower();
 
-            var items =
-                await
-                    RepositoryContext.SearchAsync<Log>(x =>
-                        (model.Action.IsEmpty() || x.Action.Contains(model.Action)) &&
-                        (model.Area.IsEmpty() || x.Area.Contains(model.Area)) &&
-                        (model.Controller.IsEmpty() || x.Controller.Contains(model.Controller)) &&
-                        (model.ReferredHost.IsEmpty() || x.ReferredHost.Contains(model.ReferredHost)) &&
-                        (!model.IsAjax.HasValue || x.IsAjax == model.IsAjax) &&
-                        (model.FullUrl.IsEmpty() || (x.InfoId != null && x.Info.FullUrl.Contains(model.FullUrl))) &&
-                        (model.ReferredUrl.IsEmpty() || (x.InfoId != null && x.Info.ReferredUrl.Contains(model.ReferredUrl))) &&
-                        (model.UserAgent.IsEmpty() || (x.InfoId != null && x.Info.UserAgent.Contains(model.UserAgent))) &&
-                        (model.Ip.IsEmpty() || (x.InfoId != null && x.Info.Ip.Contains(model.Ip))) &&
-                        (model.Port.IsEmpty() || (x.InfoId != null && x.Info.Port.Contains(model.Port))) &&
-                        (!model.IsPostMethod.HasValue || (x.ErrorId != null && x.Error.IsPostMethod == model.IsPostMethod)) &&
-                        (model.ErrorMessage.IsEmpty() || (x.ErrorId != null && x.Error.Message.Contains(model.ErrorMessage))) &&
-                        (model.Username.IsEmpty() || (x.User != null && x.User.Username.Contains(model.Username))) &&
-                        (!model.UserId.HasValue || (x.User != null && x.User.Id == model.UserId)));
-
-            if (items == null)
+            var count = await RepositoryContext.CountAsync(GetSearchExpression(model));
+            if (count == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;
             }
 
             Result = OperationResult.Success;
-            return await items.CountAsync();
+            return count;
+        }
+
+        public async Task CleanAsync(LogCleanModel model)
+        {
+            if (model == null || !model.CleanDateFrom.HasValue || !model.CleanDateTo.HasValue)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var items =
+                await
+                    RepositoryContext.SearchAsync<Log>(
+                        x => x.CreateDate >= model.CleanDateFrom && x.CreateDate <= model.CleanDateTo);
+
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+
+            await RepositoryContext.DeleteAsync(items.ToArray());
+            if (!RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+            Result = OperationResult.Success;
+        }
+
+
+
+        private static Expression<Func<Log, bool>> GetSearchExpression(LogSearchModel model)
+        {
+            return
+                x =>
+                    (string.IsNullOrEmpty(model.ActionProp) || x.Action.Contains(model.ActionProp)) &&
+                    (string.IsNullOrEmpty(model.AreaProp) || (model.AreaProp == "#" ? x.Area == null : x.Area.Contains(model.AreaProp))) &&
+                    (string.IsNullOrEmpty(model.ControllerProp) || x.Controller.Contains(model.ControllerProp)) &&
+                    (string.IsNullOrEmpty(model.ReferredHost) || x.ReferredHost.Contains(model.ReferredHost)) &&
+                    (!model.IsAjax.HasValue || x.IsAjax == model.IsAjax) &&
+                    (string.IsNullOrEmpty(model.FullUrl) || (x.InfoId != null && x.Info.FullUrl.Contains(model.FullUrl))) &&
+                    (string.IsNullOrEmpty(model.ReferredUrl) || (x.InfoId != null && x.Info.ReferredUrl.Contains(model.ReferredUrl))) &&
+                    (string.IsNullOrEmpty(model.UserAgent) || (x.InfoId != null && x.Info.UserAgent.Contains(model.UserAgent))) &&
+                    (string.IsNullOrEmpty(model.Ip) || (x.InfoId != null && x.Info.Ip.Contains(model.Ip))) &&
+                    (string.IsNullOrEmpty(model.Port) || (x.InfoId != null && x.Info.Port.Contains(model.Port))) &&
+                    (!model.IsPostMethod.HasValue || (x.ErrorId != null && x.Error.IsPostMethod == model.IsPostMethod)) &&
+                    (!model.IsErrorLog.HasValue || (model.IsErrorLog.Value ? x.ErrorId != null : x.ErrorId == null)) &&
+                    (string.IsNullOrEmpty(model.ErrorMessage) || (x.ErrorId != null && x.Error.Message.Contains(model.ErrorMessage))) &&
+                    (string.IsNullOrEmpty(model.Username) || (x.User != null && x.User.Username.Contains(model.Username))) &&
+                    (!model.UserId.HasValue || (x.User != null && x.User.Id == model.UserId)) &&
+                    (!model.CreateDateFrom.HasValue || x.CreateDate >= model.CreateDateFrom) &&
+                    (!model.CreateDateTo.HasValue || x.CreateDate <= model.CreateDateTo);
         }
     }
 }

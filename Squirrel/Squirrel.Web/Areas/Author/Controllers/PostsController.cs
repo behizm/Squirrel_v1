@@ -7,6 +7,7 @@ using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.FarsiTools;
+using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
 using WebGrease.Css.Extensions;
 
@@ -42,6 +43,10 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     post.Attachments.Any()
                         ? "#" + post.Attachments.Select(x => x.Id.ToString()).Aggregate((i, s) => i + "#" + s) + "#"
                         : "#",
+                PublishPersianDate =
+                    post.PublishDate.HasValue
+                        ? ((PersianDate)post.PublishDate.Value).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS)
+                        : string.Empty,
             };
             return View();
         }
@@ -88,6 +93,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
                         }
                     });
                 }
+            }
+
+            if (model.PublishPersianDate.IsNotEmpty())
+            {
+                var date = model.PublishPersianDate.Split(' ')[0];
+                var time = model.PublishPersianDate.Split(' ')[1];
+                model.PublishDateTime = new PersianDate(date, time);
             }
 
             model.Username = User.Identity.Name;

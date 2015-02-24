@@ -26,7 +26,14 @@ namespace Squirrel.Domain.ViewModels
     public class TopicEditModel : TopicAddModel
     {
         public Guid Id { get; set; }
+
         public string CategoryName { get; set; }
+
+        [Display(Name = @"زمان انتشار")]
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}", ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
+        public string PublishPersianDate { get; set; }
+
+        public DateTime? PublishDateTime { get; set; }
     }
 
     public class TopicDeleteModel

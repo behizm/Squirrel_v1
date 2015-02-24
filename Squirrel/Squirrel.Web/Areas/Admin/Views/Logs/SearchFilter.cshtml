@@ -1,0 +1,61 @@
+﻿@model Squirrel.Domain.ViewModels.LogSearchModel
+
+@Styles.Render("~/Content/PersianDatatimePicker")
+@Scripts.Render("~/bundles/PersianDatatimePicker")
+
+@using (Ajax.BeginForm("Search", "Logs", null, new AjaxOptions { OnSuccess = "onSearchLogSuccess" }, new { id = "log_search_from" }))
+{
+    <div class="form-group">
+        @Html.AntiForgeryToken()
+        @Html.Hidden("searchPage", 1)
+
+        @Html.TextBoxFor(m => m.AreaProp, new { placeholder = "اریا" })
+        @Html.TextBoxFor(m => m.ControllerProp, new { placeholder = "کنترلر" })
+        @Html.TextBoxFor(m => m.ActionProp, new { placeholder = "اکشن" })
+        <br/>
+        @Html.LabelFor(m => m.IsAjax)
+        @Html.EditorFor(m => m.IsAjax)
+        @Html.LabelFor(m => m.IsErrorLog)
+        @Html.EditorFor(m => m.IsErrorLog)
+        <br/>
+        From:
+        @Html.TextBox("dateform_searchlog", null, new { @readonly = "readonly" })
+        @Html.HiddenFor(m => m.CreatePersianDateFrom)
+        To:
+        @Html.TextBox("dateto_searchlog", null, new { @readonly = "readonly" })
+        @Html.HiddenFor(m => m.CreatePersianDateTo)
+        <button type="button" class="btn btn-default" onclick="beginSearch(1)">جستجو</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $('#dateform_searchlog').MdPersianDateTimePicker({
+        Placement: 'bottom', // default is 'bottom'
+        Trigger: 'focus', // default is 'focus',
+        EnableTimePicker: true, // default is true,
+        TargetSelector: '', // default is empty,
+        GroupId: '', // default is empty,
+        ToDate: false, // default is false,
+        FromDate: false, // default is false,
+    });
+
+    $('#dateform_searchlog').on('change', function () {
+        var dateVal = $(this).val();
+        $('#CreatePersianDateFrom').val(toEnglishDigits(dateVal));
+    });
+
+    $('#dateto_searchlog').MdPersianDateTimePicker({
+        Placement: 'bottom', // default is 'bottom'
+        Trigger: 'focus', // default is 'focus',
+        EnableTimePicker: true, // default is true,
+        TargetSelector: '', // default is empty,
+        GroupId: '', // default is empty,
+        ToDate: false, // default is false,
+        FromDate: false, // default is false,
+    });
+
+    $('#dateto_searchlog').on('change', function () {
+        var dateVal = $(this).val();
+        $('#CreatePersianDateTo').val(toEnglishDigits(dateVal));
+    });
+</script>

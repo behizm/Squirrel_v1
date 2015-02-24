@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Squirrel.Domain.Resources;
 
 namespace Squirrel.Domain.ViewModels
 {
@@ -40,11 +42,11 @@ namespace Squirrel.Domain.ViewModels
 
     public class LogSearchModel
     {
-        public string Area { get; set; }
+        public string AreaProp { get; set; }
 
-        public string Controller { get; set; }
+        public string ControllerProp { get; set; }
 
-        public string Action { get; set; }
+        public string ActionProp { get; set; }
 
         public string ReferredHost { get; set; }
 
@@ -62,10 +64,39 @@ namespace Squirrel.Domain.ViewModels
 
         public bool? IsPostMethod { get; set; }
 
+        public bool? IsErrorLog { get; set; }
+
         public string ErrorMessage { get; set; }
 
         public string Username { get; set; }
 
         public Guid? UserId { get; set; }
+
+        public DateTime? CreateDateFrom { get; set; }
+
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}")]
+        public string CreatePersianDateFrom { get; set; }
+
+        public DateTime? CreateDateTo { get; set; }
+
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}")]
+        public string CreatePersianDateTo { get; set; }
+    }
+
+    public class LogCleanModel
+    {
+        public DateTime? CleanDateFrom { get; set; }
+
+        [Display(Name = @"تاریخ شروع")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}", ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
+        public string CleanPersianDateFrom { get; set; }
+
+        public DateTime? CleanDateTo { get; set; }
+
+        [Display(Name = @"تاریخ پایان")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}", ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
+        public string CleanPersianDateTo { get; set; }
     }
 }
