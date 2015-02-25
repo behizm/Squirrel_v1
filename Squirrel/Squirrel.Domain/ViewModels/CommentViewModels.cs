@@ -21,6 +21,9 @@ namespace Squirrel.Domain.ViewModels
         [Display(Name = @"تائید شده است؟")]
         public bool? IsConfirmed { get; set; }
 
+        [Display(Name = @"خوانده شده است؟")]
+        public bool? IsRead { get; set; }
+
         [Display(Name = @"پست")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         public Guid? PostId { get; set; }
@@ -53,6 +56,15 @@ namespace Squirrel.Domain.ViewModels
         public string Username { get; set; }
     }
 
+    public class CommentMarkModel : CommentRemoveModel
+    {
+    }
+
+    public class CommentConfirmModel : CommentRemoveModel
+    {
+        public bool IsConfirm { get; set; }
+    }
+
     public class CommentSearchModel
     {
         public Guid? Id { get; set; }
@@ -72,6 +84,9 @@ namespace Squirrel.Domain.ViewModels
         [Display(Name = @"تائید شده است؟")]
         public bool? IsConfirmed { get; set; }
 
+        [Display(Name = @"خوانده شده است؟")]
+        public bool? IsRead { get; set; }
+
         [Display(Name = @"پست")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         public Guid? PostId { get; set; }
@@ -80,8 +95,8 @@ namespace Squirrel.Domain.ViewModels
         public Guid? ParentId { get; set; }
 
         [Display(Name = @"نام کاربری")]
-        public string Username { get; set; }
+        public string PostAuthorUsername { get; set; }
 
-        public Guid? UserId { get; set; }
+        public Guid? PostAuthorUserId { get; set; }
     }
 }

@@ -1,0 +1,20 @@
+﻿@model Squirrel.Domain.ViewModels.CommentSearchModel
+
+@using (Ajax.BeginForm("Search", "Comments", null, 
+    new AjaxOptions { OnBegin = "onSearchCommentBegin", OnSuccess = "onSearchCommentSuccess" }, 
+    new { id = "comment_search_from" }))
+{
+    <div class="form-group">
+        @Html.AntiForgeryToken()
+        @Html.Hidden("searchPage", 1)
+        @Html.HiddenFor(m => m.PostId)
+
+        @Html.TextBoxFor(m => m.Name, new { placeholder = "نام" })
+        @Html.TextBoxFor(m => m.Email, new { placeholder = "ایمیل" })
+        @Html.LabelFor(m => m.IsConfirmed)
+        @Html.EditorFor(m => m.IsConfirmed)
+        @Html.LabelFor(m => m.IsRead)
+        @Html.EditorFor(m => m.IsRead)
+        <button type="button" class="btn btn-default" onclick="searchInComment(1)">جستجو</button>
+    </div>
+}

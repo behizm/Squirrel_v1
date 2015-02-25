@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
@@ -32,6 +33,7 @@ namespace Squirrel.Service.Services
             {
                 Body = model.Body,
                 IsConfirmed = model.IsConfirmed.HasValue && model.IsConfirmed.Value,
+                IsReaded = model.IsRead.HasValue && model.IsRead.Value,
                 ParentId = model.ParentId,
                 PostId = model.PostId.Value,
             };
@@ -162,15 +164,7 @@ namespace Squirrel.Service.Services
 
             var items =
                 await
-                    RepositoryContext.SearchAsync<Comment>(x =>
-                        (string.IsNullOrEmpty(model.Body) || x.Body.Contains(model.Body)) &&
-                        (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
-                        (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email)) &&
-                        (model.UserId.HasValue || x.UserId == model.UserId) &&
-                        (!model.Username.IsEmpty() || (x.User != null && x.User.Username.ToLower() == model.Username.TrimAndLower())) &&
-                        (!model.IsConfirmed.HasValue || x.IsConfirmed == model.IsConfirmed.Value) &&
-                        (!model.ParentId.HasValue || x.ParentId == model.ParentId) &&
-                        (!model.PostId.HasValue || x.PostId == model.PostId));
+                    RepositoryContext.SearchAsync(GetSearchExpression(model));
 
             if (items == null)
             {
@@ -216,15 +210,7 @@ namespace Squirrel.Service.Services
 
             var items =
                 await
-                    RepositoryContext.SearchAsync<Comment>(x =>
-                        (string.IsNullOrEmpty(model.Body) || x.Body.Contains(model.Body)) &&
-                        (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name)) &&
-                        (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email)) &&
-                        (model.UserId.HasValue || x.UserId == model.UserId) &&
-                        (!model.Username.IsEmpty() || (x.User != null && x.User.Username.ToLower() == model.Username.TrimAndLower())) &&
-                        (!model.IsConfirmed.HasValue || x.IsConfirmed == model.IsConfirmed.Value) &&
-                        (!model.ParentId.HasValue || x.ParentId == model.ParentId) &&
-                        (!model.PostId.HasValue || x.PostId == model.PostId));
+                    RepositoryContext.SearchAsync(GetSearchExpression(model));
 
             if (items == null)
             {
@@ -234,6 +220,114 @@ namespace Squirrel.Service.Services
 
             Result = OperationResult.Success;
             return await items.CountAsync();
+        }
+
+        public async Task MarkAsRead(CommentMarkModel model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.Username) || string.IsNullOrWhiteSpace(model.Username))
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+            model.Username = model.Username.Trim().ToLower();
+
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
+            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+
+            var comment = await commentTask;
+            if (comment == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CommentService_CommentNotFound);
+                return;
+            }
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && comment.UserId != user.Id &&
+                comment.Post.Author.Id != user.Id && comment.Post.Topic.Owner.Id != user.Id)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_NoAccessForThisOp);
+                return;
+            }
+
+            comment.IsReaded = true;
+            comment.EditeDate = DateTime.Now;
+            await RepositoryContext.UpdateAsync(comment);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(RepositoryContext.OperationResult.Errors);
+        }
+
+        public async Task ChangeConfirmState(CommentConfirmModel model)
+        {
+            if (model == null || model.Username.IsEmpty())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+            model.Username = model.Username.Trim().ToLower();
+
+            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
+            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+
+            var comment = await commentTask;
+            if (comment == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CommentService_CommentNotFound);
+                return;
+            }
+
+            var user = await userTask;
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+            if (!user.IsAdmin && comment.UserId != user.Id &&
+                comment.Post.Author.Id != user.Id && comment.Post.Topic.Owner.Id != user.Id)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_NoAccessForThisOp);
+                return;
+            }
+
+            comment.IsConfirmed = model.IsConfirm;
+            comment.EditeDate = DateTime.Now;
+            await RepositoryContext.UpdateAsync(comment);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+                return;
+            }
+            Result = OperationResult.Failed(RepositoryContext.OperationResult.Errors);
+        }
+
+
+
+        private static Expression<Func<Comment, bool>> GetSearchExpression(CommentSearchModel model)
+        {
+            model.PostAuthorUsername = model.PostAuthorUsername.IsNotEmpty() ? model.PostAuthorUsername.TrimAndLower() : string.Empty;
+
+            return
+                x =>
+                    (string.IsNullOrEmpty(model.Body) || x.Body.Contains(model.Body)) &&
+                    (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name) ||
+                     (x.User != null && x.User.Profile != null && x.User.Profile.Firstname.Contains(model.Name)) ||
+                     (x.User != null && x.User.Profile != null && x.User.Profile.Lastname.Contains(model.Name))) &&
+                    (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email) || 
+                     (x.User != null && x.User.Email.Contains(model.Email))) &&
+                    (!model.PostAuthorUserId.HasValue || x.Post.AuthorId == model.PostAuthorUserId) &&
+                    (string.IsNullOrEmpty(model.PostAuthorUsername) || x.Post.Author.Username == model.PostAuthorUsername) &&
+                    (!model.IsConfirmed.HasValue || x.IsConfirmed == model.IsConfirmed) &&
+                    (!model.IsRead.HasValue || x.IsReaded == model.IsRead) &&
+                    (!model.ParentId.HasValue || x.ParentId == model.ParentId) &&
+                    (!model.PostId.HasValue || x.PostId == model.PostId);
         }
     }
 }

@@ -118,7 +118,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(TopicAddModel model)
+        public async Task<JsonResult> Add(TopicAddModel model)
         {
             if (!ModelState.IsValid)
             {

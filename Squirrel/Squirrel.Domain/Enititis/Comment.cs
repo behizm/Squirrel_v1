@@ -25,9 +25,11 @@ namespace Squirrel.Domain.Enititis
         [StringLength(50)]
         public string Email { get; set; }
 
+        public DateTime? EditeDate { get; set; }
+
         public bool IsConfirmed { get; set; }
 
-        public DateTime? EditeDate { get; set; }
+        public bool IsReaded { get; set; }
         
 
         [ForeignKey("Post")]

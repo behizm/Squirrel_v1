@@ -1,0 +1,60 @@
+﻿@using Squirrel.Domain.ViewModels
+@model List<Squirrel.Domain.Enititis.Comment>
+
+@foreach (var file in Model)
+{
+    var item = file;
+    <div style="border: 1px solid #ddd; margin-top: 10px; padding: 10px;">
+        <table style="width: 100%; border-bottom: 1px solid #ddd;">
+            <tbody>
+                <tr>
+                    @if (item.UserId.HasValue)
+                    {
+                        if (item.User.Profile != null)
+                        {
+                            <td>
+                                @Html.DisplayFor(m => item.User.Profile.Firstname)
+                                @Html.DisplayFor(m => item.User.Profile.Lastname)
+                            </td>
+                        }
+                        <td>@Html.DisplayFor(m => item.User.Email)</td>
+                    }
+                    else
+                    {
+                        <td>@Html.DisplayFor(m => item.Name)</td>
+                        <td>@Html.DisplayFor(m => item.Email)</td>
+                    }
+                    <td>
+                        @Html.DisplayFor(m => item.CreateDate)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @if (item.ParentId.HasValue)
+        {
+            <div style="text-align: center;">
+                <span>در جواب نظر</span>
+                @if (item.UserId.HasValue)
+                {
+                    if (item.User.Profile != null)
+                    {
+                        @Html.DisplayFor(m => item.Parent.User.Profile.Firstname)
+                        @Html.DisplayFor(m => item.Parent.User.Profile.Lastname)
+                    }
+                }
+                else
+                {
+                    @Html.DisplayFor(m => item.Parent.Name)
+                }
+                <span>نوشته شده در</span>
+                @Html.DisplayFor(m => item.Parent.CreateDate)
+            </div>
+        }
+        @Html.DisplayFor(m => item.Body)
+    </div>
+}
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+}

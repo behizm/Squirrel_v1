@@ -17,5 +17,7 @@ namespace Squirrel.Service
         Task<Comment> FindByIdAsync(Guid id);
         Task<List<Comment>> SearchAsync<TKey>(CommentSearchModel model, OrderingModel<Comment, TKey> ordering);
         Task<int?> CountAsync(CommentSearchModel model);
+        Task MarkAsRead(CommentMarkModel model);
+        Task ChangeConfirmState(CommentConfirmModel model);
     }
 }

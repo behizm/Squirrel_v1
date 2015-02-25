@@ -1,0 +1,28 @@
+﻿@model Squirrel.Domain.ViewModels.CommentAddModel
+
+<h4>افزودن نظر</h4>
+<hr/>
+
+@using (Ajax.BeginForm("Add", "Comments", null, new AjaxOptions { OnSuccess = "onAddCommentSuccess" }, new { id = "add_comment_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PostId)
+    
+    <p class="form-group">
+        @Html.LabelFor(m => m.Body)
+        <br />
+        @Html.TextAreaFor(m => m.Body)
+        @Html.ValidationMessageFor(m => m.Body)
+    </p>
+
+    <p>
+        <button type="button" class="btn btn-default" onclick="cancelAddComment()">انصراف</button>
+        <button type="button" class="btn btn-default" onclick="onAddCommentBegin()">ثبت</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#add_comment_form");
+    });
+</script>

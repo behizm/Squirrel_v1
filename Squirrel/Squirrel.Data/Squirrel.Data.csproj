@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201502231122158_add-publishdate.Designer.cs">
       <DependentUpon>201502231122158_add-publishdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502250614538_edit-comment.cs" />
+    <Compile Include="Migrations\201502250614538_edit-comment.Designer.cs">
+      <DependentUpon>201502250614538_edit-comment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\WarehouseContext.cs" />
@@ -102,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502231122158_add-publishdate.resx">
       <DependentUpon>201502231122158_add-publishdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502250614538_edit-comment.resx">
+      <DependentUpon>201502250614538_edit-comment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

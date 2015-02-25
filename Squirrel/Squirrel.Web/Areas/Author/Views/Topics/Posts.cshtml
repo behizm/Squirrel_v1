@@ -12,6 +12,7 @@
             <div style="padding-bottom: 10px;">
                 <span>@Html.DisplayFor(m => item.IsPublic)</span>
                 @Html.DisplayFor(m => item.CreateDate)
+                <a style="text-decoration: underline;" href="@Url.Action("Post", "Comments", new { id = item.Id })">کامنتها</a>
                 <a style="text-decoration: underline;" href="@Url.Action("Item", "Posts", new { id = item.Id })">ویرایش</a>
                 <span style="text-decoration: underline;" onclick="removePostFromTopic(this, '@item.Id', '@ViewBag.TopicId')">حذف</span>
             </div>

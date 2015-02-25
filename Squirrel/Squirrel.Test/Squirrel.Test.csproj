@@ -65,6 +65,7 @@
     <Compile Include="ServiceLayer\GeneralTest.cs" />
     <Compile Include="ServiceLayer\ConfigServiceTest.cs" />
     <Compile Include="ServiceLayer\PostServiceTest.cs" />
+    <Compile Include="ServiceLayer\CommentServiceTest.cs" />
     <Compile Include="ServiceLayer\TopicServiceTest.cs" />
     <Compile Include="ServiceLayer\CategoryServiceTest.cs" />
     <Compile Include="ServiceLayer\ProfileServiceTest.cs" />
