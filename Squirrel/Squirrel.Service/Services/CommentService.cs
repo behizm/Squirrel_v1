@@ -65,8 +65,8 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.Trim().ToLower();
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
-            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var commentTask = RepositoryContext.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var userTask = RepositoryContext2.RetrieveAsync<User>(x => x.Username == model.Username);
 
             var comment = await commentTask;
             if (comment == null)
@@ -89,6 +89,7 @@ namespace Squirrel.Service.Services
             }
 
             comment.Body = model.Body;
+            comment.IsReaded = true;
             if (model.IsConfirmed.HasValue)
                 comment.IsConfirmed = model.IsConfirmed.Value;
 
@@ -110,8 +111,8 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.Trim().ToLower();
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
-            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var commentTask = RepositoryContext.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var userTask = RepositoryContext2.RetrieveAsync<User>(x => x.Username == model.Username);
 
             var comment = await commentTask;
             if (comment == null)
@@ -231,8 +232,8 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.Trim().ToLower();
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
-            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var commentTask = RepositoryContext.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var userTask = RepositoryContext2.RetrieveAsync<User>(x => x.Username == model.Username);
 
             var comment = await commentTask;
             if (comment == null)
@@ -274,8 +275,8 @@ namespace Squirrel.Service.Services
             }
             model.Username = model.Username.Trim().ToLower();
 
-            var userTask = RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
-            var commentTask = RepositoryContext2.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var commentTask = RepositoryContext.RetrieveAsync<Comment>(x => x.Id == model.Id);
+            var userTask = RepositoryContext2.RetrieveAsync<User>(x => x.Username == model.Username);
 
             var comment = await commentTask;
             if (comment == null)
@@ -320,7 +321,7 @@ namespace Squirrel.Service.Services
                     (string.IsNullOrEmpty(model.Name) || x.Name.Contains(model.Name) ||
                      (x.User != null && x.User.Profile != null && x.User.Profile.Firstname.Contains(model.Name)) ||
                      (x.User != null && x.User.Profile != null && x.User.Profile.Lastname.Contains(model.Name))) &&
-                    (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email) || 
+                    (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email) ||
                      (x.User != null && x.User.Email.Contains(model.Email))) &&
                     (!model.PostAuthorUserId.HasValue || x.Post.AuthorId == model.PostAuthorUserId) &&
                     (string.IsNullOrEmpty(model.PostAuthorUsername) || x.Post.Author.Username == model.PostAuthorUsername) &&

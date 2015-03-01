@@ -1,0 +1,33 @@
+﻿@model Squirrel.Domain.ViewModels.CommentAddModel
+@{
+    var formId = "answer_comment_form_" + Model.ParentId;
+}
+
+<h4>پاسخ دادن</h4>
+
+<div class="answercomments-messagebox" style="background-color: #f5f5dc; text-align: center;"></div>
+
+@using (Ajax.BeginForm("Add", "Comments", null, new AjaxOptions { OnSuccess = "onAnswerCommentSuccess" }, new { id = formId }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ParentId)
+    @Html.HiddenFor(m => m.PostId)
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Body)
+        <br />
+        @Html.TextAreaFor(m => m.Body)
+        @Html.ValidationMessageFor(m => m.Body)
+    </p>
+
+    <p>
+        <button type="button" class="btn btn-default" onclick="cancelOptionComment('@Model.ParentId')">انصراف</button>
+        <button type="submit" class="btn btn-default">ثبت</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse('#' + '@formId');
+    });
+</script>

@@ -1,0 +1,15 @@
+﻿@model List<Squirrel.Domain.Enititis.Topic>
+
+<br/>
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var topic in Model)
+        {
+            var item = topic;
+            <div>
+                @Html.DisplayFor(m => item.Title)
+            </div>
+        }
+    </div>
+</div>

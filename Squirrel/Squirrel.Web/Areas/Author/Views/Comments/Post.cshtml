@@ -54,6 +54,27 @@ else
             $('#list_con').html(data);
         }
 
+        function loadItem(id) {
+            $.ajax({
+                url: '@Url.Action("Item")',
+                data: { id: id },
+                success: function (r) {
+                    var $parent = $("#citem_" + id);
+                    $parent.html(r);
+                }
+            });
+
+        }
+
+        function showCommentMessage(success, error) {
+            $('#comments_message_box').text('').hide();
+            if (success != '') {
+                $('#comments_message_box').text(success).slideDown(200);
+            } else if (error != '') {
+                $('#comments_message_box').text(error).slideDown(200);
+            }
+        }
+
         function loadAddComment() {
             $('#add_comment_loader').hide();
             $('#add_comment_content').show();
@@ -64,26 +85,123 @@ else
             $('#add_comment_content').hide();
         }
 
-        function onAddCommentBegin() {
-            $("#add_comment_form").submit();
-        }
-
         function onAddCommentSuccess(data) {
             if (data.result == true) {
                 cancelAddComment();
                 showCommentMessage(data.message, '');
+                searchInComment(1);
+                $("#add_comment_form").find('textarea#Body').val('');
             } else {
                 showCommentMessage('', data.message);
             }
         }
 
-        function showCommentMessage(success, error) {
-            $('#comments_message_box').text('').hide();
-            if (success != '') {
-                $('#comments_message_box').text(success).slideDown(200);
-            } else if (error != '') {
-                $('#comments_message_box').text(error).slideDown(200);
+        function cancelOptionComment(id) {
+            var $parent = $("#citem_" + id);
+            $parent.find('.comment-opt-edit').hide();
+            $parent.find('.comment-opt-remove').hide();
+            $parent.find('.comment-opt-answer').hide();
+            $parent.find('.comment-opt-loader').show();
+        }
+
+        function loadEditComment(id) {
+            var $parent = $("#citem_" + id);
+            $parent.find('.comment-opt-loader').hide();
+            $parent.find('.comment-opt-edit').show();
+
+            var $form = $("#edit_comment_form_" + id);
+            $form.find('textarea#Body').valid();
+        }
+
+        function onEditCommentSuccess(data) {
+            if (data.result == true) {
+                showCommentMessage(data.message, '');
+                cancelOptionComment(data.id);
+                loadItem(data.id);
+            } else {
+                var $parent = $("#citem_" + data.id);
+                $parent.find('.editcomments-messagebox').text(data.message);
             }
+        }
+
+        function loadRemoveComment(id) {
+            var $parent = $("#citem_" + id);
+            $parent.find('.comment-opt-loader').hide();
+            $parent.find('.comment-opt-remove').show();
+        }
+
+        function onRemoveCommentSuccess(data) {
+            var $parent = $("#citem_" + data.id);
+            if (data.result == true) {
+                showCommentMessage(data.message, '');
+                $parent.fadeOut(250);
+            } else {
+                $parent.find('.removecomments-messagebox').text(data.message);
+            }
+        }
+
+        function loadAnswerComment(id) {
+            var $parent = $("#citem_" + id);
+            $parent.find('.comment-opt-loader').hide();
+            $parent.find('.comment-opt-answer').show();
+        }
+
+        function onAnswerCommentSuccess(data) {
+            var $parent = $("#citem_" + data.id);
+            if (data.result == true) {
+                showCommentMessage(data.message, '');
+                cancelOptionComment(data.id);
+                $parent.find('.markasread-btn').remove();
+            } else {
+                $parent.find('.answercomments-messagebox').text(data.message);
+            }
+        }
+
+        function markAsReadComment(e, id) {
+            $.ajax({
+                url: '@Url.Action("MarkAsRead")',
+                data: { id: id },
+                success: function (r) {
+                    if (r.result == true) {
+                        $(e).remove();
+                        showCommentMessage(r.message, '');
+                    } else {
+                        showCommentMessage('', data.message);
+                    }
+                }
+            });
+        }
+
+        function ConfirmComment(e, id) {
+            $.ajax({
+                url: '@Url.Action("Confirm")',
+                data: { id: id },
+                success: function (r) {
+                    if (r.result == true) {
+                        $(e).hide();
+                        $(e).next().show();
+                        showCommentMessage(r.message, '');
+                    } else {
+                        showCommentMessage('', data.message);
+                    }
+                }
+            });
+        }
+
+        function UnconfirmComment(e, id) {
+            $.ajax({
+                url: '@Url.Action("Unconfirm")',
+                data: { id: id },
+                success: function (r) {
+                    if (r.result == true) {
+                        $(e).hide();
+                        $(e).prev().show();
+                        showCommentMessage(r.message, '');
+                    } else {
+                        showCommentMessage('', data.message);
+                    }
+                }
+            });
         }
     </script>
 }

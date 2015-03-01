@@ -9,6 +9,7 @@ using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.Async;
+using Squirrel.Utility.Helpers;
 
 namespace Squirrel.Service.Services
 {
@@ -515,24 +516,29 @@ namespace Squirrel.Service.Services
             return count;
         }
 
-        public async Task<List<Topic>> TopicsAsync(string name, bool isFamilyGet, int skip, int take)
+        public async Task<List<Topic>> TopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
         {
-            name = name.Trim();
+            if (categoryName.IsEmpty())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            categoryName = categoryName.TrimAndLower();
+            var category = await RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == categoryName);
+            if (category == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
+                return null;
+            }
 
             IQueryable<Topic> items;
             if (isFamilyGet)
             {
-                var familyIds = await ChildsIdAsync(name, true);
-                if (!Result.Succeeded)
-                    return null;
+                var familyIds = GetBranchItems(category, await AllCategories()).Select(x => x.Id);
                 items = await RepositoryContext.SearchAsync<Topic>(x => familyIds.Contains(x.CategoryId));
             }
             else
             {
-                var category = await FindByNameAsync(name);
-                if (category == null)
-                    return null;
-
                 items = await RepositoryContext.SearchAsync<Topic>(x => x.CategoryId == category.Id);
             }
 
@@ -543,7 +549,50 @@ namespace Squirrel.Service.Services
             }
 
             Result = OperationResult.Success;
-            return await items.OrderByDescending(x => x.CreateDate).Skip(skip).Take(take).ToListAsync();
+            return
+                await
+                    items.OrderByDescending(x => x.CreateDate)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToListAsync();
+        }
+
+        public async Task<List<Topic>> PublishedTopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
+        {
+            if (categoryName.IsEmpty())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            categoryName = categoryName.TrimAndLower();
+            var category = await RepositoryContext.RetrieveAsync<Category>(x => x.Name.ToLower() == categoryName);
+            if (category == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
+                return null;
+            }
+
+            IQueryable<Topic> items;
+            if (isFamilyGet)
+            {
+                var familyIds = GetBranchItems(category, await AllCategories()).Select(x => x.Id);
+                items = await RepositoryContext.SearchAsync<Topic>(x => familyIds.Contains(x.CategoryId));
+            }
+            else
+            {
+                items = await RepositoryContext.SearchAsync<Topic>(x => x.CategoryId == category.Id);
+            }
+
+            var aaa = items.ToList();
+
+            Result = OperationResult.Success;
+            return
+                await
+                    items.Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
+                        .OrderByDescending(x => x.PublishDate)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToListAsync();
         }
 
         public async Task ChangeAvatarAsync(Guid categoryId, Guid fileId)
@@ -606,46 +655,6 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        private async Task<List<Guid>> ChildsIdAsync(string name, bool withOrgin = false)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
-                return null;
-            }
-
-            var category = await FindByNameAsync(name);
-            if (category == null)
-            {
-                Result = OperationResult.Failed(ServiceMessages.CategoryService_CategoryNotFount);
-                return null;
-            }
-
-            var childs = await RepositoryContext.SearchAsync<Category>(x => x.ParentId == category.Id);
-            if (childs == null)
-            {
-                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
-                return null;
-            }
-
-            var returnVal = new List<Guid>();
-            if (withOrgin)
-                returnVal.Add(category.Id);
-
-            try
-            {
-                returnVal.AddRange(await childs.Select(x => x.Id).ToListAsync());
-            }
-            catch (Exception)
-            {
-                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
-                return null;
-            }
-
-            Result = OperationResult.Success;
-            return returnVal;
-        }
-
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private CategoryTreeModel CreateTreeNode(Category item, List<Category> categoryList)
         {
@@ -666,7 +675,7 @@ namespace Squirrel.Service.Services
         }
 
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private CategorySimpleTreeModel CreateSimpleTreeNode(Category item, List<Category> categoryList)
+        private static CategorySimpleTreeModel CreateSimpleTreeNode(Category item, List<Category> categoryList)
         {
             var node = new CategorySimpleTreeModel
             {
@@ -686,6 +695,31 @@ namespace Squirrel.Service.Services
         {
             var count = AsyncTools.ConvertToSync(() => RepositoryContext.CountAsync<Topic>(x => x.CategoryId == categoryId));
             return count ?? 0;
+        }
+
+        private async Task<List<Category>> AllCategories()
+        {
+            var items = await RepositoryContext.SearchAsync<Category>(x => true);
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return await items.ToListAsync();
+        }
+
+        private static IEnumerable<Category> GetBranchItems(Category category, List<Category> categoryList)
+        {
+            var childs = categoryList.Where(x => x.ParentId == category.Id).ToList();
+            if (!childs.Any())
+            {
+                return new List<Category> { category };
+            }
+
+            var catList = new List<Category>();
+            childs.ForEach(x => catList.AddRange(GetBranchItems(x, categoryList)));
+            return categoryList;
         }
     }
 }

@@ -43,7 +43,8 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await CategoryService.AddAsync(model);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "پروفایل با موفقیت ویرایش شد.";
+                ViewBag.SuccessMessage = "گروه با موفقیت ایجاد شد.";
+                ViewBag.JsMethod = "ReloadTree();";
                 return PartialView("_Message");
             }
 

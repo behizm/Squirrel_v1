@@ -1,0 +1,30 @@
+﻿@model Squirrel.Domain.ViewModels.CommentEditModel
+@{
+    var formId = "edit_comment_form_" + Model.Id;
+}
+
+<div class="editcomments-messagebox" style="background-color: #f5f5dc; text-align: center;"></div>
+
+@using (Ajax.BeginForm("Edit", "Comments", null, new AjaxOptions { OnSuccess = "onEditCommentSuccess" }, new { id = formId }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <p class="form-group">
+        @Html.LabelFor(m => m.Body)
+        <br />
+        @Html.TextAreaFor(m => m.Body)
+        @Html.ValidationMessageFor(m => m.Body)
+    </p>
+
+    <p>
+        <button type="button" class="btn btn-default" onclick="cancelOptionComment('@Model.Id')">انصراف</button>
+        <button type="submit" class="btn btn-default">ثبت</button>
+    </p>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse('#' + '@formId');
+    });
+</script>

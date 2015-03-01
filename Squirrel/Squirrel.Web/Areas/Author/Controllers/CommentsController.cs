@@ -25,6 +25,18 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return View();
         }
 
+        public async Task<ActionResult> Item(Guid id)
+        {
+            var item = await CommentService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = CommentService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+            ViewData.Model = item;
+            return PartialView("SearchItem");
+        }
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Search(CommentSearchModel model, int searchPage = 1)
         {
@@ -69,9 +81,9 @@ namespace Squirrel.Web.Areas.Author.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<JsonResult> Add(CommentAddModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.ParentId },
                  JsonRequestBehavior.AllowGet);
             }
 
@@ -79,13 +91,18 @@ namespace Squirrel.Web.Areas.Author.Controllers
             model.IsConfirmed = true;
             model.IsRead = true;
             await CommentService.AddAsync(model);
+            if (model.ParentId.HasValue)
+            {
+                // ReSharper disable once CSharpWarnings::CS4014
+                CommentService2.MarkAsRead(new CommentMarkModel { Id = model.ParentId.Value, Username = User.Identity.Name });
+            }
             if (CommentService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "نظر با موفقیت افزوده شد." },
+                return Json(new { result = true, message = "نظر با موفقیت افزوده شد.", id = model.ParentId },
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.ParentId },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -94,7 +111,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
                  JsonRequestBehavior.AllowGet);
             }
 
@@ -102,11 +119,11 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await CommentService.EditAsync(model);
             if (CommentService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "نظر با موفقیت ویرایش شد." },
+                return Json(new { result = true, message = "نظر با موفقیت ویرایش شد.", id = model.Id },
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.Id },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -115,7 +132,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
                  JsonRequestBehavior.AllowGet);
             }
 
@@ -123,11 +140,11 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await CommentService.DeleteAsync(model);
             if (CommentService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "نظر با موفقیت حذف شد." },
+                return Json(new { result = true, message = "نظر با موفقیت حذف شد.", id = model.Id },
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.Id },
                 JsonRequestBehavior.AllowGet);
         }
 

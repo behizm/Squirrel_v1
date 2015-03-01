@@ -1,0 +1,78 @@
+﻿@using Squirrel.Domain.ViewModels
+@model Squirrel.Domain.Enititis.Comment
+
+<table style="width: 100%; border-bottom: 1px solid #ddd;">
+    <tbody>
+        <tr>
+            @if (Model.UserId.HasValue)
+            {
+                if (Model.User.Profile != null)
+                {
+                    <td>
+                        @Html.DisplayFor(m => m.User.Profile.Firstname)
+                        @Html.DisplayFor(m => m.User.Profile.Lastname)
+                    </td>
+                }
+                <td>@Html.DisplayFor(m => m.User.Email)</td>
+            }
+            else
+            {
+                <td>@Html.DisplayFor(m => m.Name)</td>
+                <td>@Html.DisplayFor(m => m.Email)</td>
+            }
+            <td>
+                @Html.DisplayFor(m => m.CreateDate)
+            </td>
+        </tr>
+    </tbody>
+</table>
+@if (Model.ParentId.HasValue)
+{
+    <div style="text-align: center;">
+        <span>در جواب نظر</span>
+        @if (Model.UserId.HasValue)
+        {
+            if (Model.User.Profile != null)
+            {
+                @Html.DisplayFor(m => m.Parent.User.Profile.Firstname)
+                @Html.DisplayFor(m => m.Parent.User.Profile.Lastname)
+            }
+        }
+        else
+        {
+            @Html.DisplayFor(m => m.Parent.Name)
+        }
+        <span>نوشته شده در</span>
+        @Html.DisplayFor(m => m.Parent.CreateDate)
+    </div>
+}
+@Html.DisplayFor(m => m.Body)
+<hr />
+<div class="comment-opt-loader" style="text-align: right;">
+    <button type="button" class="btn btn-default btn-xs" onclick="loadEditComment('@Model.Id')">Edit</button>
+    <button type="button" class="btn btn-default btn-xs" onclick="loadAnswerComment('@Model.Id')">Answer</button>
+    <button type="button" class="btn btn-default btn-xs" onclick="loadRemoveComment('@Model.Id')">Remove</button>
+    @if (!Model.IsReaded)
+    {
+        <button type="button" class="btn btn-default btn-xs markasread-btn" onclick="markAsReadComment(this, '@Model.Id')">Mark as read</button>
+    }
+    @if (Model.IsConfirmed)
+    {
+        <button type="button" class="btn btn-default btn-xs" style="display: none;" onclick="ConfirmComment(this, '@Model.Id')">Confirm</button>
+        <button type="button" class="btn btn-default btn-xs" onclick="UnconfirmComment(this, '@Model.Id')">Unconfirm</button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-default btn-xs" onclick="ConfirmComment(this, '@Model.Id')">Confirm</button>
+        <button type="button" class="btn btn-default btn-xs" style="display: none;" onclick="UnconfirmComment(this, '@Model.Id')">Unconfirm</button>
+    }
+</div>
+<div class="comment-opt-edit" style="display: none">
+    @Html.Partial("Edit", new CommentEditModel { Body = Model.Body, Id = Model.Id })
+</div>
+<div class="comment-opt-remove" style="display: none">
+    @Html.Partial("Remove", new CommentRemoveModel { Id = Model.Id })
+</div>
+<div class="comment-opt-answer" style="display: none">
+    @Html.Partial("Answer", new CommentAddModel { ParentId = Model.Id, PostId = Model.PostId })
+</div>
