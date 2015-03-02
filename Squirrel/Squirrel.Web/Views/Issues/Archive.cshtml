@@ -1,0 +1,28 @@
+﻿<br />
+<div class="row">
+    <div class="col-md-12">
+        <div style="background-color: #f3f3f3; padding: 10px;">
+            @Html.Partial("Archive_Filter")
+        </div>
+        <br>
+        <div id="archive_search_result"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            searchInArchive(1);
+        });
+
+        function searchInArchive(p) {
+            $('#searchPage').val(p);
+            $('#archive_search_from').submit();
+        }
+
+        function onSearchInArchiveSuccess(data) {
+            $('#archive_search_result').html(data);
+        }
+    </script>
+}

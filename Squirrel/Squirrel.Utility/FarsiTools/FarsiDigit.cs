@@ -7,6 +7,11 @@ namespace Squirrel.Utility.FarsiTools
     {
         public static string FaDigit(this string content)
         {
+            if (string.IsNullOrEmpty(content) || string.IsNullOrWhiteSpace(content))
+            {
+                return string.Empty;
+            }
+
             return
                 content
                 .Replace("0", "۰")

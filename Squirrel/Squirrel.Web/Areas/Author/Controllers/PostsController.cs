@@ -104,19 +104,33 @@ namespace Squirrel.Web.Areas.Author.Controllers
 
             model.Username = User.Identity.Name;
             await PostService.EditAsync(model);
-            if (PostService.Result.Succeeded)
+            if (!PostService.Result.Succeeded)
+                return Json(new {result = false, message = PostService.Result.Errors.FirstOrDefault()},
+                    JsonRequestBehavior.AllowGet);
+
+            var publishDate = "";
+            if (model.IsPublic)
             {
-                return
-                    Json(
-                        new
-                        {
-                            result = true,
-                            message = "مطلب با موفقیت ویرایش شد.",
-                            date = ((PersianDate)DateTime.Now).ToStringDateTime()
-                        }, JsonRequestBehavior.AllowGet);
+                if (model.PublishPersianDate.IsNotEmpty())
+                {
+                    publishDate = model.PublishPersianDate.FaDigit();
+                }
+                else
+                {
+                    publishDate =
+                        ((PersianDate) DateTime.Now).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS)
+                            .FaDigit();
+                }
             }
-            return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
-                JsonRequestBehavior.AllowGet);
+            return
+                Json(
+                    new
+                    {
+                        result = true,
+                        message = "مطلب با موفقیت ویرایش شد.",
+                        date = ((PersianDate)DateTime.Now).ToStringDateTime(), 
+                        publishDate,
+                    }, JsonRequestBehavior.AllowGet);
         }
 
         public async Task<JsonResult> Remove(Guid id)

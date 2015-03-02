@@ -4528,6 +4528,10 @@
     </Content>
     <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Issues\Category.cshtml" />
+    <Content Include="Views\Issues\Tag.cshtml" />
+    <Content Include="Views\Issues\Archive.cshtml" />
+    <Content Include="Views\Issues\Archive_Filter.cshtml" />
+    <Content Include="Views\Issues\Archive_Result.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">

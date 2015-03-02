@@ -1,0 +1,10 @@
+﻿@model Squirrel.Domain.ViewModels.TopicPublishedSearchModel
+
+@using (Ajax.BeginForm("Archive", "Issues", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "onSearchInArchiveSuccess" }, new { id = "archive_search_from" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("searchPage", 1)
+    @Html.TextBoxFor(m => m.Title, new { placeholder = "عنوان" })
+    @Html.TextBoxFor(m => m.Category, new { placeholder = "گروه" })
+    <button type="submit">جستجو</button>
+}

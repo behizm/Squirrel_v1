@@ -80,6 +80,8 @@
 
         function privatePost(e) {
             $('#IsPublic').val('False');
+            $('#publishdate_editpost').val('');
+            $('#PublishPersianDate').val('');
             $(e).hide();
             $(e).prev().show();
             savePost();
@@ -95,6 +97,9 @@
             if (data.result == true) {
                 showMessage(data.message, '');
                 $('#post_editdate').text(data.date);
+                var publishDate = data.publishDate;
+                $('#publishdate_editpost').val(publishDate);
+                $('#PublishPersianDate').val(toEnglishDigits(publishDate));
             } else {
                 showMessage('', data.message);
             }

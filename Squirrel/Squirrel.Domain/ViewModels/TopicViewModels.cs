@@ -48,5 +48,18 @@ namespace Squirrel.Domain.ViewModels
         public string Category { get; set; }
         public string Username { get; set; }
         public bool? IsPublished { get; set; }
+        public DateTime? PublishDateFrom { get; set; }
+        public DateTime? PublishDateTo { get; set; }
+    }
+
+    public class TopicPublishedSearchModel
+    {
+        public string Title { get; set; }
+        public string Category { get; set; }
+        public Guid? CategoryId { get; set; }
+        public DateTime? PublishDateFrom { get; set; }
+        public DateTime? PublishDateTo { get; set; }
+        public string Username { get; set; }
+        public string Author { get; set; }
     }
 }

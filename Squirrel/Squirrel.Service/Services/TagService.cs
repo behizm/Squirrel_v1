@@ -7,6 +7,7 @@ using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Helpers;
 
 namespace Squirrel.Service.Services
 {
@@ -91,6 +92,40 @@ namespace Squirrel.Service.Services
                 return;
             }
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
+        public async Task<List<Topic>> PublishedTopicsAsync(string tagName, int skip, int take)
+        {
+            if (tagName.IsEmpty())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+            tagName = tagName.TrimAndLower();
+
+            var tag = await RepositoryContext.RetrieveAsync<Tag>(x => x.Name.ToLower() == tagName);
+            if (tag == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TagService_TagNotFound);
+                return null;
+            }
+
+            var topics =
+                await RepositoryContext.SearchAsync<Topic>(x => x.Posts.Any(p => p.Tags.Any(t => t.Id == tag.Id)));
+            if (topics == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return
+                await topics
+                    .Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
+                    .OrderByDescending(x => x.PublishDate)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
         }
     }
 }

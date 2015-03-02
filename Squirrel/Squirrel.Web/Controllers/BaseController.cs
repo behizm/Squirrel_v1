@@ -117,6 +117,19 @@ namespace Squirrel.Web.Controllers
             get { return _commentService2 ?? (_commentService2 = ServiceIOC.Get<ICommentService>()); }
         }
 
+        //
+        private ITagService _tagService;
+        protected ITagService TagService
+        {
+            get { return _tagService ?? (_tagService = ServiceIOC.Get<ITagService>()); }
+        }
+
+        private ITagService _tagService2;
+        protected ITagService TagService2
+        {
+            get { return _tagService2 ?? (_tagService2 = ServiceIOC.Get<ITagService>()); }
+        }
+
         // Methods
         protected async Task<string> EncryptAsync(string code)
         {

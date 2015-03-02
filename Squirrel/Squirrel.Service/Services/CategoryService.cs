@@ -712,14 +712,13 @@ namespace Squirrel.Service.Services
         private static IEnumerable<Category> GetBranchItems(Category category, List<Category> categoryList)
         {
             var childs = categoryList.Where(x => x.ParentId == category.Id).ToList();
-            if (!childs.Any())
-            {
-                return new List<Category> { category };
-            }
-
             var catList = new List<Category>();
-            childs.ForEach(x => catList.AddRange(GetBranchItems(x, categoryList)));
-            return categoryList;
+            if (childs.Any())
+            {
+                childs.ForEach(x => catList.AddRange(GetBranchItems(x, categoryList)));
+            }
+            catList.Add(category);
+            return catList;
         }
     }
 }

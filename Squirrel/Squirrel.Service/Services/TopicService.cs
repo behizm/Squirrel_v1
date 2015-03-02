@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ExtensionMethods;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Helpers;
 
 namespace Squirrel.Service.Services
 {
@@ -115,7 +117,7 @@ namespace Squirrel.Service.Services
                 isChanged = true;
             }
 
-            if (model.Title == topic.Title && model.PostsOrdering == topic.PostsOrdering && 
+            if (model.Title == topic.Title && model.PostsOrdering == topic.PostsOrdering &&
                 !isChanged && topic.PublishDate == model.PublishDateTime)
             {
                 Result = OperationResult.Success;
@@ -197,14 +199,7 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
-            var items =
-                await
-                    RepositoryContext.SearchAsync<Topic>(x =>
-                        (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username.ToLower()) &&
-                        (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
-                        (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
+            var items = await RepositoryContext.SearchAsync(GetSearchExpression(model));
 
             if (items == null)
             {
@@ -248,15 +243,70 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
-            var count =
-                await
-                    RepositoryContext.CountAsync<Topic>(x =>
-                        (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
-                        (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username.ToLower()) &&
-                        (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
-                        (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering));
+            var count = await RepositoryContext.CountAsync(GetSearchExpression(model));
 
+            if (count == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return count;
+        }
+
+        public async Task<List<Topic>> SearchInPublishedAsync<TKey>(TopicPublishedSearchModel model, OrderingModel<Topic, TKey> ordering)
+        {
+            if (model == null || ordering == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var items = await RepositoryContext.SearchAsync(await GetSearchInPublishedExpression(model));
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    return
+                        await
+                            items
+                                .OrderBy(ordering.OrderByKeySelector)
+                                .Skip(ordering.Skip)
+                                .Take(ordering.Take)
+                                .ToListAsync();
+                }
+                return
+                    await
+                        items
+                            .OrderByDescending(ordering.OrderByKeySelector)
+                            .Skip(ordering.Skip)
+                            .Take(ordering.Take)
+                            .ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
+        public async Task<int?> CountInPublishedAsync(TopicPublishedSearchModel model)
+        {
+            if (model == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return null;
+            }
+
+            var count = await RepositoryContext.CountAsync(await GetSearchInPublishedExpression(model));
             if (count == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -320,6 +370,7 @@ namespace Squirrel.Service.Services
                     return topic.Posts.ToList();
             }
         }
+        
 
 
         private async Task ChangePublishAsync(Guid id, Guid userId, bool publishState)
@@ -448,5 +499,110 @@ namespace Squirrel.Service.Services
             }
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
+
+        private static Expression<Func<Topic, bool>> GetSearchExpression(TopicSearchModel model)
+        {
+            model.Username = model.Username.IsNotEmpty() ? model.Username.TrimAndLower() : string.Empty;
+
+            return x =>
+                (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
+                (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
+                (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username) &&
+                (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
+                (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering) &&
+                (!model.PublishDateFrom.HasValue || x.PublishDate >= model.PublishDateFrom) &&
+                (!model.PublishDateTo.HasValue || x.PublishDate <= model.PublishDateTo);
+        }
+
+        private async Task<Expression<Func<Topic, bool>>> GetSearchInPublishedExpression(TopicPublishedSearchModel model)
+        {
+            model.Username = model.Username.IsNotEmpty() ? model.Username.TrimAndLower() : string.Empty;
+            model.Author = model.Author.IsNotEmpty() ? model.Author.TrimAndLower() : string.Empty;
+
+            List<Guid> catFamilyIds;
+            if (model.CategoryId.HasValue)
+            {
+                catFamilyIds = await GetCategoryFamilyById(model.CategoryId.Value);
+            }
+            else if (model.Category.IsNotEmpty())
+            {
+                catFamilyIds = await GetCategoryFamilyByName(model.Category);
+            }
+            else
+            {
+                model.CategoryId = null;
+                catFamilyIds = new List<Guid>();
+            }
+
+            if (!model.PublishDateTo.HasValue || model.PublishDateTo > DateTime.Now)
+            {
+                model.PublishDateTo = DateTime.Now;
+            }
+
+            Expression<Func<Topic, bool>> expression =
+                x =>
+                    (x.IsPublished) && (x.PublishDate <= model.PublishDateTo) &&
+                    (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
+                    (!model.CategoryId.HasValue || catFamilyIds.Contains(x.CategoryId)) &&
+                    (string.IsNullOrEmpty(model.Category) || catFamilyIds.Contains(x.CategoryId)) &&
+                    (!model.PublishDateFrom.HasValue || x.PublishDate >= model.PublishDateFrom) &&
+                    (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
+                    (string.IsNullOrEmpty(model.Author) ||
+                     (x.Owner.Profile != null &&
+                      (x.Owner.Profile.Firstname + x.Owner.Profile.Lastname).Contains(model.Author)));
+
+            return expression;
+        }
+
+        private async Task<List<Guid>> GetCategoryFamilyByName(string categoryName)
+        {
+            var category = await RepositoryContext.RetrieveAsync<Category>(x => x.Name == categoryName);
+            if (category == null)
+            {
+                return null;
+            }
+
+            var allCats = await AllCategories();
+            var family = GetBranchItems(category, allCats);
+            return family.Select(x => x.Id).ToList();
+        }
+
+        private async Task<List<Guid>> GetCategoryFamilyById(Guid categoryId)
+        {
+            var category = await RepositoryContext.RetrieveAsync<Category>(x => x.Id == categoryId);
+            if (category == null)
+            {
+                return null;
+            }
+
+            var allCats = await AllCategories();
+            var family = GetBranchItems(category, allCats);
+            return family.Select(x => x.Id).ToList();
+        }
+
+        private static List<Category> GetBranchItems(Category category, List<Category> categoryList)
+        {
+            var childs = categoryList.Where(x => x.ParentId == category.Id).ToList();
+            var catList = new List<Category>();
+            if (childs.Any())
+            {
+                childs.ForEach(x => catList.AddRange(GetBranchItems(x, categoryList)));
+            }
+            catList.Add(category);
+            return catList;
+        }
+
+        private async Task<List<Category>> AllCategories()
+        {
+            var items = await RepositoryContext.SearchAsync<Category>(x => true);
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return await items.ToListAsync();
+        }
+
     }
 }

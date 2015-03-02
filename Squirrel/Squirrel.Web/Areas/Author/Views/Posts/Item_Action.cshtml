@@ -23,13 +23,6 @@
     </div>
 }
 <div>
-    تاریخ انتشار :
-    <p>
-        @Html.TextBox("publishdate_editpost", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })<br />
-        @Html.ValidationMessageFor(m => m.PublishPersianDate)
-    </p>
-</div>
-<div>
     نویسنده :
     <p>
         @Html.DisplayFor(m => thisPost.Author.Username)
@@ -41,16 +34,24 @@
 <p>
     <button type="button" class="btn btn-success" style="width: 200px;">پیش نمایش</button>
 </p>
+<hr style="border-color: #ddd" />
+<div>
+    تاریخ انتشار :
+    <p>
+        @Html.TextBox("publishdate_editpost", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })<br />
+        @Html.ValidationMessageFor(m => m.PublishPersianDate)
+    </p>
+</div>
 <p>
     @if (thisPost.IsPublic)
     {
-        <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">انتشار</button>
-        <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">خصوصی سازی</button>
+        <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">ذخیره و انتشار</button>
+        <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">ذخیره و خصوصی کردن</button>
     }
     else
     {
-        <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">انتشار</button>
-        <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">خصوصی سازی</button>
+        <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">ذخیره و انتشار</button>
+        <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">ذخیره و خصوصی کردن</button>
     }
 </p>
 

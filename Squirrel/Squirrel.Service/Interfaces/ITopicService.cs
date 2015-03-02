@@ -16,6 +16,8 @@ namespace Squirrel.Service
         Task<Topic> FindByIdAsync(Guid id);
         Task<List<Topic>> SearchAsync<TKey>(TopicSearchModel model, OrderingModel<Topic, TKey> ordering);
         Task<int?> CountAsync(TopicSearchModel model);
+        Task<List<Topic>> SearchInPublishedAsync<TKey>(TopicPublishedSearchModel model, OrderingModel<Topic, TKey> ordering);
+        Task<int?> CountInPublishedAsync(TopicPublishedSearchModel model);
         Task PublishAsync(Guid id, Guid userId);
         Task PublishAsync(Guid id, string username);
         Task UnPublishAsync(Guid id, Guid userId);

@@ -201,12 +201,19 @@ namespace Squirrel.Service.Services
             post.HeaderImageId = model.HeaderImageId;
             post.TopicId = topic.Id;
             post.AuthorId = user.Id;
+
+            var isPublicStateChanged = post.IsPublic != model.IsPublic;
             post.IsPublic = model.IsPublic;
-            if (model.PublishDateTime.HasValue)
+            if (model.IsPublic)
             {
-                post.PublishDate = model.PublishDateTime;
+                post.PublishDate = model.PublishDateTime.HasValue ? model.PublishDateTime : DateTime.Now;
             }
-            await UpdateAsync(post);
+            else
+            {
+                post.PublishDate = null;
+            }
+
+            await UpdateAsync(post, isPublicStateChanged);
         }
 
         public async Task DeleteAsync(PostRemoveModel model)
@@ -419,8 +426,17 @@ namespace Squirrel.Service.Services
             return await task;
         }
 
-        private async Task UpdateAsync(Post post)
+        private async Task UpdateAsync(Post post, bool isPublicStateChanged = false)
         {
+            if (isPublicStateChanged)
+            {
+                if (!post.IsPublic && post.Topic.IsPublished && post.Topic.Posts.All(x => !x.IsPublic))
+                {
+                    post.Topic.IsPublished = false;
+                    post.Topic.EditDate = DateTime.Now;
+                }
+            }
+
             post.EditDate = DateTime.Now;
             await RepositoryContext.UpdateAsync(post);
             if (RepositoryContext.OperationResult.Succeeded)
