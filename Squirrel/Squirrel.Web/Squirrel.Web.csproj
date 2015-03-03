@@ -4474,6 +4474,8 @@
     <Content Include="Areas\Author\Views\Comments\Edit.cshtml" />
     <Content Include="Areas\Author\Views\Comments\Remove.cshtml" />
     <Content Include="Areas\Author\Views\Comments\Answer.cshtml" />
+    <Content Include="Areas\Author\Views\Categories\SimpleTreeByKey.cshtml" />
+    <Content Include="Areas\Author\Views\Categories\SimpleTreeByKey_Items.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -1,0 +1,15 @@
+﻿@model List<Squirrel.Domain.ViewModels.CategorySimpleTreeModel>
+
+@Html.Partial("SimpleTreeByKey_Items", Model)
+
+<script type="text/javascript">
+    function onSimpleCatNodeClick(e, key, id, name) {
+        $.event.trigger({
+            type: 'onCategoryChoosed',
+            key: key,
+            id: id,
+            name: name,
+            element: e,
+        });
+    }
+</script>

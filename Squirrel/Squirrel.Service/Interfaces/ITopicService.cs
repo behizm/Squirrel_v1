@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
-using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 
 // ReSharper disable once CheckNamespace

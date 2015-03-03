@@ -54,12 +54,12 @@ namespace Squirrel.Domain.ViewModels
 
     public class TopicPublishedSearchModel
     {
-        public string Title { get; set; }
-        public string Category { get; set; }
+        public string SeachText { get; set; }
         public Guid? CategoryId { get; set; }
+        public string Category { get; set; }
+        public Guid? AuthorId { get; set; }
+        public string Author { get; set; }
         public DateTime? PublishDateFrom { get; set; }
         public DateTime? PublishDateTo { get; set; }
-        public string Username { get; set; }
-        public string Author { get; set; }
     }
 }

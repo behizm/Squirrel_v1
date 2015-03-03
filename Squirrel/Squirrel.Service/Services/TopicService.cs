@@ -370,7 +370,7 @@ namespace Squirrel.Service.Services
                     return topic.Posts.ToList();
             }
         }
-        
+
 
 
         private async Task ChangePublishAsync(Guid id, Guid userId, bool publishState)
@@ -516,8 +516,19 @@ namespace Squirrel.Service.Services
 
         private async Task<Expression<Func<Topic, bool>>> GetSearchInPublishedExpression(TopicPublishedSearchModel model)
         {
-            model.Username = model.Username.IsNotEmpty() ? model.Username.TrimAndLower() : string.Empty;
+            var textList = new List<string>();
+            if (model.SeachText.IsNotEmpty())
+            {
+                model.SeachText = model.SeachText.Trim();
+                while (model.SeachText.Contains("  "))
+                {
+                    model.SeachText = model.SeachText.Replace("  ", " ");
+                }
+                textList = model.SeachText.Split(' ').ToList();
+            }
+
             model.Author = model.Author.IsNotEmpty() ? model.Author.TrimAndLower() : string.Empty;
+            model.Category = model.Category.IsNotEmpty() ? model.Category.TrimAndLower() : string.Empty;
 
             List<Guid> catFamilyIds;
             if (model.CategoryId.HasValue)
@@ -542,11 +553,13 @@ namespace Squirrel.Service.Services
             Expression<Func<Topic, bool>> expression =
                 x =>
                     (x.IsPublished) && (x.PublishDate <= model.PublishDateTo) &&
-                    (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
+                    (!textList.Any() || textList.All(t => x.Title.Contains(t)) ||
+                     textList.Any(
+                         t => t.Length > 2 && x.Posts.Any(p => p.IsPublic && p.Tags.Any(o => o.Name.Contains(t))))) &&
                     (!model.CategoryId.HasValue || catFamilyIds.Contains(x.CategoryId)) &&
                     (string.IsNullOrEmpty(model.Category) || catFamilyIds.Contains(x.CategoryId)) &&
                     (!model.PublishDateFrom.HasValue || x.PublishDate >= model.PublishDateFrom) &&
-                    (string.IsNullOrEmpty(model.Username) || x.Owner.Username == model.Username) &&
+                    (!model.AuthorId.HasValue || x.OwnerId == model.AuthorId) &&
                     (string.IsNullOrEmpty(model.Author) ||
                      (x.Owner.Profile != null &&
                       (x.Owner.Profile.Firstname + x.Owner.Profile.Lastname).Contains(model.Author)));

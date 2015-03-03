@@ -1,0 +1,23 @@
+﻿@model List<Squirrel.Domain.ViewModels.CategorySimpleTreeModel>
+
+@{
+    string targetKey = ViewBag.TargetKey;
+}
+
+@foreach (var cat in Model)
+{
+    var item = cat;
+    <div>
+        <div>
+            <span style="border-bottom: 1px solid; padding-left: 20px;" onclick="onSimpleCatNodeClick(this,'@targetKey','@item.Node.Id','@item.Node.Name')">
+                @Html.DisplayFor(m => item.Node.Name)
+            </span>
+        </div>
+        @if (cat.Childs != null && cat.Childs.Any())
+        {
+            <div style="border-left: 1px solid; margin-left: 20px;">
+                @Html.Partial("SimpleTreeByKey_Items", cat.Childs)
+            </div>
+        }
+    </div>
+}

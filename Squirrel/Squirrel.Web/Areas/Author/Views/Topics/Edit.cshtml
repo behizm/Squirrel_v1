@@ -27,7 +27,7 @@
                 @Html.EnumDropDownListFor(m => m.PostsOrdering, true)
                 @Html.ValidationMessageFor(m => m.PostsOrdering)
             </p>
-            <p class="form-group">
+            <p class="form-group" id='@string.Format("edittopiccategory_con_{0}",Model.Id)'>
                 @Html.LabelFor(m => m.CategoryId)
                 <br />
                 @Html.TextBoxFor(m => m.CategoryName, new { @readonly = "readonly", id = "category_edittopic_name" })
@@ -60,11 +60,12 @@
         $.validator.unobtrusive.parse("#topic_edit_form");
         $("#topic_edit_form").data("validator").settings.ignore = "";
 
-        loadCategories("category_edittopic");
-
         $('#category_edittopic_id').on('change', function () {
             $(this).valid();
         });
+
+        loadCategoriesForEdit('@Model.Id');
+        $(document).on('onCategoryChoosed', editTopicCategoryHandler);
     });
 
     $('#publishpdate_edit').MdPersianDateTimePicker({
@@ -82,15 +83,23 @@
         $('#PublishPersianDate').val(toEnglishDigits(dateVal));
     });
 
-    function loadCategories(targetKeyName) {
+    function loadCategoriesForEdit(key) {
         $.ajax({
-            url: '@Url.Action("SimpleTree", "Categories")',
+            url: '@Url.Action("SimpleTreeByKey", "Categories")',
             data: {
-                targetKeyName: targetKeyName,
+                key: key,
             },
             success: function (r) {
                 $('#topicedit_categories_con').html(r);
             },
         });
+    }
+
+    function editTopicCategoryHandler(e) {
+        if (e.key == '@Model.Id') {
+            var $con = $('#edittopiccategory_con_' + '@Model.Id');
+            $con.find('#category_edittopic_name').val(e.name);
+            $con.find('#category_edittopic_id').val(e.id).trigger('change');
+        }
     }
 </script>

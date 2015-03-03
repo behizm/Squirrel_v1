@@ -62,6 +62,11 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
+        public ActionResult Date()
+        {
+            return View();
+        }
+
 
     }
 }

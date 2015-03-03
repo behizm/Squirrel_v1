@@ -47,22 +47,30 @@
         $.validator.unobtrusive.parse("#topic_add_form");
         $("#topic_add_form").data("validator").settings.ignore = "";
 
-        loadCategories("category_addtopic");
-
         $('#category_addtopic_id').on('change', function () {
             $(this).valid();
         });
+
+        loadCategoriesForAdd();
+        $(document).on('onCategoryChoosed', addTopicCategoryHandler);
     });
 
-    function loadCategories(targetKeyName) {
+    function loadCategoriesForAdd() {
         $.ajax({
-            url: '@Url.Action("SimpleTree", "Categories")',
+            url: '@Url.Action("SimpleTreeByKey", "Categories")',
             data: {
-                targetKeyName : targetKeyName,
+                key: 'new',
             },
-            success: function(r) {
+            success: function (r) {
                 $('#topicadd_categories_con').html(r);
             },
         });
+    }
+
+    function addTopicCategoryHandler(e) {
+        if (e.key == "new") {
+            $('#category_addtopic_name').val(e.name);
+            $('#category_addtopic_id').val(e.id).trigger('change');
+        }
     }
 </script>
