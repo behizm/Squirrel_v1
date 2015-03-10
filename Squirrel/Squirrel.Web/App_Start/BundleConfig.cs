@@ -57,6 +57,8 @@ namespace Squirrel.Web
             bundles.Add(new ScriptBundle("~/bundles/PersianDatatimePicker").Include(
                 "~/Scripts/MdBootstrapPersianDateTimePicker/calendar.js",
                 "~/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"));
+
+            BundleTable.EnableOptimizations = false;
         }
     }
 }
