@@ -13,6 +13,7 @@ namespace Squirrel.Service
         Task EditAsync(TopicEditModel model);
         Task DeleteAsync(TopicDeleteModel model, Guid userId);
         Task<Topic> FindByIdAsync(Guid id);
+        Task<Topic> FindByIssueIdAsync(string issueId);
         Task<List<Topic>> SearchAsync<TKey>(TopicSearchModel model, OrderingModel<Topic, TKey> ordering);
         Task<int?> CountAsync(TopicSearchModel model);
         Task<List<Topic>> SearchInPublishedAsync<TKey>(TopicPublishedSearchModel model, OrderingModel<Topic, TKey> ordering);

@@ -17,5 +17,10 @@ namespace Squirrel.Web.Controllers
         {
             return PartialView("AccessDenied");
         }
+
+        public ActionResult NotFound()
+        {
+            return View();
+        }
     }
 }

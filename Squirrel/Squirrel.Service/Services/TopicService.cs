@@ -47,6 +47,13 @@ namespace Squirrel.Service.Services
                 return;
             }
 
+            var issueId = await GenerateIssueId();
+            if (issueId.IsEmpty())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+
             var item = new Topic
             {
                 CategoryId = category.Id,
@@ -55,6 +62,7 @@ namespace Squirrel.Service.Services
                 Title = model.Title,
                 OwnerId = user.Id,
                 EditDate = DateTime.Now,
+                IssueId = issueId,
             };
             await RepositoryContext.CreateAsync(item);
             if (RepositoryContext.OperationResult.Succeeded)
@@ -182,6 +190,18 @@ namespace Squirrel.Service.Services
         public async Task<Topic> FindByIdAsync(Guid id)
         {
             var item = await RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+            if (item == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return item;
+        }
+
+        public async Task<Topic> FindByIssueIdAsync(string issueId)
+        {
+            var item = await RepositoryContext.RetrieveAsync<Topic>(x => x.IssueId == issueId);
             if (item == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
@@ -617,5 +637,30 @@ namespace Squirrel.Service.Services
             return await items.ToListAsync();
         }
 
+        private async Task<string> GenerateIssueId()
+        {
+            while (true)
+            {
+                var topicsCount = await RepositoryContext.CountAsync<Topic>(t => true);
+                if (topicsCount == null)
+                {
+                    return null;
+                }
+
+                var digitCount = topicsCount.Value.Length();
+                digitCount += 2;
+                if (digitCount > 15)
+                {
+                    digitCount = 15;
+                }
+
+                var newId = NumberMethods.RandomFromGuid(digitCount);
+                var existedCount = await RepositoryContext.CountAsync<Topic>(t => t.IssueId == newId);
+                if (existedCount == 0)
+                {
+                    return newId;
+                }
+            }
+        }
     }
 }

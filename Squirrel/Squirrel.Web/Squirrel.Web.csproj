@@ -4539,6 +4539,8 @@
     <Content Include="Views\Issues\Archive.cshtml" />
     <Content Include="Views\Issues\Archive_Filter.cshtml" />
     <Content Include="Views\Issues\Archive_Result.cshtml" />
+    <Content Include="Views\Issue\Item.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">

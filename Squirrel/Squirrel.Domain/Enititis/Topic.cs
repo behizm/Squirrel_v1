@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace Squirrel.Domain.Enititis
 {
@@ -31,6 +32,10 @@ namespace Squirrel.Domain.Enititis
         public bool IsPublished { get; set; }
 
         public DateTime? PublishDate { get; set; }
+
+        [Index("IX_IssueId", IsUnique = true)]
+        [StringLength(15), Required]
+        public string IssueId { get; set; }
 
 
 

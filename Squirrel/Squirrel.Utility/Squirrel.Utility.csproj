@@ -77,6 +77,7 @@
     <Compile Include="FarsiTools\FarsiDigit.cs" />
     <Compile Include="FarsiTools\PersianDate.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
+    <Compile Include="Helpers\NumberExtensions.cs" />
     <Compile Include="Helpers\SelectListExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
