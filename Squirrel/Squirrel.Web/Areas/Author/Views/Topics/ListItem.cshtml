@@ -3,7 +3,11 @@
 
 <div>@Html.DisplayFor(m => m.Title)</div>
 <div style="font-size: 11px; margin-top: 15px;">
-    C:@(((PersianDate)Model.CreateDate).ToStringDateTime())
+    [@Html.DisplayFor(m => m.IssueId)]
+
+    <span style="margin-left: 5px;">
+        C:@(((PersianDate)Model.CreateDate).ToStringDateTime())
+    </span>
 
     @if (Model.PublishDate.HasValue)
     {

@@ -46,9 +46,15 @@ namespace Squirrel.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            //bundles.Add(new StyleBundle("~/Content/css").Include(
+            //          "~/Content/bootstrap.css",
+            //          "~/Content/site.css"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/bootstrap.css"));
+
+            bundles.Add(new StyleBundle("~/Content/vone").Include(
+                      "~/Content/themes/vone/main.css"));
 
             // Persian DateTimePicker
             bundles.Add(new StyleBundle("~/Content/PersianDatatimePicker").Include(

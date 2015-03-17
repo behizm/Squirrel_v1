@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using Squirrel.Domain.Enititis;
+using WebGrease.Css.Extensions;
 
 namespace Squirrel.Web.Controllers
 {
@@ -17,7 +17,9 @@ namespace Squirrel.Web.Controllers
             {
                 return View("NotFound");
             }
-
+            topic.Posts = topic.Posts.OrderByPostOrdering(topic.PostsOrdering);
+            var privatePosts = topic.Posts.Where(p => !p.IsPublic).ToList();
+            privatePosts.ForEach(p => topic.Posts.Remove(p));
             return View("Item", topic);
         }
 

@@ -1,0 +1,19 @@
+﻿html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+}
+.body-container {
+  height: 100%;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-align-content: flex-end;
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+}
+.body-container .footer-container {
+  /*align-items: flex-end;*/
+}
+/*# sourceMappingURL=main.css.map */
