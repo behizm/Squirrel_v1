@@ -1,27 +1,99 @@
-﻿html {
+﻿@mainFont: 20px irnazanin;
+@glyphFont: 20px pe7;
+@bodyBackColor: #e6e9ed;
+@defaultFontColor: #434a54;
+@fontColorDark: #656d78;
+@fontColorMedium: #aab2bd;
+
+html {
     height: 100%;
+    direction: rtl;
 
     body {
         height: 100%;
+        font: @mainFont;
+        background-color: @bodyBackColor;
+        color: @defaultFontColor;
     }
 }
 
+.clearbox {
+    clear: both;
+}
+
+.glyphbox {
+    font: @glyphFont;
+}
+
 .body-container {
-    height: 100%;
+    min-height: 100%;
     display: flex;
     -ms-flex-direction: column;
     flex-direction: column;
-    -ms-align-content: flex-end;
-    -webkit-align-content: flex-end;
-    align-content: flex-end;
+    justify-content: center;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    position: relative;
 
     .header-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        .header {
+            height: 120px;
+
+            .logo-con {
+                padding-top: 10px;
+
+                .logo {
+                    float: right;
+
+                    img {
+                        height: 80px;
+                    }
+                }
+
+                .sitename {
+                    float: right;
+                    line-height: 30px;
+                    margin-top: 10px;
+                    padding-right: 20px;
+                    color: @fontColorDark;
+
+                    .name {
+                        font-size: 1.2em;
+                    }
+
+                    .desc {
+                        font-size: .85em;
+                    }
+                }
+
+                .menu-opener {
+                    float: right;
+                    font-size: 2.5em;
+                    line-height: 80px;
+                    color: @fontColorDark;
+                    padding-right: 10px;
+                }
+            }
+        }
     }
 
     .main-container {
     }
 
     .footer-container {
-        /*align-items: flex-end;*/
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        .footer {
+            background-color: #eee;
+            height: 60px;
+        }
     }
 }

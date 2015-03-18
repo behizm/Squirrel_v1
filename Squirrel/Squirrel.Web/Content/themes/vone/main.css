@@ -1,19 +1,75 @@
 ﻿html {
   height: 100%;
+  direction: rtl;
 }
 html body {
   height: 100%;
+  font: 20px irnazanin;
+  background-color: #e6e9ed;
+  color: #434a54;
+}
+.clearbox {
+  clear: both;
+}
+.glyphbox {
+  font: 20px pe7;
 }
 .body-container {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
-  -ms-align-content: flex-end;
-  -webkit-align-content: flex-end;
-  align-content: flex-end;
+  justify-content: center;
+  padding-top: 120px;
+  padding-bottom: 60px;
+  position: relative;
+}
+.body-container .header-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.body-container .header-container .header {
+  height: 120px;
+}
+.body-container .header-container .header .logo-con {
+  padding-top: 10px;
+}
+.body-container .header-container .header .logo-con .logo {
+  float: right;
+}
+.body-container .header-container .header .logo-con .logo img {
+  height: 80px;
+}
+.body-container .header-container .header .logo-con .sitename {
+  float: right;
+  line-height: 30px;
+  margin-top: 10px;
+  padding-right: 20px;
+  color: #656d78;
+}
+.body-container .header-container .header .logo-con .sitename .name {
+  font-size: 1.2em;
+}
+.body-container .header-container .header .logo-con .sitename .desc {
+  font-size: .85em;
+}
+.body-container .header-container .header .logo-con .menu-opener {
+  float: right;
+  font-size: 2.5em;
+  line-height: 80px;
+  color: #656d78;
+  padding-right: 10px;
 }
 .body-container .footer-container {
-  /*align-items: flex-end;*/
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.body-container .footer-container .footer {
+  background-color: #eee;
+  height: 60px;
 }
 /*# sourceMappingURL=main.css.map */

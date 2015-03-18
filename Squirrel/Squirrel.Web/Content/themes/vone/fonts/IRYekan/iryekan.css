@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'IRYekanRegular';
+    src: url('iryekan.eot');
+    src: url('iryekan.eot') format('embedded-opentype'),
+         url('iryekan.woff') format('woff'),
+         url('iryekan.ttf') format('truetype'),
+         url('iryekan.svg#IRYekanRegular') format('svg');
+}

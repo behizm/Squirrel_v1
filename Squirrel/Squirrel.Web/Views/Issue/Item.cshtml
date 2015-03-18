@@ -3,20 +3,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div>
-    @Html.DisplayFor(m => m.Title)
+<div class="col-md-12">
+    <div>
+        @Html.DisplayFor(m => m.Title)
+    </div>
+
+    <div>
+        @Html.DisplayFor(m => m.PublishDate)
+    </div>
+
+    <hr />
+
+    @foreach (var post in Model.Posts)
+    {
+        var item = post;
+        <p>
+            @Html.DisplayFor(m => item.CreateDate)
+        </p>
+    }
 </div>
-
-<div>
-    @Html.DisplayFor(m => m.PublishDate)
-</div>
-
-<hr />
-
-@foreach (var post in Model.Posts)
-{
-    var item = post;
-    <p>
-        @Html.DisplayFor(m => item.CreateDate)
-    </p>
-}
