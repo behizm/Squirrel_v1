@@ -1,0 +1,108 @@
+﻿@model Squirrel.Domain.ViewModels.CommentAddPublicModel
+
+<div class="row form-con" style="display: none;" id="add_comment_form_con">
+    @using (Ajax.BeginForm("AddComment", "Issue", null,
+        new AjaxOptions { OnBegin = "onAddCommentBegin", OnSuccess = "onAddCommentSuccess", OnFailure = "onAddCommentError" },
+        new { }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.PostId)
+
+        <div class="col-sm-12">
+            <div class="message-box error" style="margin-bottom: 30px; display: none;" id="add_comment_error">
+                <span class="msg-close glyphbox">&#xe680</span>
+                <div class="msg-topic">خطا !</div>
+                <div class="msg-text"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-5">
+            <div class="formrow">
+                @Html.TextBoxFor(m => m.Name, new { @class = "textbox full", @placeholder = "نام" })
+            </div>
+            <div class="formrow">
+                @Html.TextBoxFor(m => m.Email, new { @class = "textbox full", @placeholder = "ایمیل" })
+            </div>
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="formrow">
+                        @Html.TextBox("assas", null, new { @class = "textbox full" })
+                    </div>
+                </div>
+                <div class="col-xs-7">
+                    <div class="formrow">
+                        @Html.TextBoxFor(m => m.Captcha, new { @class = "textbox full", @placeholder = "عبارت امنیتی" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="formrow">
+                @Html.TextAreaFor(m => m.Body, new { @class = "textarea height3 full fix", @placeholder = "متن نظر" })
+            </div>
+        </div>
+        <div class="col-sm-12 submit-con" style="display: none;" id="add_comment_submit_con">
+            <button class="button action large secondary2 inline" type="submit">&#xe668</button>
+            <button class="button action large secondary1" onclick="hideAddCommentFrom()">&#xe680</button>
+            @Html.Partial("Loading", "addcomment_loading")
+        </div>
+    }
+</div>
+
+<div class="button-con" id="add_comment_button_con">
+    <button class="button action large secondary2" onclick="showAddCommentFrom(this)">&#xe668</button>
+    <button class="button action large secondary1" style="display: none;">&#xe680</button>
+</div>
+
+<div class="message-box success" style="display: none;" id="add_comment_success">
+    <span class="msg-close glyphbox">&#xe680</span>
+    <div class="msg-topic">نظر شما با موفقیت ثبت شد !</div>
+    <div class="msg-text">نظر شما بعد از تائید نویسنده مطلب نمایش داده خواهد شد.</div>
+</div>
+
+
+<script type="text/javascript">
+    function showAddCommentFrom(e) {
+        $(e).addClass('inline');
+        $(e).next().show();
+        setTimeout(function () {
+            $('#add_comment_form_con').slideDown(500);
+        }, 200);
+        setTimeout(function () {
+            $('#add_comment_button_con').hide();
+            $('#add_comment_submit_con').show();
+        }, 700);
+    }
+
+    function hideAddCommentFrom() {
+        $('#add_comment_submit_con').hide();
+        $('#add_comment_button_con').show();
+        $('#add_comment_form_con').slideUp(300);
+        setTimeout(function () {
+            $('#add_comment_button_con button:eq(0)').removeClass('inline');
+            $('#add_comment_button_con button:eq(1)').hide();
+        }, 500);
+    }
+
+    function onAddCommentBegin() {
+        $('#addcomment_loading').show();
+    }
+
+    function onAddCommentError() {
+        $('#addcomment_loading').hide();
+        $('#add_comment_error .msg-text').text('هنگام ثبت نظر شما خطایی رخ داد. لطفا کمی دیرتر مجددا تلاش کنید.');
+        $('#add_comment_error').show();
+    }
+
+    function onAddCommentSuccess(data) {
+        $('#addcomment_loading').hide();
+        if (data.result == false) {
+            $('#add_comment_error .msg-text').text(data.message);
+            $('#add_comment_error').show();
+        } else {
+            $('#add_comment_error').hide();
+            $('#add_comment_form_con').hide();
+            $('#add_comment_success').show();
+        }
+    }
+</script>

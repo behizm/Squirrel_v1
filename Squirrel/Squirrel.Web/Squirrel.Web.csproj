@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Bower.js.1.2.7.10\build\bower.js.props" Condition="Exists('..\packages\Bower.js.1.2.7.10\build\bower.js.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,6 +21,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <NuGetPackageImportStamp>fda10073</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -4332,6 +4334,8 @@
     <Content Include="ckeditor\skins\office2013\images\refresh.png" />
     <Content Include="ckeditor\skins\office2013\skin.js" />
     <Content Include="ckeditor\styles.js" />
+    <Content Include="Content\bootstrap-rtl\bootstrap-rtl.css" />
+    <Content Include="Content\bootstrap-rtl\bootstrap-rtl.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -4372,6 +4376,8 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\themes\vone\fonts.css" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRAN Sans.html" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\style.css" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.svg" />
     <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.svg" />
     <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.svg" />
@@ -4403,6 +4409,12 @@
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.svg" />
     <Content Include="Content\themes\vone\images\favicon.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
+    <Content Include="Content\themes\vone\loading.css">
+      <DependentUpon>loading.less</DependentUpon>
+    </Content>
+    <Content Include="Content\themes\vone\loading.min.css">
+      <DependentUpon>loading.css</DependentUpon>
+    </Content>
     <Content Include="Content\themes\vone\main.css">
       <DependentUpon>main.less</DependentUpon>
     </Content>
@@ -4525,9 +4537,6 @@
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.svgz" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.ttf" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.woff" />
-    <Content Include="Content\themes\vone\fonts\IRSans\irsans.eot" />
-    <Content Include="Content\themes\vone\fonts\IRSans\irsans.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRSans\irsans.woff" />
     <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.eot" />
     <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.ttf" />
     <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.woff" />
@@ -4562,7 +4571,56 @@
     <Content Include="Content\themes\vone\fonts\Pe7stroke\pe-icon-7-stroke\fonts\Pe-icon-7-stroke.eot" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\pe-icon-7-stroke\fonts\Pe-icon-7-stroke.ttf" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\pe-icon-7-stroke\fonts\Pe-icon-7-stroke.woff" />
+    <Content Include="bower.json" />
+    <Content Include=".bowerrc" />
+    <Content Include="Content\bootstrap-rtl\bootstrap-rtl.css.map" />
+    <Content Include="Content\themes\vone\palette.less" />
+    <Content Include="Content\themes\vone\functions.less" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.eot" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.woff" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans black\IRAN Sans Black.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans black\IRAN-Sans-Black.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Bold\IRAN Sans Bold.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Bold\IRAN-Sans-Bold.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN Sans Light Expanded.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN Sans Light.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN-Sans-Light.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Ultra Light\IRAN Sans Ultra Light.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Ultra Light\IRAN-Sans-Ultra-Light.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN Sans Expanded.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN Sans.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN-Sans.ttf" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IIRANSansLE.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IIRANSansLE.woff" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IIRANSansLE.eot" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansB.eot" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansB.woff" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansB.woff2" />
+    <Content Include="Content\themes\vone\loading.less" />
+    <Content Include="Content\themes\vone\loading.css.map">
+      <DependentUpon>loading.css</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="npmPlaceholder.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\General\CommonMethods.js" />
@@ -4581,6 +4639,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lib\readmelibs.txt" />
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\calendar.js" />
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\calendar.min.js" />
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.js" />
@@ -4626,6 +4685,13 @@
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Issue\Post.cshtml" />
+    <Content Include="Views\Issue\Post_Info.cshtml" />
+    <Content Include="Views\Issue\Post_Tags.cshtml" />
+    <Content Include="Views\Issue\Post_Attachments.cshtml" />
+    <Content Include="Views\Issue\Post_AddComment.cshtml" />
+    <Content Include="Views\Shared\Loading.cshtml" />
+    <Content Include="Views\Issue\Post_Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">
@@ -4680,6 +4746,16 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Npm.js.1.3.15.4\build\npm.js.targets" Condition="Exists('..\packages\Npm.js.1.3.15.4\build\npm.js.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Npm.js.1.3.15.4\build\npm.js.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Npm.js.1.3.15.4\build\npm.js.targets'))" />
+    <Error Condition="!Exists('..\packages\Bower.js.1.2.7.10\build\bower.js.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bower.js.1.2.7.10\build\bower.js.props'))" />
+    <Error Condition="!Exists('..\packages\Bower.js.1.2.7.10\build\bower.js.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bower.js.1.2.7.10\build\bower.js.targets'))" />
+  </Target>
+  <Import Project="..\packages\Bower.js.1.2.7.10\build\bower.js.targets" Condition="Exists('..\packages\Bower.js.1.2.7.10\build\bower.js.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

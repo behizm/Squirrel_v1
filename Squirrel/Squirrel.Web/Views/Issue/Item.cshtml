@@ -1,24 +1,10 @@
 ﻿@model Squirrel.Domain.Enititis.Topic
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.Title;
 }
 
-<div class="col-md-12">
-    <div>
-        @Html.DisplayFor(m => m.Title)
-    </div>
-
-    <div>
-        @Html.DisplayFor(m => m.PublishDate)
-    </div>
-
-    <hr />
-
-    @foreach (var post in Model.Posts)
-    {
-        var item = post;
-        <p>
-            @Html.DisplayFor(m => item.CreateDate)
-        </p>
-    }
-</div>
+@foreach (var post in Model.Posts)
+{
+    @Html.Partial("Post", post)
+}

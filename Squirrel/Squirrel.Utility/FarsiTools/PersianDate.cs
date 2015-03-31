@@ -192,5 +192,38 @@ namespace Squirrel.Utility.FarsiTools
             }
             return null;
         }
+
+        public static string PersianAgo(this DateTime date)
+        {
+            var days = Math.Floor((DateTime.Now - date).TotalDays);
+            if (days >= 365)
+            {
+                return string.Format("{0} سال پیش", (int)(days / 365));
+            }
+
+            if (days >= 30)
+            {
+                return string.Format("{0} ماه پیش", (int)(days / 30));
+            }
+
+            if (days >= 7)
+            {
+                return string.Format("{0} هفته پیش", (int)(days / 7));
+            }
+
+            if (days >= 1)
+            {
+                return string.Format("{0} روز پیش", days);
+            }
+
+            var hours = Math.Floor((DateTime.Now - date).TotalHours);
+            if (hours >= 1)
+            {
+                return string.Format("{0} ساعت پیش", hours);
+            }
+
+            var minutes = Math.Floor((DateTime.Now - date).TotalMinutes);
+            return minutes > 1 ? string.Format("{0} دقیقه پیش", minutes) : "یک دقیقه پیش";
+        }
     }
 }

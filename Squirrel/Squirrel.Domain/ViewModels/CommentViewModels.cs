@@ -35,6 +35,18 @@ namespace Squirrel.Domain.ViewModels
         public string Username { get; set; }
     }
 
+    public class CommentAddPublicModel : CommentAddModel
+    {
+        [Display(Name = @"نام")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [StringLength(50, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
+        public new string Name { get; set; }
+
+        [Display(Name = @"عبارت امنیتی")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public string Captcha { get; set; }
+    }
+
     public class CommentEditModel
     {
         public Guid Id { get; set; }

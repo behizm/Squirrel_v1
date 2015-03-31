@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Squirrel.Domain.Enititis.Comment>
+
+@foreach (var comment in Model)
+{
+    var item = comment;
+
+    <div>
+        @Html.DisplayFor(m => item.Body)
+    </div>
+    <div class="divider-full-1"></div>
+}

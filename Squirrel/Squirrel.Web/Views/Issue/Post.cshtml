@@ -1,0 +1,64 @@
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Post
+
+<div class="col-md-12 post-i-con">
+    @if (Model.HeaderImageId.HasValue)
+    {
+        <div class="main-pic">
+            <img src="@Url.Content(Model.HeaderImage.Address)" />
+        </div>
+    }
+
+    <div class="post-box">
+        <div class="col-md-2">
+            @Html.Partial("Post_Info", Model)
+        </div>
+        <div class="col-md-10">
+            <div class="base">
+                <div class="title">
+                    @Html.DisplayFor(m => m.Topic.Title)
+                </div>
+                <div class="divider-right-1"></div>
+                <div class="content">
+                    @Html.Raw(Model.Body)
+                </div>
+                <div class="divider-right-1"></div>
+                <div class="pdate">
+                    <span class="glyphbox">&#xe660</span>
+                    @if (Model.PublishDate.HasValue)
+                    {
+                        <span class="text">
+                            @(((PersianDate)Model.PublishDate.Value).ToStringDateTime().FaDigit())
+                        </span>
+                    }
+                </div>                @if (Model.Attachments.Any())
+                {
+                    <div class="attachments-con">
+                        @Html.Partial("Post_Attachments", Model.Attachments)
+                    </div>
+                }
+                @if (Model.Tags.Any())
+                {
+                    <div class="tags-con">
+                        @Html.Partial("Post_Tags", Model.Tags)
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="clearbox"></div>
+    </div>
+    <div class="comment-con">
+        <div class="topic">نظرات</div>
+        <div class="divider-full-1"></div>
+        @if (Model.Comments.Any(x => x.IsConfirmed))
+        {
+            <div class="comments">
+                @Html.Partial("Post_Comments", Model.Comments.Where(x => x.IsConfirmed).OrderBy(x => x.CreateDate))
+            </div>
+        }
+        <div class="add-comment">
+            @Html.Partial("Post_AddComment", new CommentAddPublicModel { PostId = Model.Id })
+        </div>
+    </div>
+</div>

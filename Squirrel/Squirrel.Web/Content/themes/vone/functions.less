@@ -1,0 +1,96 @@
+﻿.BorderBox() {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.Transition(@property,@style,@time) {
+    -moz-transition: @property @style @time;
+    -o-transition: @property @style @time;
+    -webkit-transition: @property @style @time;
+    transition: @property @style @time;
+}
+
+.Transition(@property,@style,@time,@delay) {
+    -moz-transition: @property @style @time @delay;
+    -o-transition: @property @style @time @delay;
+    -webkit-transition: @property @style @time @delay;
+    transition: @property @style @time @delay;
+}
+
+.Transitions(@properties;@styles;@times) {
+    -moz-transition: @properties @styles @times;
+    -o-transition: @properties @styles @times;
+    -webkit-transition: @properties @styles @times;
+    transition: @properties @styles @times;
+}
+
+.RotateX(@deg) {
+    -webkit-transform: rotateX(@deg);
+    -moz-transform: rotateX(@deg);
+    -ms-transform: rotateX(@deg);
+    -o-transform: rotateX(@deg);
+    transform: rotateX(@deg);
+}
+
+.RotateY(@deg) {
+    -webkit-transform: rotateY(@deg);
+    -moz-transform: rotateY(@deg);
+    -ms-transform: rotateY(@deg);
+    -o-transform: rotateY(@deg);
+    transform: rotateY(@deg);
+}
+
+.RotateZ(@deg) {
+    -webkit-transform: rotateZ(@deg);
+    -moz-transform: rotateZ(@deg);
+    -ms-transform: rotateZ(@deg);
+    -o-transform:  rotateZ(@deg);
+    transform: rotateZ(@deg);
+}
+
+.TranslateY(@unit) {
+    -webkit-transform: translateY(@unit);
+    -moz-transform: translateY(@unit);
+    -ms-transform: translateY(@unit);
+    -o-transform: translateY(@unit);
+    transform: translateY(@unit);
+}
+
+.Transform(@property) {
+    -webkit-transform: @property;
+    -moz-transform: @property;
+    -ms-transform: @property;
+    -o-transform: @property;
+    transform: @property;
+}
+
+.TransitionTransform(@style,@time) {
+    -moz-transition: -moz-transform @style @time;
+    -o-transition: -o-transform @style @time;
+    -webkit-transition: -webkit-transform @style @time;
+    transition: transform @style @time;
+}
+
+.Backface-Visibility(@unit: hidden) {
+    -webkit-backface-visibility: @unit;
+    -moz-backface-visibility: @unit;
+    -ms-backface-visibility: @unit;
+    -o-backface-visibility: @unit;
+    backface-visibility: @unit;
+}
+
+.Perspective(@unit) {
+    -webkit-perspective: @unit;
+    -moz-perspective: @unit;
+    -ms-perspective: @unit;
+    -o-perspective: @unit;
+    perspective: @unit;
+}
+
+.absolutePostion(@top @right @bottom @left) {
+    top: @top;
+    right: @right;
+    bottom: @bottom;
+    left: @left;
+}

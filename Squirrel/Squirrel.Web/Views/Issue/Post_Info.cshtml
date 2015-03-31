@@ -1,0 +1,58 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Post
+
+<div class="row info">
+    <div class="col-md-12 col-xs-4 ptime">
+        <span class="glyphbox">&#xe66b</span>
+        @if (Model.PublishDate.HasValue)
+        {
+            <span class="text">
+                @Model.PublishDate.Value.PersianAgo().FaDigit()
+            </span>
+        }
+    </div>
+    <div class="col-md-12 col-xs-4 profile">
+        @if (Model.Author.Profile == null)
+        {
+            <div class="pic">
+                <span class="glyphbox">&#xe628</span>
+            </div>
+            <div class="name">@Html.DisplayFor(m => m.Author.Username)</div>
+        }
+        else
+        {
+            if (Model.Author.Profile.AvatarId.HasValue)
+            {
+                <div class="pic">
+                    <img src="@Url.Content(Model.Author.Profile.Avatar.Address)" />
+                </div>
+            }
+            else
+            {
+                <span class="glyphbox">&#xe628</span>
+            }
+            <div class="name">
+                @Html.DisplayFor(m => m.Author.Profile.Firstname)
+                @Html.DisplayFor(m => m.Author.Profile.Lastname)
+            </div>
+        }
+    </div>
+    <div class="col-md-12 col-xs-4 profile">
+        @if (Model.Topic.Category.AvatarId.HasValue)
+        {
+            <div class="pic">
+                <img src="@Url.Content(Model.Topic.Category.Avatar.Address)" />
+            </div>
+        }
+        else
+        {
+            <div class="pic">
+                <span class="glyphbox">&#xe69b</span>
+            </div>
+        }
+        <div class="name">
+            @Html.DisplayFor(m => m.Topic.Category.Name)
+        </div>
+    </div>
+</div>
+

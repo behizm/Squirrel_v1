@@ -60,11 +60,21 @@
 
 @font-face {
   font-family: 'irsans';
-  src: url('fonts/IRSans/irsans.woff') format('woff'),              
-       url('fonts/IRSans/irsans.ttf') format('truetype'),
-       url('fonts/IRSans/irsans.eot?#iefix') format('embedded-opentype'),
+  src: url('fonts/IRSans/IIRANSansLE.eot?#') format('eot'),   
+       url('fonts/IRSans/IIRANSansLE.woff2') format('woff2'), 
+       url('fonts/IRSans/IIRANSansLE.woff') format('woff'),
        url('fonts/IranSansZ/iransansz-webfont.svg#IranSansZ') format('svg');
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'irsans';
+  src: url('fonts/IRSans/IRANSansB.eot?#') format('eot'),   
+       url('fonts/IRSans/IRANSansB.woff2') format('woff2'), 
+       url('fonts/IRSans/IRANSansB.woff') format('woff'),
+       url('fonts/IranSansZ/iransansz-webfont.svg#IranSansZ') format('svg');
+  font-weight: bold;
   font-style: normal;
 }
 
