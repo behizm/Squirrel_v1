@@ -1,4 +1,9 @@
-﻿@model Squirrel.Domain.ViewModels.CommentAddPublicModel
+﻿@using System.Drawing
+@using BotDetect
+@using BotDetect.Web.UI.Mvc
+@model Squirrel.Domain.ViewModels.CommentAddPublicModel
+
+<link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
 
 <div class="row form-con" style="display: none;" id="add_comment_form_con">
     @using (Ajax.BeginForm("AddComment", "Issue", null,
@@ -18,40 +23,51 @@
 
         <div class="col-sm-5">
             <div class="formrow">
-                @Html.TextBoxFor(m => m.Name, new { @class = "textbox full", @placeholder = "نام" })
+                @Html.TextBoxFor(m => m.Name, new { @class = "textbox full", @placeholder = "نام", @tabindex = "1" })
             </div>
             <div class="formrow">
-                @Html.TextBoxFor(m => m.Email, new { @class = "textbox full", @placeholder = "ایمیل" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "textbox full", @placeholder = "ایمیل", @tabindex = "2" })
             </div>
             <div class="row">
-                <div class="col-xs-5">
+                <div class="col-md-5 col-sm-6 col-xs-6">
                     <div class="formrow">
-                        @Html.TextBox("assas", null, new { @class = "textbox full" })
+                        <div class="captcha-con">
+                            @{ var sampleCaptcha = new MvcCaptcha("SampleCaptcha")
+                           {
+                               ImageFormat = ImageFormat.Jpeg,
+                               ImageStyle = ImageStyle.SunAndWarmAir,
+                               CodeLength = 4,
+                               CaptchaImageTooltip = "عبارت امنیتی را به درستی وارد کنید.",
+                               CodeStyle = CodeStyle.Numeric,
+                               ImageSize = new Size(138, 44),
+                           }; }
+                            @Html.Captcha(sampleCaptcha)
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-7">
+                <div class="col-md-7 col-sm-6 col-xs-6">
                     <div class="formrow">
-                        @Html.TextBoxFor(m => m.Captcha, new { @class = "textbox full", @placeholder = "عبارت امنیتی" })
+                        @Html.TextBoxFor(m => m.Captcha, new { @class = "textbox full", @placeholder = "عبارت امنیتی", @tabindex = "3" })
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-7">
             <div class="formrow">
-                @Html.TextAreaFor(m => m.Body, new { @class = "textarea height3 full fix", @placeholder = "متن نظر" })
+                @Html.TextAreaFor(m => m.Body, new { @class = "textarea height3 full fix", @placeholder = "متن نظر", @tabindex = "4" })
             </div>
         </div>
         <div class="col-sm-12 submit-con" style="display: none;" id="add_comment_submit_con">
             <button class="button action large secondary2 inline" type="submit">&#xe668</button>
-            <button class="button action large secondary1" onclick="hideAddCommentFrom()">&#xe680</button>
+            <button class="button action large secondary1" type="button" onclick="hideAddCommentFrom()">&#xe680</button>
             @Html.Partial("Loading", "addcomment_loading")
         </div>
     }
 </div>
 
 <div class="button-con" id="add_comment_button_con">
-    <button class="button action large secondary2" onclick="showAddCommentFrom(this)">&#xe668</button>
-    <button class="button action large secondary1" style="display: none;">&#xe680</button>
+    <button class="button action large secondary2" type="button" onclick="showAddCommentFrom(this)">&#xe668</button>
+    <button class="button action large secondary1" type="button" style="display: none;">&#xe680</button>
 </div>
 
 <div class="message-box success" style="display: none;" id="add_comment_success">
@@ -92,6 +108,9 @@
         $('#addcomment_loading').hide();
         $('#add_comment_error .msg-text').text('هنگام ثبت نظر شما خطایی رخ داد. لطفا کمی دیرتر مجددا تلاش کنید.');
         $('#add_comment_error').show();
+        // Reload Captcha
+        SampleCaptcha.ReloadImage();
+        $('#Captcha').val('');
     }
 
     function onAddCommentSuccess(data) {
@@ -99,6 +118,9 @@
         if (data.result == false) {
             $('#add_comment_error .msg-text').text(data.message);
             $('#add_comment_error').show();
+            // Reload Captcha
+            SampleCaptcha.ReloadImage();
+            $('#Captcha').val('');
         } else {
             $('#add_comment_error').hide();
             $('#add_comment_form_con').hide();

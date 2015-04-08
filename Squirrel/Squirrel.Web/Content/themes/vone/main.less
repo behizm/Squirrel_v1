@@ -2,12 +2,12 @@
 @smallFont: 13px tahoma;
 @glyphFont: 20px pe7;
 
-@mainShadowDark10: -3px 3px 6px 0 rgba(44, 62, 80, 0.1);
-@mainShadowDark10Active: 0 0 6px 0 rgba(44, 62, 80, 0.1);
-@mainShadowDark15: -3px 3px 6px 0 rgba(44, 62, 80, 0.15);
-@mainShadowDark15Active: 0 0 6px 0 rgba(44, 62, 80, 0.15);
-@mainShadowDark20: -3px 3px 6px 0 rgba(44, 62, 80, 0.2);
-@mainShadowDark20Active: 0 0 6px 0 rgba(44, 62, 80, 0.2);
+@mainShadowDark10: 0 3px 5px 0 rgba(44, 62, 80, 0.1);
+@mainShadowDark10Active: 0 0 5px 0 rgba(44, 62, 80, 0.1);
+@mainShadowDark15: 0 3px 5px 0 rgba(44, 62, 80, 0.15);
+@mainShadowDark15Active: 0 0 5px 0 rgba(44, 62, 80, 0.15);
+@mainShadowDark20: 0 3px 5px 0 rgba(44, 62, 80, 0.2);
+@mainShadowDark20Active: 0 0 5px 0 rgba(44, 62, 80, 0.2);
 
 @import "palette.less";
 @import "functions.less";
@@ -76,7 +76,7 @@ html {
     }
 
     &.input-validation-error {
-        outline: 1px solid @primaryLightColor;
+        border-right: 10px solid @primaryLightColor;
     }
 
     &.inline {
@@ -376,10 +376,12 @@ html {
 
             .poweredby {
                 text-align: left;
+                line-height: 30px;
             }
 
             .copyright {
                 text-align: right;
+                line-height: 30px;
             }
 
             .important {
@@ -611,6 +613,41 @@ html {
             color: @grayLight2;
         }
 
+        .comments {
+            .rightcol {
+                text-align: center;
+
+                .avatar-con {
+                    width: 60px;
+                    height: 60px;
+                    line-height: 60px;
+                    border-radius: 60px;
+                    background-color: @primaryLightColor;
+                    color: @white;
+                    margin: auto;
+                    font-size: 1.2em;
+                }
+
+                .name {
+                    font-size: .9em;
+                    color: @grayDark3;
+                    padding-top: 10px;
+                }
+            }
+
+            .leftcol {
+                .date {
+                    line-height: 60px;
+                    font-size: .8em;
+                    color: @grayDark4;
+                }
+
+                .content {
+                    font-size: .9em;
+                }
+            }
+        }
+
         .add-comment {
             text-align: center;
             padding: 15px 0;
@@ -624,6 +661,12 @@ html {
                         .absolutePostion(11px,15px,auto,auto);
                         display: none;
                     }
+                }
+
+                .captcha-con {
+                    width: 138px;
+                    height: 44px;
+                    overflow: hidden;
                 }
             }
         }

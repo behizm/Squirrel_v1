@@ -15,16 +15,15 @@
         <div class="clearbox"></div>
     </div>
     <div class="col-sm-6 hidden-xs search-con">
-        @*@Html.TextBox("searchText", null, new { @class = "textbox", @placeholder = "جستجو" })*@
         <div class="textpackage with-tail">
             @Html.TextBox("searchText", null, new { @class = "textbox", @placeholder = "جستجو" })
-            <span class="tail glyphbox activeflat">&#xe687</span>
+            <span class="tail glyphbox activeflat">&#xe618</span>
         </div>
     </div>
     <div class="col-xs-4 visible-xs search-con">
         <div class="textpackage with-tail full">
-            @Html.TextBox("searchText", null, new { @class = "textbox", @placeholder = "جستجو", id="xsmallsearchbox" })
-            <span class="tail glyphbox activeflat">&#xe687</span>
+            @Html.TextBox("searchText", null, new { @class = "textbox", @placeholder = "", id="xsmallsearchbox" })
+            <span class="tail glyphbox activeflat">&#xe618</span>
         </div>
     </div>
 </div>

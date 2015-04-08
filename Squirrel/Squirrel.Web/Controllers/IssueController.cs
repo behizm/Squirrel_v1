@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using BotDetect.Web.UI;
+using BotDetect.Web.UI.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
@@ -36,20 +38,33 @@ namespace Squirrel.Web.Controllers
             return View("Item");
         }
 
-        public async Task<JsonResult> AddComment(CommentAddModel model)
+        [CaptchaValidation("Captcha", "SampleCaptcha", "Incorrect CAPTCHA code!")]
+        public async Task<JsonResult> AddComment(CommentAddPublicModel model)
         {
+            if (ModelState["Captcha"].Errors.Any())
+            {
+                return Json(new { result = false, message = "عبارت امنیتی را به درستی وارد کنید." },
+                    JsonRequestBehavior.AllowGet);
+            }
+
             if (!ModelState.IsValid)
             {
                 return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
                     JsonRequestBehavior.AllowGet);
             }
 
-            model.IsConfirmed = false;
-            model.IsRead = false;
-            model.ParentId = null;
-            model.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
+            var item = new CommentAddModel
+            {
+                Body = model.Body,
+                Email = model.Email,
+                IsConfirmed = false,
+                IsRead = false,
+                Name = model.Name,
+                PostId = model.PostId,
+                Username = User.Identity.IsAuthenticated ? User.Identity.Name : null,
+            };
 
-            await CommentService.AddAsync(model);
+            await CommentService.AddAsync(item);
             if (CommentService.Result.Succeeded)
             {
                 return Json(new { result = true }, JsonRequestBehavior.AllowGet);

@@ -64,11 +64,11 @@ html body {
   background-color: #ffffff;
   color: #515963;
   outline: none;
-  box-shadow: -3px 3px 6px 0 rgba(44, 62, 80, 0.1);
+  box-shadow: 0 3px 5px 0 rgba(44, 62, 80, 0.1);
 }
 .textbox.input-validation-error,
 .textarea.input-validation-error {
-  outline: 1px solid #fc97a1;
+  border-right: 10px solid #fc97a1;
 }
 .textbox.inline,
 .textarea.inline {
@@ -170,7 +170,7 @@ html body {
   padding: 0;
   width: 44px;
   border-radius: 44px;
-  box-shadow: -3px 3px 6px 0 rgba(44, 62, 80, 0.2);
+  box-shadow: 0 3px 5px 0 rgba(44, 62, 80, 0.2);
   -moz-transition: box-shadow, background-color linear, linear 0.1s;
   -o-transition: box-shadow, background-color linear, linear 0.1s;
   -webkit-transition: box-shadow, background-color linear, linear 0.1s;
@@ -182,7 +182,7 @@ html body {
   border-radius: 54px;
 }
 .button.action:active {
-  box-shadow: 0 0 6px 0 rgba(44, 62, 80, 0.2);
+  box-shadow: 0 0 5px 0 rgba(44, 62, 80, 0.2);
 }
 .button.primary {
   background-color: #fb7d89;
@@ -327,9 +327,11 @@ html body {
 }
 .body-container .footer-container .footer .poweredby {
   text-align: left;
+  line-height: 30px;
 }
 .body-container .footer-container .footer .copyright {
   text-align: right;
+  line-height: 30px;
 }
 .body-container .footer-container .footer .important {
   color: #f74f5f;
@@ -536,6 +538,32 @@ html body {
   font-size: 1.5em;
   color: #bdc1c7;
 }
+.post-i-con .comment-con .comments .rightcol {
+  text-align: center;
+}
+.post-i-con .comment-con .comments .rightcol .avatar-con {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 60px;
+  background-color: #fc97a1;
+  color: #ffffff;
+  margin: auto;
+  font-size: 1.2em;
+}
+.post-i-con .comment-con .comments .rightcol .name {
+  font-size: .9em;
+  color: #696f78;
+  padding-top: 10px;
+}
+.post-i-con .comment-con .comments .leftcol .date {
+  line-height: 60px;
+  font-size: .8em;
+  color: #84888f;
+}
+.post-i-con .comment-con .comments .leftcol .content {
+  font-size: .9em;
+}
 .post-i-con .comment-con .add-comment {
   text-align: center;
   padding: 15px 0;
@@ -550,6 +578,11 @@ html body {
   bottom: auto;
   left: auto;
   display: none;
+}
+.post-i-con .comment-con .add-comment .form-con .captcha-con {
+  width: 138px;
+  height: 44px;
+  overflow: hidden;
 }
 /* ------ */
 @-webkit-keyframes animation-activeInBack {

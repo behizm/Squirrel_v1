@@ -1,11 +1,29 @@
-﻿@model IEnumerable<Squirrel.Domain.Enititis.Comment>
+﻿@using Squirrel.Utility.FarsiTools
+@model IEnumerable<Squirrel.Domain.Enititis.Comment>
 
 @foreach (var comment in Model)
 {
     var item = comment;
 
-    <div>
-        @Html.DisplayFor(m => item.Body)
+    <div class="row">
+        <div class="col-md-2 col-sm-3 col-xs-4 rightcol">
+            <div class="avatar-con">
+                @(((PersianDate)item.CreateDate).Day.FaDigit())
+            </div>
+            <div class="name">
+                @Html.DisplayFor(m => item.Name)
+            </div>
+        </div>
+        <div class="col-md-10 col-sm-9 col-xs-8 leftcol">
+            <div class="date">
+                @(((PersianDate)item.CreateDate).ToStringDateTime().FaDigit())
+            </div>
+            <div class="content">
+                @Html.DisplayFor(m => item.Body)
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="divider-full-1"></div>
+        </div>
     </div>
-    <div class="divider-full-1"></div>
 }
