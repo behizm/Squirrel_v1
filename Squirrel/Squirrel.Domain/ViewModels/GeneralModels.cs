@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Squirrel.Domain.ViewModels
@@ -13,7 +14,7 @@ namespace Squirrel.Domain.ViewModels
         }
 
         public System.Linq.Expressions.Expression<Func<TSource, TKey>> OrderByKeySelector { get; set; }
-
+        public Func<TSource, TKey> OrderByKeySelectorFunc { get; set; }
         public bool IsAscending { get; set; }
         public int Skip { get; set; }
         public int Take { get; set; }
@@ -27,5 +28,11 @@ namespace Squirrel.Domain.ViewModels
     {
         public string Name { get; set; }
         public Task<T> Task { get; set; }
+    }
+
+    public class ListModel<T>
+    {
+        public List<T> List { get; set; }
+        public int CountOfAll { get; set; }
     }
 }

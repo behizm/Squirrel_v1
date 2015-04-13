@@ -1,4 +1,4 @@
-﻿@mainFont: 16px irsans;
+﻿@mainFont: 20px irsans;
 @smallFont: 13px tahoma;
 @glyphFont: 20px pe7;
 
@@ -21,7 +21,6 @@ html {
     body {
         height: 100%;
         font: @mainFont;
-        background-color: @grayLight5;
         color: @grayDark2;
     }
 }
@@ -309,83 +308,80 @@ html {
     -ms-flex-direction: column;
     flex-direction: column;
     justify-content: center;
-    padding-top: 120px;
-    padding-bottom: 70px;
+    padding-top: 60px;
+    padding-bottom: 60px;
     position: relative;
 
     .header-container {
         position: absolute;
         .absolutePostion(0,0,auto,0);
+        height: 60px;
+        box-shadow: 0 0 15px 0 rgba(0,0,0,.15);
 
-        .header {
-            height: 120px;
-            padding: 20px 0;
+        .header-logo {
+            line-height: 60px;
 
-            .search-con {
-                text-align: left;
-                padding-top: 18px;
+            span {
+                display: inline-block;
+                vertical-align: middle;
             }
 
-            .logo-con {
-                .logo {
-                    float: right;
+            .sitename {
+                color: @grayDark1;
+                font-size: 1.6em;
+            }
 
-                    img {
-                        height: 80px;
-                    }
-                }
+            .logo {
+                font: 32px squirrelfont;
+                color: @primaryColor;
+                padding: 0 12px 8px;
+            }
 
-                .sitename {
-                    float: right;
-                    line-height: 30px;
-                    margin-top: 10px;
-                    padding-right: 20px;
-                    color: @grayDark3;
+            .site-description {
+                color: @grayDark5;
+                font-size: .8em;
+            }
+        }
 
-                    .name {
-                        font-size: 1.2em;
-                    }
+        .header-menu {
+            color: @grayDark3;
 
-                    .desc {
-                        font-size: .85em;
-                    }
-                }
+            .item {
+                display: block;
+                float: left;
+                line-height: 44px;
+                font-size: .65em;
+                margin: 8px 20px 0 0;
+            }
 
-                .menu-opener {
-                    float: right;
-                    font-size: 2.5em;
-                    line-height: 80px;
-                    color: @grayDark4;
-                    padding-right: 10px;
-                }
+            .glyphbox {
+                font-size: 1.1em;
             }
         }
     }
 
     .main-container {
+        margin: 70px 0;
     }
 
     .footer-container {
         position: absolute;
         .absolutePostion(auto,0,0,0);
+        height: 60px;
+        background-color: @grayLight6;
 
-        .footer {
-            height: 70px;
-            font-size: .75em;
-            padding-top: 15px;
-
-            .poweredby {
-                text-align: left;
-                line-height: 30px;
-            }
-
-            .copyright {
-                text-align: right;
-                line-height: 30px;
-            }
+        .footer-text {
+            font-size: .6em;
+            font-style: italic;
+            color: @grayDark3;
+             line-height: 50px;
 
             .important {
-                color: @primaryDarkestColor;
+                color: @primaryDarkColor;
+            }
+
+            &.poweredby {
+                text-align: left;
             }
         }
     }

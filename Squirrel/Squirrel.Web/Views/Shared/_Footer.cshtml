@@ -1,13 +1,17 @@
 ﻿@using Squirrel.Utility.FarsiTools
-<div class="footer">
-    <div class="col-sm-6 copyright">
-        © سایت
-        <span class="important">سنجاب</span>
-        -
-        @(((PersianDate)DateTime.Now).Year.FaDigit())
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="footer-text">
+            © سایت
+            <span class="important">سنجاب</span>
+            @(((PersianDate)DateTime.Now).Year.FaDigit())
+        </div>
     </div>
-    <div class="col-sm-6 poweredby">
-        ایجاد شده توسط
-        <span class="important">بهنام ضیغمی</span>
+    <div class="col-sm-6">
+        <div class="footer-text poweredby">
+            طراحی و توسعه توسط
+            <span class="important">ادمین محترم</span>
+        </div>
     </div>
 </div>

@@ -127,5 +127,54 @@ namespace Squirrel.Service.Services
                     .Take(take)
                     .ToListAsync();
         }
+
+        public async Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering)
+        {
+            var posts = await RepositoryContext.SearchAsync<Post>(x => x.IsPublic && x.Topic.IsPublished);
+            if (posts == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            var tags = await posts.SelectMany(x => x.Tags).Select(x => x.Name).ToListAsync();
+            var uniqueTags = tags.Distinct().ToList();
+
+            var resultModel = new ListModel<TagWeightModel>
+            {
+                CountOfAll = uniqueTags.Count(),
+                List =
+                    uniqueTags.Select(x => new TagWeightModel { Name = x, Weight = tags.Count(t => t == x) }).ToList()
+            };
+
+            try
+            {
+                Result = OperationResult.Success;
+                if (ordering.IsAscending)
+                {
+                    resultModel.List =
+                        resultModel.List
+                            .OrderBy(ordering.OrderByKeySelectorFunc)
+                            .Skip(ordering.Skip)
+                            .Take(ordering.Take)
+                            .ToList();
+                }
+                else
+                {
+                    resultModel.List =
+                        resultModel.List
+                            .OrderByDescending(ordering.OrderByKeySelectorFunc)
+                            .Skip(ordering.Skip)
+                            .Take(ordering.Take)
+                            .ToList();
+                }
+                return resultModel;
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
     }
 }

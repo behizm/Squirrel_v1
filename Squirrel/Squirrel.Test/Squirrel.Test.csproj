@@ -64,6 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceLayer\GeneralTest.cs" />
     <Compile Include="ServiceLayer\ConfigServiceTest.cs" />
+    <Compile Include="ServiceLayer\TagServiceTest.cs" />
     <Compile Include="ServiceLayer\PostServiceTest.cs" />
     <Compile Include="ServiceLayer\CommentServiceTest.cs" />
     <Compile Include="ServiceLayer\TopicServiceTest.cs" />

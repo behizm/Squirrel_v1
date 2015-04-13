@@ -16,15 +16,21 @@
     
 </head>
 <body>
-    <div class="container body-container">
+    <div class="body-container">
         <div class="header-container">
-            @Html.Partial("_Header")
+            <div class="container">
+                @Html.Partial("_Header")
+            </div>
         </div>
-        <div class="row main-container">
-            @RenderBody()
+        <div class="container">
+            <div class="row main-container">
+                @RenderBody()
+            </div>
         </div>
         <div class="footer-container">
-            @Html.Partial("_Footer")
+            <div class="container">
+                @Html.Partial("_Footer")
+            </div>
         </div>
     </div>
 

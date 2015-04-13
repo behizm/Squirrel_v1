@@ -13,5 +13,6 @@ namespace Squirrel.Service
         Task<int?> CountAsync(TagSearchModel model);
         Task DeleteAsync(Guid tagId, Guid userId);
         Task<List<Topic>> PublishedTopicsAsync(string tagName, int skip, int take);
+        Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering);
     }
 }

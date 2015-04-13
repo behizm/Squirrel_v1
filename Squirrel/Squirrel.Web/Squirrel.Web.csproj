@@ -4414,6 +4414,14 @@
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeui.svg" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.css" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.svg" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\demo-files\demo.css" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\demo-files\demo.js" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\demo.html" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\fonts\SquirrelFont.svg" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\ie7\ie7.css" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\ie7\ie7.js" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\Read Me.txt" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\style.css" />
     <Content Include="Content\themes\vone\images\favicon.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
     <Content Include="Content\themes\vone\loading.css">
@@ -4427,6 +4435,12 @@
     </Content>
     <Content Include="Content\themes\vone\main.min.css">
       <DependentUpon>main.css</DependentUpon>
+    </Content>
+    <Content Include="Content\themes\vone\palette.css">
+      <DependentUpon>palette.less</DependentUpon>
+    </Content>
+    <Content Include="Content\themes\vone\palette.min.css">
+      <DependentUpon>palette.css</DependentUpon>
     </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -4625,6 +4639,13 @@
     <Content Include="Content\themes\vone\loading.less" />
     <Content Include="Content\themes\vone\loading.css.map">
       <DependentUpon>loading.css</DependentUpon>
+    </Content>
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\fonts\SquirrelFont.eot" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\fonts\SquirrelFont.ttf" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\fonts\SquirrelFont.woff" />
+    <Content Include="Content\themes\vone\fonts\SquirrelFont\selection.json" />
+    <Content Include="Content\themes\vone\palette.css.map">
+      <DependentUpon>palette.css</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="npmPlaceholder.txt" />
