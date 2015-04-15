@@ -128,9 +128,12 @@ namespace Squirrel.Service.Services
                     .ToListAsync();
         }
 
-        public async Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering)
+        public async Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering, bool isPublished = false)
         {
-            var posts = await RepositoryContext.SearchAsync<Post>(x => x.IsPublic && x.Topic.IsPublished);
+            var posts =
+                await
+                    RepositoryContext.SearchAsync<Post>(
+                        x => !isPublished || (x.IsPublic && x.Topic.IsPublished && x.Topic.PublishDate <= DateTime.Now));
             if (posts == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -176,5 +179,6 @@ namespace Squirrel.Service.Services
                 return null;
             }
         }
+
     }
 }

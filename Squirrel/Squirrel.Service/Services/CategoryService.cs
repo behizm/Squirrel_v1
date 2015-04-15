@@ -583,8 +583,6 @@ namespace Squirrel.Service.Services
                 items = await RepositoryContext.SearchAsync<Topic>(x => x.CategoryId == category.Id);
             }
 
-            var aaa = items.ToList();
-
             Result = OperationResult.Success;
             return
                 await
@@ -612,7 +610,7 @@ namespace Squirrel.Service.Services
             await UpdateAsync(category);
         }
 
-        public async Task<List<CategoryTreeModel>> FamilyTree()
+        public async Task<List<CategoryTreeModel>> FamilyTreeAsync(bool isPublishedTopics = false)
         {
             var items = await RepositoryContext.SearchAsync<Category>(x => true);
             if (items == null)
@@ -623,10 +621,10 @@ namespace Squirrel.Service.Services
 
             var cats = await items.ToListAsync();
             var originNodes = cats.Where(x => x.ParentId == null).ToList();
-            return originNodes.Select(x => CreateTreeNode(x, cats)).ToList();
+            return originNodes.Select(x => CreateTreeNode(x, cats, isPublishedTopics)).ToList();
         }
 
-        public async Task<List<CategorySimpleTreeModel>> SimpleFamilyTree()
+        public async Task<List<CategorySimpleTreeModel>> SimpleFamilyTreeAsync()
         {
             var items = await RepositoryContext.SearchAsync<Category>(x => true);
             if (items == null)
@@ -656,20 +654,20 @@ namespace Squirrel.Service.Services
         }
 
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private CategoryTreeModel CreateTreeNode(Category item, List<Category> categoryList)
+        private CategoryTreeModel CreateTreeNode(Category item, List<Category> categoryList, bool isPublishedTopics = false)
         {
             var node = new CategoryTreeModel
             {
                 Node = item
             };
-            node.Node.TopicCount = TopicCount(item.Id);
+            node.Node.TopicCount = TopicCount(item.Id, isPublishedTopics);
 
             var childs = categoryList.Where(x => x.ParentId == item.Id).ToList();
             if (!childs.Any())
             {
                 return node;
             }
-            node.Childs = childs.Select(c => CreateTreeNode(c, categoryList)).ToList();
+            node.Childs = childs.Select(c => CreateTreeNode(c, categoryList, isPublishedTopics)).ToList();
             node.Node.ChildTopicCount = node.Childs.Sum(x => x.Node.TopicCount + x.Node.ChildTopicCount);
             return node;
         }
@@ -691,9 +689,15 @@ namespace Squirrel.Service.Services
             return node;
         }
 
-        private int TopicCount(Guid categoryId)
+        private int TopicCount(Guid categoryId, bool isPublishedTopics = false)
         {
-            var count = AsyncTools.ConvertToSync(() => RepositoryContext.CountAsync<Topic>(x => x.CategoryId == categoryId));
+            var count =
+                AsyncTools.ConvertToSync(
+                    () =>
+                        RepositoryContext.CountAsync<Topic>(
+                            x =>
+                                x.CategoryId == categoryId &&
+                                (!isPublishedTopics || (x.IsPublished && x.PublishDate <= DateTime.Now))));
             return count ?? 0;
         }
 
@@ -709,6 +713,7 @@ namespace Squirrel.Service.Services
             return await items.ToListAsync();
         }
 
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private static IEnumerable<Category> GetBranchItems(Category category, List<Category> categoryList)
         {
             var childs = categoryList.Where(x => x.ParentId == category.Id).ToList();

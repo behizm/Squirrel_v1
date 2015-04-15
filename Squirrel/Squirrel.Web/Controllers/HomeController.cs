@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Squirrel.Web.Filters;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index(string id)
         {
-            ViewBag.Buffer = id;
             return View();
         }
 
@@ -22,6 +24,7 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
+        [UpdateCachedDataFilter(UpdateCachedDataType.OnActionExecuting)]
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

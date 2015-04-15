@@ -169,7 +169,7 @@ namespace Squirrel.Utility.FarsiTools
         {
             return new[]
             {
-                "فرودین",
+                "فروردین",
                 "اردیبهشت",
                 "خرداد",
                 "تیر",
@@ -225,5 +225,11 @@ namespace Squirrel.Utility.FarsiTools
             var minutes = Math.Floor((DateTime.Now - date).TotalMinutes);
             return minutes > 1 ? string.Format("{0} دقیقه پیش", minutes) : "یک دقیقه پیش";
         }
+
+        public static PersianDate ToPersianDate(this DateTime date)
+        {
+            return date;
+        }
     }
+
 }

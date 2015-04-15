@@ -386,6 +386,12 @@ namespace Squirrel.Service.Services
                 case PostsOrdering.Popular:
                     return topic.Posts.OrderByDescending(x => x.Votes.Summery()).ToList();
 
+                case PostsOrdering.NewerPublish:
+                    return topic.Posts.OrderByDescending(x => x.PublishDate.HasValue ? x.PublishDate.Value : x.CreateDate).ToList();
+
+                case PostsOrdering.OlderPublish:
+                    return topic.Posts.OrderBy(x => x.PublishDate.HasValue ? x.PublishDate.Value : x.CreateDate).ToList();
+
                 default:
                     return topic.Posts.ToList();
             }

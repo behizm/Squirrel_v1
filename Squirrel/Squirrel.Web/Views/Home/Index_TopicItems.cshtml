@@ -1,0 +1,28 @@
+﻿@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@using Squirrel.Web.Models
+@model string
+
+@{
+    var topicCounter = 0;
+}
+
+@* ReSharper disable once AccessToModifiedClosure *@
+@foreach (var topic in CachedAppData.LastPublishedTopics.Items.TakeWhile(topic => topicCounter <= 4))
+{
+    if (Model.IsNotEmpty() && topicCounter == 0)
+    {
+        topicCounter++;
+        continue;
+    }
+    @Html.Partial("Index_TopicItem", topic)
+    topicCounter++;
+}
+
+<div class="paging-box">
+    <a class="button tile gold icon">&#xe686</a>
+    <a class="button tile gold">@(1.FaDigit())</a>
+    <a class="button tile gold current">@(2.FaDigit())</a>
+    <a class="button tile gold">@(3.FaDigit())</a>
+    <a class="button tile gold icon">&#xe684</a>
+</div>

@@ -366,7 +366,7 @@
                             toPersianNumber(zeroPad(dateTimeInJsonFormat.Month)) + '/' +
                             toPersianNumber(zeroPad(dateTimeInJsonFormat.Day));
         if (enableTimePicker)
-            selectedDateTimeString = selectedDateTimeString + '  ' + toPersianNumber(zeroPad(dateTimeInJsonFormat.Hour)) +
+            selectedDateTimeString = selectedDateTimeString + ' ' + toPersianNumber(zeroPad(dateTimeInJsonFormat.Hour)) +
                 ':' + toPersianNumber(zeroPad(dateTimeInJsonFormat.Minute)) +
                 ':' + toPersianNumber(zeroPad(dateTimeInJsonFormat.Second));
         return selectedDateTimeString;
@@ -563,6 +563,8 @@
             }
             else
                 $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker));
+
+            $target.trigger('change');
         }
 
         $popoverDescriber.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));

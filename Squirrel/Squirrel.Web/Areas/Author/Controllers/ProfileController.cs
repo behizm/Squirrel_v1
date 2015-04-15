@@ -8,6 +8,7 @@ using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Filters;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
@@ -25,7 +26,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView(profile);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<JsonResult> Edit(ProfileEditModel model)
         {
             if (!ModelState.IsValid)
@@ -44,13 +45,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult avatar()
+        public ActionResult Avatar()
         {
             return PartialView();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<JsonResult> avatar(ProfileAvatarModel model)
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
+        public async Task<JsonResult> Avatar(ProfileAvatarModel model)
         {
             if (!ModelState.IsValid)
             {

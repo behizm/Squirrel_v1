@@ -87,6 +87,8 @@
     <Compile Include="Enititis\Topic.cs" />
     <Compile Include="Enititis\User.cs" />
     <Compile Include="Enititis\Vote.cs" />
+    <Compile Include="ExtensionMethods\TopicExtensions.cs" />
+    <Compile Include="ExtensionMethods\UserExtensions.cs" />
     <Compile Include="ExtensionMethods\VoteExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ServiceMessages.Designer.cs">

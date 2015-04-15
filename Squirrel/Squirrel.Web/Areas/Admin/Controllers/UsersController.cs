@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Filters;
 
 namespace Squirrel.Web.Areas.Admin.Controllers
 {
@@ -145,7 +146,7 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             return PartialView();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<ActionResult> Edit(UserUpdateModel model)
         {
             if (!ModelState.IsValid)

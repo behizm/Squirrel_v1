@@ -9,6 +9,7 @@ using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.FarsiTools;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Filters;
 using WebGrease.Css.Extensions;
 
 namespace Squirrel.Web.Areas.Author.Controllers
@@ -51,6 +52,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return View();
         }
 
+        [UpdateCachedDataFilter]
         public async Task<JsonResult> Edit(PostEditModel model)
         {
             if (!ModelState.IsValid)
@@ -133,6 +135,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     }, JsonRequestBehavior.AllowGet);
         }
 
+        [UpdateCachedDataFilter]
         public async Task<JsonResult> Remove(Guid id)
         {
             var model = new PostRemoveModel

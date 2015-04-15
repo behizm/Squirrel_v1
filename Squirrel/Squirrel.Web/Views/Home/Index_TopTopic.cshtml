@@ -1,0 +1,35 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Web.Models
+@model Squirrel.Domain.Enititis.Topic
+
+@{
+    var headerImage = CachedAppData.LastPublishedTopics.Items.First().ImageAddress();
+    PersianDate publishDate = Model.PublishDate;
+}
+
+<div class="col-md-12 hidden-xs hidden-sm">
+    <div class="top-post-home">
+        <img src="@Url.Content(headerImage)" alt="" />
+        <div class="header">
+            <div class="info">
+                <span>@Html.DisplayFor(m => m.Category.Name)</span>
+                ،
+                @if (publishDate != null)
+                {
+                    @Html.DisplayFor(m => publishDate.Day).FaDigit()
+                    @PersianDateTools.JalaliMonth(publishDate.Month).FaDigit()
+                }
+            </div>
+            <div class="topic">
+                @Html.DisplayFor(m => m.Title).FaDigit()
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 hidden-xs hidden-sm">
+    <div class="divider-blank-70"></div>
+</div>
+<div class="col-md-12 visible-xs visible-sm">
+    @Html.Partial("Index_TopicItem", Model)
+</div>

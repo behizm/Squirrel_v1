@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -9,6 +8,7 @@ using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.FarsiTools;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Filters;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
@@ -90,6 +90,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView("SimpleList ", items);
         }
 
+        [UpdateCachedDataFilter]
         public async Task<JsonResult> Publish(Guid id)
         {
             await TopicService.PublishAsync(id, User.Identity.Name);
@@ -101,6 +102,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        [UpdateCachedDataFilter]
         public async Task<JsonResult> UnPublish(Guid id)
         {
             await TopicService.UnPublishAsync(id, User.Identity.Name);
@@ -163,7 +165,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<ActionResult> Edit(TopicEditModel model)
         {
             if (!ModelState.IsValid)

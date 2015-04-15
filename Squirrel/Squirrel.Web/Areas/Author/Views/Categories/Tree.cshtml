@@ -3,17 +3,17 @@
 
 @foreach (var cat in Model)
 {
-    CategoryTreeModel item = cat;
+    var item = cat;
     <div>
         <div>
-            <span style="border-bottom: 1px solid; padding-left: 20px;" onclick="LoadDetailsFromList('@cat.Node.Id')">
+            <span style="border-bottom: 1px solid; padding-right: 20px;" onclick="LoadDetailsFromList('@cat.Node.Id')">
                 @Html.DisplayFor(m => item.Node.Name)
                 [@Html.DisplayFor(m => item.Node.TopicCount) : @Html.DisplayFor(m => item.Node.ChildTopicCount)]
             </span>
         </div>
         @if (cat.Childs != null && cat.Childs.Any())
         {
-            <div style="border-left: 1px solid; margin-left: 20px;">
+            <div style="border-right: 1px solid; margin-right: 20px;">
                 @Html.Partial("Tree", cat.Childs)
             </div>
         }

@@ -26,7 +26,7 @@ namespace Squirrel.Service
         Task<List<Topic>> TopicsAsync(string categoryName, bool isFamilyGet, int skip = 0, int take = 10);
         Task<List<Topic>> PublishedTopicsAsync(string categoryName, bool isFamilyGet, int skip, int take);
         Task ChangeAvatarAsync(Guid categoryId, Guid fileId);
-        Task<List<CategoryTreeModel>> FamilyTree();
-        Task<List<CategorySimpleTreeModel>> SimpleFamilyTree();
+        Task<List<CategoryTreeModel>> FamilyTreeAsync(bool isPublishedTopics = false);
+        Task<List<CategorySimpleTreeModel>> SimpleFamilyTreeAsync();
     }
 }

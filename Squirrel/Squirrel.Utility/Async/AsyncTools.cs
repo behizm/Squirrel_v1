@@ -11,5 +11,11 @@ namespace Squirrel.Utility.Async
             task.Wait();
             return task.Result;
         }
+
+        public static void ConvertToSync(Func<Task> func)
+        {
+            var task = Task.Run(func);
+            task.Wait();
+        }
     }
 }

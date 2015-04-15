@@ -1,0 +1,92 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.Enititis.Topic
+
+@{
+    var imageAddress = Model.ImageAddress();
+}
+
+
+<div class="topic-item-home">
+    @if (imageAddress.IsNotEmpty())
+    {
+        <div class="image">
+            <img src="@Url.Content(imageAddress)" alt="@Model.Title" />
+        </div>
+    }
+    else
+    {
+        <div class="topic">
+            @Html.DisplayFor(m => m.Title).FaDigit()
+        </div>
+    }
+    
+    <div class="content">
+        <div class="col-sm-4 hidden-xs">
+            <div class="categroy">
+                @Html.DisplayFor(m => m.Category.Name)
+            </div>
+        </div>
+        <div class="col-sm-8 hidden-xs">
+            <div class="author">
+                @if (Model.PublishDate.HasValue)
+                {
+                    PersianDate publishDate = Model.PublishDate.Value;
+                    <span>
+                        @Html.DisplayFor(m => publishDate.Year).FaDigit()
+                        ،
+                        @Html.DisplayFor(m => publishDate.Day).FaDigit()
+                        @PersianDateTools.JalaliMonth(publishDate.Month)
+                    </span>
+                }
+                توسط
+                <span class="name">
+                    @Model.Owner.ShowName()
+                </span>
+            </div>
+        </div>
+        <div class="col-xm-12 visible-xs" style="overflow: hidden;">
+            <div class="author" style="text-align: center;">
+                @if (Model.PublishDate.HasValue)
+                {
+                    PersianDate publishDate = Model.PublishDate.Value;
+                    <span>
+                        @Html.DisplayFor(m => publishDate.Year).FaDigit()
+                        ،
+                        @Html.DisplayFor(m => publishDate.Day).FaDigit()
+                        @PersianDateTools.JalaliMonth(publishDate.Month)
+                    </span>
+                }
+                توسط
+                <span class="name">
+                    @Model.Owner.ShowName()
+                </span>
+            </div>
+        </div>
+        @if (imageAddress.IsNotEmpty())
+        {
+            <div class="col-sm-12">
+                <div class="title">
+                    @Html.DisplayFor(m => m.Title).FaDigit()
+                </div>
+            </div>
+        }
+        <div class="col-sm-12">
+            <div class="abstract">
+                @Model.Abstarct()
+            </div>
+        </div>
+        <div class="clearbox"></div>
+    </div>
+
+    <div class="more">
+        <div class="button-hline gold">
+            <div class="line"></div>
+            <div class="button-con">
+                <a class="button gold">ادامه</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="divider-blank-70"></div>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Filters;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
@@ -19,7 +20,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
 
         public async Task<ActionResult> Tree()
         {
-            var tree = await CategoryService.FamilyTree();
+            var tree = await CategoryService.FamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
             ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
@@ -31,7 +32,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<ActionResult> Add(CategoryAddModel model)
         {
             if (!ModelState.IsValid)
@@ -81,7 +82,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<ActionResult> Edit(CategoryEditModel model)
         {
             if (!ModelState.IsValid)
@@ -118,7 +119,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             return PartialView();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<ActionResult> Avatar(CategoryAvatarModel model)
         {
             if (!ModelState.IsValid || !model.FileId.HasValue)
@@ -142,7 +143,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         public async Task<ActionResult> SimpleTree(string targetKeyName)
         {
             ViewBag.TreeTargetKeyName = targetKeyName;
-            var tree = await CategoryService.SimpleFamilyTree();
+            var tree = await CategoryService.SimpleFamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
             ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
@@ -152,7 +153,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         public async Task<ActionResult> SimpleTreeByKey(string key)
         {
             ViewBag.TargetKey = key;
-            var tree = await CategoryService.SimpleFamilyTree();
+            var tree = await CategoryService.SimpleFamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
             ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
