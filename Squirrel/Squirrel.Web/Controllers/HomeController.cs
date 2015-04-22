@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using Squirrel.Domain.Enititis;
+using Squirrel.Domain.ExtensionMethods;
+using Squirrel.Utility.Helpers;
 using Squirrel.Web.Filters;
 using Squirrel.Web.Models;
 
@@ -13,7 +13,27 @@ namespace Squirrel.Web.Controllers
     {
         public ActionResult Index(string id)
         {
+            var imagedTopics = new List<Topic>();
+            foreach (var topic in CachedAppData.LastPublishedTopics.Items.Where(topic => topic.ImageAddress().IsNotEmpty()))
+            {
+                if (imagedTopics.All(x => x.CategoryId != topic.CategoryId))
+                {
+                    imagedTopics.Add(topic);
+                }
+                if (imagedTopics.Count >= 3)
+                {
+                    break;
+                }
+            }
+            ViewBag.TopTopics = imagedTopics;
             return View();
+        }
+
+        public ActionResult LastTopics(int page)
+        {
+            ViewBag.CurrentPage = page;
+            ViewData.Model = CachedAppData.LastPublishedTopics.Items.Skip((page - 1) * 5).Take(5).ToList();
+            return PartialView("Index_TopicItems");
         }
 
         [Authorize]

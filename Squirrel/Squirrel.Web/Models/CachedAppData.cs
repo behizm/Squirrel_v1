@@ -64,7 +64,7 @@ namespace Squirrel.Web.Models
                 IsAscending = false,
                 OrderByKeySelector = x => x.PublishDate,
                 Skip = 0,
-                Take = 10,
+                Take = 20,
             };
             var topic = await TopicService.SearchAsync(searchModel, orderingModel);
             if (topic == null)

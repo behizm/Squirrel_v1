@@ -13,34 +13,29 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/vone")
     @RenderSection("scripts", required: false)
-    
+
 </head>
 <body>
-    <div class="body-container">
-        <div class="header-container">
-            <div class="container">
-                @Html.Partial("_Header")
+    @Html.Partial("_FloatHeader")
+    <div class="container">
+        <div class="header-container" id="header_fix">
+            @Html.Partial("_Header")
+        </div>
+        <div class="bubble-menu hidden-lg hidden-md">
+            @Html.Partial("_BubbleMenu")
+        </div>
+        <div class="row">
+            <div class="sitename-con">
+                <div class="name">سنجاب</div>
+                <div class="desc">وبــلاگ شــخـصی</div>
             </div>
         </div>
-        <div class="container">
-            <div class="row main-container">
-                @RenderBody()
-            </div>
+        <div class="row">
+            @RenderBody()
         </div>
         <div class="footer-container">
-            <div class="container">
-                @Html.Partial("_Footer")
-            </div>
+            @Html.Partial("_Footer")
         </div>
     </div>
-
-    <script type="text/javascript">
-        $(function () {
-            $('.msg-close').on('click', function () {
-                $(this).parent().hide();
-            });
-        });
-    </script>
-
 </body>
 </html>

@@ -32,3 +32,48 @@ function toEnglishDigits(text) {
     str = str.replace(/۹/g, '9');
     return str;
 }
+
+(function ($) {
+
+    $(function () {
+        // Material Textbox >>> start :
+        $('.materialtext .textbox').each(function(i) {
+            if ($(this).val() != '') {
+                $(this).parent().addClass('value');
+            }
+        });
+
+        $('.materialtext .textbox').focusin(function () {
+            $(this).parent().addClass('focus');
+            $(this).parent().addClass('value');
+        });
+        $('.materialtext .textbox').focusout(function () {
+            if ($(this).val() == '') {
+                $(this).parent().removeClass('value');
+            }
+            $(this).parent().removeClass('focus');
+        });
+        // Material Textbox <<< end.
+    });
+
+
+    //DropDownList
+    $.fn.CustomizeDropDownList = function (className) {
+        this.wrap('<div class="dropdownlist ' + className + '"></div>');
+        var ddl = this.parent('.dropdownlist');
+        var selectText = this.find(':selected').text();
+        ddl.append('<div class="selecttext"></div>');
+        ddl.children('.selecttext').text(selectText);
+        ddl.append('<ul></ul>');
+        this.children('option').each(function (x) {
+            var thisText = ddl.children('select').children('option:eq(' + x + ')').text();
+            if (thisText == selectText) {
+                ddl.children('ul').append('<li class="selected">' + thisText + '</li>');
+            }
+            else {
+                ddl.children('ul').append('<li>' + thisText + '</li>');
+            }
+        });
+    };
+
+})($)

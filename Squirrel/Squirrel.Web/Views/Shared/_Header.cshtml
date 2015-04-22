@@ -1,28 +1,31 @@
 ﻿@using Squirrel.Web.Models
-<div class="row">
-    <div class ="col-sm-5">
-        <div class="header-logo">
-            <span class="sitename">
-                سنجاب
-            </span>
-            <span class="logo">
-                &#xe600
-            </span>
-            <span class="site-description">
-                وبلاگ شخصی
-            </span>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10">
+            <div class="header-menu">
+                <a class="item logo" href="@Url.Action("Index", "Home")">&#xe600</a>
+                @foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount))
+                {
+                    var item = cat;
+                    <a class="item hidden-sm hidden-xs" 
+                       href="@Url.Action("Category", "Issues", new { id = item.Name })">
+                        @Html.DisplayFor(m => item.Name)
+                    </a>
+                }
+                <a class="item cat hidden-lg hidden-md" onclick="showBubbleMenu()">گروهها</a>
+            </div>
         </div>
-    </div>
-    <div class ="col-sm-7 hidden-xs">
-        <div class="header-menu">
-            <div class="item glyphbox">&#xe618</div>
-            @foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderBy(x => x.ChildTopicCount + x.TopicCount))
-            {
-                var item = cat;
-                <div class="item">@Html.DisplayFor(m => item.Name)</div>
-            }
-            <div class="item glyphbox">&#xe648</div>
-            <div class="clearbox"></div>
+        <div class="col-xs-2">
+            <div class="header-search">
+                <div class="glyphbox" onclick="showSearchBubble(this)">&#xe618</div>
+                <div class="searchbox">
+                    <div class="materialtext">
+                        <div class="title">جستجو</div>
+                        @Html.TextBox("searchtext", null, new { @class = "textbox" })
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

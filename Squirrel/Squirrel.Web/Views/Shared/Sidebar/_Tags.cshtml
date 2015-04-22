@@ -1,0 +1,10 @@
+﻿@model List<Squirrel.Domain.ViewModels.TagWeightModel>
+
+@foreach (var tag in Model)
+{
+    var item = tag;
+
+    <a class="item" href="@Url.Action("Tag", "Issues", new { id = item.Name })">
+        <span>@Html.DisplayFor(m => item.Name)</span>
+    </a>
+}

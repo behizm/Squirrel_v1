@@ -4424,6 +4424,10 @@
     <Content Include="Content\themes\vone\fonts\SquirrelFont\ie7\ie7.js" />
     <Content Include="Content\themes\vone\fonts\SquirrelFont\Read Me.txt" />
     <Content Include="Content\themes\vone\fonts\SquirrelFont\style.css" />
+    <Content Include="Content\themes\vone\images\back-wall-01.jpg" />
+    <Content Include="Content\themes\vone\images\back-wall-02.jpg" />
+    <Content Include="Content\themes\vone\images\back-wall-03.jpg" />
+    <Content Include="Content\themes\vone\images\back-wall-04.jpg" />
     <Content Include="Content\themes\vone\images\favicon.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
     <Content Include="Content\themes\vone\loading.css">
@@ -4658,6 +4662,12 @@
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSans.eot" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSans.woff" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSans.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansBL.woff2" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansBL.eot" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansBL.woff" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.eot" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.woff" />
+    <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="npmPlaceholder.txt" />
     <Content Include="Scripts\bootstrap.js" />
@@ -4731,9 +4741,18 @@
     <Content Include="Views\Issue\Post_AddComment.cshtml" />
     <Content Include="Views\Shared\Loading.cshtml" />
     <Content Include="Views\Issue\Post_Comments.cshtml" />
-    <Content Include="Views\Home\Index_TopTopic.cshtml" />
+    <Content Include="Views\Home\Index_TopTopics.cshtml" />
     <Content Include="Views\Home\Index_TopicItem.cshtml" />
     <Content Include="Views\Home\Index_TopicItems.cshtml" />
+    <Content Include="Views\Shared\Sidebar\Sidebar.cshtml" />
+    <Content Include="Views\Shared\Sidebar\_Topics.cshtml" />
+    <Content Include="Views\Shared\Sidebar\_Categories.cshtml" />
+    <Content Include="Views\Shared\Sidebar\_Tags.cshtml" />
+    <Content Include="Views\Shared\Sidebar\_Instagram.cshtml" />
+    <Content Include="Views\Issues\Search.cshtml" />
+    <Content Include="Views\Shared\_FloatHeader.cshtml" />
+    <Content Include="Views\Issues\User.cshtml" />
+    <Content Include="Views\Shared\_BubbleMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">

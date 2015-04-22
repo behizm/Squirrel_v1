@@ -31,6 +31,18 @@ namespace Squirrel.Web
             );
 
             routes.MapRoute(
+                name: "Category",
+                url: "Category/{id}",
+                defaults: new { controller = "Issues", action = "Category" }
+            );
+
+            routes.MapRoute(
+                name: "User",
+                url: "User/{id}",
+                defaults: new { controller = "Issues", action = "User" }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -1,0 +1,16 @@
+﻿@using Squirrel.Utility.FarsiTools
+@model List<Squirrel.Domain.ViewModels.CategoryNode>
+
+@foreach (var node in Model)
+{
+    var item = node;
+    <div class="item">
+        <a class="name" href="@Url.Action("Category", "Issues", new { id = item.Name })">
+        @Html.DisplayFor(m => item.Name)
+        </a>
+        <span class="count">
+            (@((item.TopicCount + item.ChildTopicCount).FaDigit())
+            پست)
+        </span>
+    </div>
+}

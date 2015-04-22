@@ -1,0 +1,60 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@model List<Squirrel.Domain.Enititis.Topic>
+
+@{
+    var counter = 1;
+}
+
+@foreach (var topic in Model)
+{
+    var item = topic;
+    var className = "";
+    if (counter == 2)
+    {
+        className = "center";
+    }
+
+    <a class="item @className" href="@Url.Action("Index", "Issue", new { id = item.IssueId })">
+        <div class="title">
+            <div class="text">
+                <span>
+                    @Html.DisplayFor(m => item.Title)
+                </span>
+            </div>
+        </div>
+        <div class="image">
+            <img src="@Url.Content(item.ImageAddress())" />
+        </div>
+    </a>
+
+    counter++;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('.top-topics .item').each(function (i) {
+            var $imageDiv = $(this).children('.image');
+            var $image = $imageDiv.children('img');
+
+            var imageMaxH = $imageDiv.height();
+            var imageH = $image.height();
+
+            if (imageH < imageMaxH) {
+                $image.css('width', 'auto').css('height', '100%');
+                var imageMaxW = $imageDiv.width();
+                var imageW = $image.width();
+                var margin = imageW - imageMaxW;
+                if (margin > 0) {
+                    var marginRight = -margin / 2;
+                    $image.css('margin-right', marginRight + 'px');
+                }
+            } else {
+                var marginV = imageH - imageMaxH;
+                if (marginV > 0) {
+                    var marginTop = -marginV / 2;
+                    $image.css('margin-top', marginTop + 'px');
+                }
+            }
+        });
+    })
+</script>

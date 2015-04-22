@@ -1,26 +1,27 @@
-﻿@using Squirrel.Domain.ExtensionMethods
+﻿@using Squirrel.Domain.Enititis
 @using Squirrel.Web.Models
 @{
     ViewBag.Title = "وبلاگ شخصی";
-    var headerImage = CachedAppData.LastPublishedTopics.Items.First().ImageAddress();
+    List<Topic> topTopics = ViewBag.TopTopics;
 }
 
-@if (!string.IsNullOrEmpty(headerImage))
+@if (topTopics != null && topTopics.Count >= 3)
 {
-    @Html.Partial("Index_TopTopic", CachedAppData.LastPublishedTopics.Items.First())
+    <div class="col-md-12 hidden-sm hidden-xs">
+        <div class="row top-topics">
+            @Html.Partial("Index_TopTopics", topTopics)
+        </div>
+    </div>
 }
 
-<div class="col-md-8">
-    @Html.Partial("Index_TopicItems", headerImage)
+<div class="col-md-8" id="t_page">
+    <div class="home-lasttopics" id="home_lasttopics_con">
+        @Html.Partial("Index_TopicItems", CachedAppData.LastPublishedTopics.Items.Skip(0).Take(5).ToList())
+    </div>
 </div>
 
 <div class="col-md-4 hidden-sm hidden-xs">
     <div class="sidebar">
-        <div class="line-box">
-            <p>1212</p>
-            <p>1212</p>
-            <p>1212</p>
-            <p>1212</p>
-        </div>
+        @Html.Partial("~/Views/Shared/Sidebar/Sidebar.cshtml")
     </div>
 </div>

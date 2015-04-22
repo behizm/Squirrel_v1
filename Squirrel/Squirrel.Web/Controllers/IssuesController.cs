@@ -67,6 +67,18 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
+        public ActionResult Search(string id, int p = 1)
+        {
+            ViewBag.SearchKeyword = id;
+            return View();
+        }
+
+        public ActionResult User(string id, int p = 1)
+        {
+            ViewBag.IssuesUser = id;
+            return View();
+        }
+
 
     }
 }

@@ -1,0 +1,82 @@
+﻿<div class="overheader hidden-sm hidden-xs">
+    <div class="container">
+        <div class="header-container" id="header_float">
+            @Html.Partial("_Header")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.header-container#header_float .searchbox').on('input', function (e) {
+            if (e.target.value != '') {
+                $('.header-container#header_fix .searchbox').find('.materialtext').addClass('value');
+            } else {
+                $('.header-container#header_fix .searchbox').find('.materialtext').removeClass('value');
+            }
+            $('.header-container#header_fix .searchbox').find('input[type="text"]').val(e.target.value);
+        });
+
+        $('.header-container#header_fix .searchbox').on('input', function (e) {
+            if (e.target.value != '') {
+                $('.header-container#header_float .searchbox').find('.materialtext').addClass('value');
+            } else {
+                $('.header-container#header_float .searchbox').find('.materialtext').removeClass('value');
+            }
+            $('.header-container#header_float .searchbox').find('input[type="text"]').val(e.target.value);
+        });
+
+        $('.header-container#header_float input[type="text"]').on('keypress', function (e) {
+            var text = $('.header-container#header_float input[type="text"]').val();
+            if (e.keyCode == 13) {
+                SearchWithKeyword(text);
+            }
+        });
+
+        $('.header-container#header_fix input[type="text"]').on('keypress', function (e) {
+            var text = $('.header-container#header_fix input[type="text"]').val();
+            if (e.keyCode == 13) {
+                SearchWithKeyword(text);
+            }
+        });
+
+        $('.header-container#header_fix .header-menu').on('resize', function () { alert(1); });
+    });
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 300) {
+            $('.overheader').addClass('make-vis');
+        } else {
+            $('.overheader').removeClass('make-vis');
+        }
+    });
+
+    $(window).click(function (e) {
+        //console.log(e);
+        //console.log(e.target.className);
+        //console.log(e.target.parentElement.className);
+        var parentClassName = e.target.parentElement.className;
+        if (parentClassName.search('materialtext') == -1 &&
+            parentClassName.search('header-search') == -1 &&
+            parentClassName.search('searchbox') == -1) {
+            hideSearchBubble();
+        }
+    });
+
+    function showSearchBubble() {
+        $('.header-container#header_float .searchbox').toggleClass('search-vis');
+        $('.header-container#header_fix .searchbox').toggleClass('search-vis');
+    }
+
+    function hideSearchBubble() {
+        $('.header-container#header_float .searchbox').removeClass('search-vis');
+        $('.header-container#header_fix .searchbox').removeClass('search-vis');
+    }
+
+    function SearchWithKeyword(k) {
+        k = k.trim();
+        if (k != '') {
+            window.location.href = '@Url.Action("Search", "Issues", new { id = "" })' + "/" + k;
+        }
+    }
+</script>

@@ -1,28 +1,51 @@
 ﻿@using Squirrel.Utility.FarsiTools
-@using Squirrel.Utility.Helpers
 @using Squirrel.Web.Models
-@model string
+@model List<Squirrel.Domain.Enititis.Topic>
 
 @{
-    var topicCounter = 0;
+    var pageCount = (CachedAppData.LastPublishedTopics.Items.Count / 5) + 1;
+    if (CachedAppData.LastPublishedTopics.Items.Count % 5 == 0)
+    {
+        pageCount--;
+    }
+    var currentPage = 1;
+    if (ViewBag.CurrentPage != null)
+    {
+        currentPage = ViewBag.CurrentPage;
+    }
 }
 
 @* ReSharper disable once AccessToModifiedClosure *@
-@foreach (var topic in CachedAppData.LastPublishedTopics.Items.TakeWhile(topic => topicCounter <= 4))
+@foreach (var topic in Model)
 {
-    if (Model.IsNotEmpty() && topicCounter == 0)
-    {
-        topicCounter++;
-        continue;
-    }
     @Html.Partial("Index_TopicItem", topic)
-    topicCounter++;
 }
 
-<div class="paging-box">
-    <a class="button tile gold icon">&#xe686</a>
-    <a class="button tile gold">@(1.FaDigit())</a>
-    <a class="button tile gold current">@(2.FaDigit())</a>
-    <a class="button tile gold">@(3.FaDigit())</a>
-    <a class="button tile gold icon">&#xe684</a>
+<div class="pager">
+    @for (var i = 0; i < pageCount; i++)
+    {
+        if ((i + 1) == currentPage)
+        {
+            <span class="page current">@((i + 1).FaDigit())</span>
+        }
+        else
+        {
+            <a class="page" onclick="onChangeLastTopicsPage(@(i+1))" href="#t_page">
+                @((i + 1).FaDigit())
+            </a>
+        }
+    }
+    <a class="page glyphbox" href="@Url.Action("Archive", "Issues")">&#xe632</a>
 </div>
+
+<script type="text/javascript">
+    function onChangeLastTopicsPage(p) {
+        $.ajax({
+            url: '@Url.Action("LastTopics", "Home")',
+            data: { page: p },
+            success: function (r) {
+                $('#home_lasttopics_con').html(r);
+            },
+        });
+    }
+</script>

@@ -1,0 +1,23 @@
+﻿@using Squirrel.Web.Models
+@foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount))
+{
+    var item = cat;
+    <a class="item" href="@Url.Action("Category", "Issues", new { id = item.Name })">@Html.DisplayFor(m => item.Name)</a>
+}
+
+<script type="text/javascript">
+    $(window).click(function (e) {
+        var targetClassName = e.target.className;
+        var parentClassName = e.target.parentElement.className;
+        if (targetClassName.search('bubble-menu') == -1 &&
+            parentClassName.search('bubble-menu') == -1 &&
+            targetClassName.search('header-menu') == -1 &&
+            parentClassName.search('header-menu') == -1) {
+            $('.bubble-menu').removeClass('make-vis');
+        }
+    });
+
+    function showBubbleMenu() {
+        $('.bubble-menu').toggleClass('make-vis');
+    };
+</script>
