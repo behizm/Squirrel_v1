@@ -1,13 +1,4 @@
 ﻿@using Squirrel.Web.Models
-<div class="flatbox-shadow">
-    <div class="materialtext hasbtn">
-        <div class="title">دنبال چیزی می گردی؟</div>
-        @Html.TextBox("SidebarSearchText", null, new { @class = "textbox" })
-        <div class="button tile glyphbox" onclick="onSearchButtonClick()">&#xe686</div>
-    </div>
-</div>
-
-<div class="divider-blank50"></div>
 
 <div class="flatbox-shadow">
     <div class="box-topic">
@@ -15,6 +6,16 @@
     </div>
     <div class="sidebar-topics">
         @Html.Partial("~/Views/Shared/Sidebar/_Topics.cshtml", CachedAppData.PopularPublishedTopics.Items.Skip(0).Take(4).ToList())
+    </div>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="flatbox-shadow">
+    <div class="materialtext hasbtn">
+        <div class="title">دنبال چیزی می گردی؟</div>
+        @Html.TextBox("SidebarSearchText", null, new { @class = "textbox" })
+        <div class="button tile glyphbox" onclick="onSearchButtonClick()">&#xe686</div>
     </div>
 </div>
 

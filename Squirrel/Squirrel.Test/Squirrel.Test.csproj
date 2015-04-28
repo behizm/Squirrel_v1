@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DataLayer\RepositoryContextTest.cs" />
+    <Compile Include="DomainLayer\CryptographyRSA.cs" />
     <Compile Include="DomainLayer\CryptographyHashingTest.cs" />
     <Compile Include="DomainLayer\CryptographySymmetricTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="ServiceLayer\TagServiceTest.cs" />
     <Compile Include="ServiceLayer\PostServiceTest.cs" />
     <Compile Include="ServiceLayer\CommentServiceTest.cs" />
+    <Compile Include="ServiceLayer\FileServiceTest.cs" />
     <Compile Include="ServiceLayer\TopicServiceTest.cs" />
     <Compile Include="ServiceLayer\CategoryServiceTest.cs" />
     <Compile Include="ServiceLayer\ProfileServiceTest.cs" />

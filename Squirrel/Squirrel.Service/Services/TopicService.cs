@@ -48,7 +48,7 @@ namespace Squirrel.Service.Services
             }
 
             var issueId = await GenerateIssueId();
-            if (issueId.IsEmpty())
+            if (issueId.IsNothing())
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return;
@@ -397,6 +397,24 @@ namespace Squirrel.Service.Services
             }
         }
 
+        public async Task PlusView(Guid id)
+        {
+            var topic = await RepositoryContext.RetrieveAsync<Topic>(x => x.Id == id);
+            if (topic == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.TopicService_TopicNotFound);
+                return;
+            }
+
+            topic.View = topic.View + 1;
+            await RepositoryContext.UpdateAsync(topic);
+            if (RepositoryContext.OperationResult.Succeeded)
+            {
+                Result = OperationResult.Success;
+            }
+            Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+        }
+
 
 
         private async Task ChangePublishAsync(Guid id, Guid userId, bool publishState)
@@ -528,7 +546,7 @@ namespace Squirrel.Service.Services
 
         private static Expression<Func<Topic, bool>> GetSearchExpression(TopicSearchModel model)
         {
-            model.Username = model.Username.IsNotEmpty() ? model.Username.TrimAndLower() : string.Empty;
+            model.Username = model.Username.IsNotNothing() ? model.Username.TrimAndLower() : string.Empty;
 
             return x =>
                 (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
@@ -543,7 +561,7 @@ namespace Squirrel.Service.Services
         private async Task<Expression<Func<Topic, bool>>> GetSearchInPublishedExpression(TopicPublishedSearchModel model)
         {
             var textList = new List<string>();
-            if (model.SeachText.IsNotEmpty())
+            if (model.SeachText.IsNotNothing())
             {
                 model.SeachText = model.SeachText.Trim();
                 while (model.SeachText.Contains("  "))
@@ -553,15 +571,15 @@ namespace Squirrel.Service.Services
                 textList = model.SeachText.Split(' ').ToList();
             }
 
-            model.Author = model.Author.IsNotEmpty() ? model.Author.TrimAndLower() : string.Empty;
-            model.Category = model.Category.IsNotEmpty() ? model.Category.TrimAndLower() : string.Empty;
+            model.Author = model.Author.IsNotNothing() ? model.Author.TrimAndLower() : string.Empty;
+            model.Category = model.Category.IsNotNothing() ? model.Category.TrimAndLower() : string.Empty;
 
             List<Guid> catFamilyIds;
             if (model.CategoryId.HasValue)
             {
                 catFamilyIds = await GetCategoryFamilyById(model.CategoryId.Value);
             }
-            else if (model.Category.IsNotEmpty())
+            else if (model.Category.IsNotNothing())
             {
                 catFamilyIds = await GetCategoryFamilyByName(model.Category);
             }

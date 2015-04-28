@@ -67,7 +67,7 @@ namespace Squirrel.Utility.Cryptography
                 var encodedCodeResult = Convert.ToBase64String(encryptedCode);
                 return encodedCodeResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

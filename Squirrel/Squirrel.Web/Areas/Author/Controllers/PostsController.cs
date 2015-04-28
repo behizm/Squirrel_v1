@@ -97,7 +97,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 }
             }
 
-            if (model.PublishPersianDate.IsNotEmpty())
+            if (model.PublishPersianDate.IsNotNothing())
             {
                 var date = model.PublishPersianDate.Split(' ')[0];
                 var time = model.PublishPersianDate.Split(' ')[1];
@@ -113,7 +113,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var publishDate = "";
             if (model.IsPublic)
             {
-                if (model.PublishPersianDate.IsNotEmpty())
+                if (model.PublishPersianDate.IsNotNothing())
                 {
                     publishDate = model.PublishPersianDate.FaDigit();
                 }

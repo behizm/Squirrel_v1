@@ -37,17 +37,17 @@ function toEnglishDigits(text) {
 
     $(function () {
         // Material Textbox >>> start :
-        $('.materialtext .textbox').each(function(i) {
+        $('.materialtext .textbox, .materialtext .textarea').each(function (i) {
             if ($(this).val() != '') {
                 $(this).parent().addClass('value');
             }
         });
 
-        $('.materialtext .textbox').focusin(function () {
+        $('.materialtext .textbox, .materialtext .textarea').focusin(function () {
             $(this).parent().addClass('focus');
             $(this).parent().addClass('value');
         });
-        $('.materialtext .textbox').focusout(function () {
+        $('.materialtext .textbox, .materialtext .textarea').focusout(function () {
             if ($(this).val() == '') {
                 $(this).parent().removeClass('value');
             }

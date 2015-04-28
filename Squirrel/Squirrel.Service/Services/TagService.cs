@@ -96,7 +96,7 @@ namespace Squirrel.Service.Services
 
         public async Task<List<Topic>> PublishedTopicsAsync(string tagName, int skip, int take)
         {
-            if (tagName.IsEmpty())
+            if (tagName.IsNothing())
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return null;

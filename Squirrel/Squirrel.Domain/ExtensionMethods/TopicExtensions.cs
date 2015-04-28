@@ -6,6 +6,52 @@ namespace Squirrel.Domain.ExtensionMethods
 {
     public static class TopicExtensions
     {
+        public static ICollection<Post> OrderByPostOrdering(this ICollection<Post> posts, PostsOrdering postsOrdering)
+        {
+            switch (postsOrdering)
+            {
+                case PostsOrdering.LastEdited:
+                    return posts.OrderByDescending(x => x.EditDate.HasValue ? x.EditDate.Value : x.CreateDate).ToList();
+
+                case PostsOrdering.Newer:
+                    return posts.OrderByDescending(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Older:
+                    return posts.OrderBy(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Popular:
+                    return posts.OrderByDescending(x => x.Votes.Summery()).ToList();
+
+                default:
+                    return posts.ToList();
+            }
+        }
+
+        public static ICollection<Post> PublicOrderedPosts(this ICollection<Post> posts, PostsOrdering postsOrdering)
+        {
+            var privatePosts = posts.Where(x => !x.IsPublic).ToList();
+            privatePosts.ForEach(x => posts.Remove(x));
+
+            switch (postsOrdering)
+            {
+                case PostsOrdering.LastEdited:
+                    return posts.OrderByDescending(x => x.EditDate.HasValue ? x.EditDate.Value : x.CreateDate).ToList();
+
+                case PostsOrdering.Newer:
+                    return posts.OrderByDescending(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Older:
+                    return posts.OrderBy(x => x.CreateDate).ToList();
+
+                case PostsOrdering.Popular:
+                    return posts.OrderByDescending(x => x.Votes.Summery()).ToList();
+
+                default:
+                    return posts.ToList();
+            }
+        }
+
+
         public static List<Post> SortedPosts(this Topic topic)
         {
             if (topic.Posts == null || !topic.Posts.Any())

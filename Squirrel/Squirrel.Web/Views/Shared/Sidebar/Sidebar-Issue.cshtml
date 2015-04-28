@@ -1,0 +1,69 @@
+﻿@using Squirrel.Web.Models
+
+<div class="flatbox-shadow">
+    <div class="box-topic">
+        آخرین مطالب
+    </div>
+    <div class="sidebar-topics">
+        @Html.Partial("~/Views/Shared/Sidebar/_Topics.cshtml", CachedAppData.LastPublishedTopics.Items.Skip(0).Take(5).ToList())
+    </div>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="flatbox-shadow">
+    <div class="materialtext hasbtn">
+        <div class="title">دنبال چیزی می گردی؟</div>
+        @Html.TextBox("SidebarSearchText", null, new { @class = "textbox" })
+        <div class="button tile glyphbox" onclick="onSearchButtonClick()">&#xe686</div>
+    </div>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="flatbox-shadow">
+    <div class="box-topic">
+        دسته بندی مطالب
+    </div>
+    <div class="sidebar-categories">
+        @Html.Partial(
+        "~/Views/Shared/Sidebar/_Categories.cshtml",
+        CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount).ToList())
+    </div>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="flatbox-shadow">
+    <div class="box-topic">
+        برچسب ها
+    </div>
+    <div class="sidebar-tags">
+        @Html.Partial(
+        "~/Views/Shared/Sidebar/_Tags.cshtml",
+        CachedAppData.PublishedTags.Items.OrderByDescending(x => x.Weight).ToList())
+    </div>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="flatbox-shadow">
+    <div class="box-topic">
+        اینستاگرام
+    </div>
+    <div class="sidebar-tags">
+        @Html.Partial("~/Views/Shared/Sidebar/_Instagram.cshtml")
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#SidebarSearchText').on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            SearchWithKeyword($(this).val());
+        }
+    });
+
+    function onSearchButtonClick() {
+        SearchWithKeyword($('#SidebarSearchText').val());
+    }
+</script>

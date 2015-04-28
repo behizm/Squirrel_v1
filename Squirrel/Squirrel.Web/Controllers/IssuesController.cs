@@ -7,11 +7,15 @@ using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Helpers;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Controllers
 {
     public class IssuesController : BaseController
     {
+        public const int IssuesPageItemCount = 3;
+
         public ActionResult Archive()
         {
             return View();
@@ -67,18 +71,64 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
-        public ActionResult Search(string id, int p = 1)
-        {
-            ViewBag.SearchKeyword = id;
-            return View();
-        }
-
         public ActionResult User(string id, int p = 1)
         {
             ViewBag.IssuesUser = id;
             return View();
         }
 
+        public async Task<ActionResult> Search(string id, int p = 1)
+        {
 
+            var searchModel = new TopicSearchModel
+            {
+                Title = id,
+            };
+            var orderingModel = new OrderingModel<Topic, DateTime?>
+            {
+                IsAscending = false,
+                OrderByKeySelector = x => x.PublishDate,
+                Skip = (p - 1) * IssuesPageItemCount,
+                Take = IssuesPageItemCount,
+            };
+            var viewResult = await SearchView(searchModel, orderingModel, p);
+            if (viewResult != null)
+            {
+                return viewResult;
+            }
+
+            ViewBag.SearchKeyword = id;
+            return View();
+        }
+
+        private async Task<ViewResult> SearchView(TopicSearchModel searchModel, OrderingModel<Topic, DateTime?> orderingModel, int page)
+        {
+            var errorModel = new ErrorViewModel
+            {
+                Topic = "در هنگام پردازش صفحه خطایی رخ داد.",
+                Message = "لطفا کمی دیرتر دوباره صفحه مورد نظر خود را باز کنید.",
+            };
+
+            var itemsTask = TopicService.SearchAsync(searchModel, orderingModel);
+            var countTask = TopicService2.CountAsync(searchModel);
+            var items = await itemsTask;
+            if (items == null)
+            {
+                return View("HandledError", errorModel);
+            }
+            var count = await countTask;
+            if (count == null)
+            {
+                return View("HandledError", errorModel);
+            }
+
+            ViewBag.SearchResults = items;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = count % IssuesPageItemCount == 0
+                ? count / IssuesPageItemCount
+                : (count / IssuesPageItemCount) + 1;
+
+            return null;
+        }
     }
 }

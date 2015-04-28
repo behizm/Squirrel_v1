@@ -1,4 +1,9 @@
-﻿.circularG-con {
+﻿/*@complementLightestColor: #FFDDD4;
+@complementLightColor: #FDC7B8;
+@complementColor: #DF9A89;
+@complementDarkColor: #C0725E;
+@complementDarkestColor: #A4533E;*/
+.circularG-con {
   display: inline-block;
   vertical-align: middle;
 }
@@ -9,7 +14,7 @@
 }
 .circularG {
   position: absolute;
-  background-color: #898989;
+  background-color: #959595;
   width: 7px;
   height: 7px;
   -moz-border-radius: 7px;

@@ -518,7 +518,7 @@ namespace Squirrel.Service.Services
 
         public async Task<List<Topic>> TopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
         {
-            if (categoryName.IsEmpty())
+            if (categoryName.IsNothing())
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;
@@ -559,7 +559,7 @@ namespace Squirrel.Service.Services
 
         public async Task<List<Topic>> PublishedTopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
         {
-            if (categoryName.IsEmpty())
+            if (categoryName.IsNothing())
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
                 return null;

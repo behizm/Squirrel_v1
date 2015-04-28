@@ -31,14 +31,14 @@ namespace Squirrel.Web.Areas.Admin.Controllers
                 Take = 10,
             };
 
-            if (model.CreatePersianDateFrom.IsNotEmpty())
+            if (model.CreatePersianDateFrom.IsNotNothing())
             {
                 var date = model.CreatePersianDateFrom.Split(' ')[0];
                 var time = model.CreatePersianDateFrom.Split(' ')[1];
                 model.CreateDateFrom = new PersianDate(date, time);
             }
 
-            if (model.CreatePersianDateTo.IsNotEmpty())
+            if (model.CreatePersianDateTo.IsNotNothing())
             {
                 var date = model.CreatePersianDateTo.Split(' ')[0];
                 var time = model.CreatePersianDateTo.Split(' ')[1];
@@ -85,14 +85,14 @@ namespace Squirrel.Web.Areas.Admin.Controllers
                     JsonRequestBehavior.AllowGet);
             }
 
-            if (model.CleanPersianDateFrom.IsNotEmpty())
+            if (model.CleanPersianDateFrom.IsNotNothing())
             {
                 var date = model.CleanPersianDateFrom.Split(' ')[0];
                 var time = model.CleanPersianDateFrom.Split(' ')[1];
                 model.CleanDateFrom = new PersianDate(date, time);
             }
 
-            if (model.CleanPersianDateTo.IsNotEmpty())
+            if (model.CleanPersianDateTo.IsNotNothing())
             {
                 var date = model.CleanPersianDateTo.Split(' ')[0];
                 var time = model.CleanPersianDateTo.Split(' ')[1];

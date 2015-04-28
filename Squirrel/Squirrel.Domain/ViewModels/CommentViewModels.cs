@@ -16,6 +16,7 @@ namespace Squirrel.Domain.ViewModels
 
         [Display(Name = @"آدرس ایمیل")]
         [StringLength(50, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
         public string Email { get; set; }
 
         [Display(Name = @"تائید شده است؟")]

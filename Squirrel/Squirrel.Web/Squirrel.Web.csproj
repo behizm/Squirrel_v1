@@ -182,6 +182,8 @@
     <Compile Include="Models\BaseViewPage.cs" />
     <Compile Include="Models\CachedAppData.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
+    <Compile Include="Models\ErrorViewModel.cs" />
+    <Compile Include="Models\RsaClass.cs" />
     <Compile Include="Models\SqPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -4429,6 +4431,7 @@
     <Content Include="Content\themes\vone\images\back-wall-03.jpg" />
     <Content Include="Content\themes\vone\images\back-wall-04.jpg" />
     <Content Include="Content\themes\vone\images\favicon.png" />
+    <Content Include="Content\themes\vone\images\generalavatar.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
     <Content Include="Content\themes\vone\loading.css">
       <DependentUpon>loading.less</DependentUpon>
@@ -4724,7 +4727,6 @@
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.min.js.map">
       <DependentUpon>jquery.Bootstrap-PersianDateTimePicker.min.js</DependentUpon>
     </Content>
-    <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Issues\Category.cshtml" />
     <Content Include="Views\Issues\Tag.cshtml" />
     <Content Include="Views\Issues\Archive.cshtml" />
@@ -4744,7 +4746,7 @@
     <Content Include="Views\Home\Index_TopTopics.cshtml" />
     <Content Include="Views\Home\Index_TopicItem.cshtml" />
     <Content Include="Views\Home\Index_TopicItems.cshtml" />
-    <Content Include="Views\Shared\Sidebar\Sidebar.cshtml" />
+    <Content Include="Views\Shared\Sidebar\Sidebar-Home.cshtml" />
     <Content Include="Views\Shared\Sidebar\_Topics.cshtml" />
     <Content Include="Views\Shared\Sidebar\_Categories.cshtml" />
     <Content Include="Views\Shared\Sidebar\_Tags.cshtml" />
@@ -4753,6 +4755,13 @@
     <Content Include="Views\Shared\_FloatHeader.cshtml" />
     <Content Include="Views\Issues\User.cshtml" />
     <Content Include="Views\Shared\_BubbleMenu.cshtml" />
+    <Content Include="Views\Shared\Sidebar\Sidebar-Issue.cshtml" />
+    <Content Include="Views\Issue\Item_Related.cshtml" />
+    <Content Include="Views\Issue\Item_Neighbors.cshtml" />
+    <Content Include="Views\Shared\HandledError.cshtml" />
+    <Content Include="Views\Shared\_HandledError.cshtml" />
+    <Content Include="Views\Issues\_Issues.cshtml" />
+    <Content Include="Views\Issues\_Issues_Item.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">

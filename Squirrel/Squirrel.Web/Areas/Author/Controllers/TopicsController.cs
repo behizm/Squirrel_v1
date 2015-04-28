@@ -174,7 +174,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                  JsonRequestBehavior.AllowGet);
             }
 
-            if (model.PublishPersianDate.IsNotEmpty())
+            if (model.PublishPersianDate.IsNotNothing())
             {
                 var date = model.PublishPersianDate.Split(' ')[0];
                 var time = model.PublishPersianDate.Split(' ')[1];

@@ -1,66 +1,92 @@
-﻿@using Squirrel.Domain.ViewModels
+﻿@using Squirrel.Domain.ExtensionMethods
 @using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@using Squirrel.Web.Models
 @model Squirrel.Domain.Enititis.Post
+@{
+    var avatarAddress = Model.Author.AvatarAddress();
+    var authorName = Model.Author.ShowName();
+    PersianDate pDate = Model.PublishDate;
+}
 
-<div class="col-md-12 post-i-con">
-    @if (Model.HeaderImageId.HasValue)
-    {
-        <div class="main-pic">
-            <img src="@Url.Content(Model.HeaderImage.Address)" />
-        </div>
-    }
-    <div class="post-box">
-        <div class="col-md-2">
-            @Html.Partial("Post_Info", Model)
-        </div>
-        <div class="col-md-10">
-            <div class="base">
-                <div class="title">
-                    @Html.DisplayFor(m => m.Topic.Title)
-                </div>
-                <div class="divider-right-1"></div>
-                <div class="content">
-                    @Html.Raw(Model.Body)
-                </div>
-                <div class="divider-right-1"></div>
-                <div class="pdate">
-                    <span class="glyphbox">&#xe660</span>
-                    @if (Model.PublishDate.HasValue)
-                    {
-                        <span class="text">
-                            @(((PersianDate)Model.PublishDate.Value).ToStringDateTime(PersianDateFormat.DD_MonthName_YYYY, " ").FaDigit())
-                        </span>
-                    }
-                </div>                @if (Model.Attachments.Any())
-                {
-                    <div class="attachments-con">
-                        @Html.Partial("Post_Attachments", Model.Attachments)
-                    </div>
-                }
-                @if (Model.Tags.Any())
-                {
-                    <div class="tags-con">
-                        @Html.Partial("Post_Tags", Model.Tags)
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="clearbox"></div>
+<div class="category">
+    <span class="rightline"></span>
+    <a class="text" href="@Url.Action("Category", "Issues", new { id = Model.Topic.Category.Name })">
+        @Html.DisplayFor(m => m.Topic.Category.Name)
+    </a>
+    <span class="leftline"></span>
+</div>
+
+<div class="title">
+    @Html.DisplayFor(m => m.Topic.Title).FaDigit()
+</div>
+
+@if (Model.HeaderImageId.HasValue)
+{
+    <div class="headimage">
+        <img src="@Url.Content(Model.HeaderImage.Address)" alt="" />
     </div>
-    <div class="comment-con">
-        <div class="topic">نظرات</div>
-        <div class="divider-full-1"></div>
-        @if (Model.Comments.Any(x => x.IsConfirmed))
+}
+
+<div class="content">
+    @Html.Raw(Model.Body)
+</div>
+
+@if (Model.Attachments.Any())
+{
+    <div class="attachments">
+        @foreach (var att in Model.Attachments)
         {
-            <div class="comments">
-                @Html.Partial("Post_Comments", Model.Comments.Where(x => x.IsConfirmed).OrderBy(x => x.CreateDate))
+            var token = RsaClass.Encrypt(string.Format("{0}:{1}", att.Id, DateTime.Now.Ticks));
+            var item = att;
+            <div class="item">
+                <a href="@Url.Action("Attachment", "Issue", new { token })" target="_blank">
+                    @Html.DisplayFor(m => item.Name)
+                </a>
             </div>
         }
-        <div class="add-comment">
-            @Html.Partial("Post_AddComment", new CommentAddPublicModel { PostId = Model.Id })
+    </div>
+}
+
+@if (Model.Tags.Any())
+{
+    <div class="tags">
+        @foreach (var tag in Model.Tags.Select(x => x.Name))
+        {
+            var item = tag;
+            <a class="item" href="@Url.Action("Tag", "Issues", new { id = item })">
+                @Html.DisplayFor(m => item)
+            </a>
+        }
+    </div>
+}
+
+<div class="hline-full"></div>
+
+<div class="info">
+    @if (avatarAddress.IsNotNothing())
+    {
+        <a class="avatar" href="@Url.Action("User", "Issues", new { id = Model.Author.Username })">
+            <img src="@Url.Content(avatarAddress)" alt="@authorName" />
+        </a>
+    }
+    <div class="data">
+        <div class="author">
+            <span>نوشته شده توسط</span>
+            <a href="@Url.Action("User", "Issues", new { id = Model.Author.Username })">
+                @Html.DisplayFor(m => authorName)
+            </a>
         </div>
+        @if (pDate != null)
+        {
+            <div class="date">
+                در تاریخ
+                @pDate.ToStringDate().FaDigit()
+                ساعت
+                @pDate.ToStringTime().FaDigit()
+            </div>
+        }
     </div>
-    <div class="post-box" style=" border-radius: 5px;">
-        .
-    </div>
+
+    <div class="clearbox"></div>
 </div>

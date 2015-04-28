@@ -18,7 +18,8 @@ namespace Squirrel.Service.Services
         public List<FileTypeExtensions> FileTypeWithExtensionses { get; private set; }
         public List<FileTypeSize> FileTypeMaxSize { get; private set; }
         public List<string> ValidFileExtentions { get; private set; }
-        public int TempSubDirectotyLifeTimeMinutes { get; private set; }
+        public int TempSubDirectoryLifeTimeMinutes { get; private set; }
+        public int DownloadSubDirectoryLifeTimeMinutes { get; private set; }
 
         public FileService()
         {
@@ -68,7 +69,8 @@ namespace Squirrel.Service.Services
             };
 
             ValidFileExtentions = FileTypeWithExtensionses.SelectMany(x => x.ExtensionsList).ToList();
-            TempSubDirectotyLifeTimeMinutes = 15;
+            TempSubDirectoryLifeTimeMinutes = 15;
+            DownloadSubDirectoryLifeTimeMinutes = 60;
         }
 
         public async Task AddAsync(FileAddModel file)
@@ -449,7 +451,7 @@ namespace Squirrel.Service.Services
                 {
                     var dirInfo = new DirectoryInfo(tempDirectotyPath);
                     dirInfo.GetDirectories()
-                        .Where(x => x.CreationTime < DateTime.Now.AddMinutes(-TempSubDirectotyLifeTimeMinutes))
+                        .Where(x => x.CreationTime < DateTime.Now.AddMinutes(-TempSubDirectoryLifeTimeMinutes))
                         .ForEach(x => Directory.Delete(x.FullName, true));
                 }
 

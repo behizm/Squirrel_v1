@@ -268,7 +268,7 @@ namespace Squirrel.Service.Services
 
         public async Task ChangeConfirmState(CommentConfirmModel model)
         {
-            if (model == null || model.Username.IsEmpty())
+            if (model == null || model.Username.IsNothing())
             {
                 Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
                 return;
@@ -313,7 +313,7 @@ namespace Squirrel.Service.Services
 
         private static Expression<Func<Comment, bool>> GetSearchExpression(CommentSearchModel model)
         {
-            model.PostAuthorUsername = model.PostAuthorUsername.IsNotEmpty() ? model.PostAuthorUsername.TrimAndLower() : string.Empty;
+            model.PostAuthorUsername = model.PostAuthorUsername.IsNotNothing() ? model.PostAuthorUsername.TrimAndLower() : string.Empty;
 
             return
                 x =>

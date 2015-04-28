@@ -54,7 +54,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 Take = 10,
             };
 
-            model.PostAuthorUsername = User.Identity.Name;
+            model.PostAuthorUsername = User.Identity.IsAdmin ? string.Empty : User.Identity.Name;
             var itemsTask = CommentService.SearchAsync(model, orderingModel);
             var countTask = CommentService2.CountAsync(model);
 

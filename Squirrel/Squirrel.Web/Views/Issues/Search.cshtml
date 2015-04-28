@@ -1,1 +1,104 @@
-﻿@ViewBag.SearchKeyword
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Web.Controllers
+@using Squirrel.Web.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "جستجو";
+    List<Topic> searchTopics =
+        ViewBag.SearchResults ??
+        CachedAppData.LastPublishedTopics.Items.Take(IssuesController.IssuesPageItemCount).ToList();
+}
+
+<div class="divider-blank30"></div>
+
+<div class="issues-con">
+    <div class="search-box flatbox">
+        <div class="materialtext hasbtn">
+            <div class="title">عبارت جستجو را بنویسید.</div>
+            @Html.TextBox("SearchKeyword", (string)ViewBag.SearchKeyword, new { @id = "search_archive", @class = "textbox" })
+            <div class="button tile glyphbox" onclick="seachInArchive()">&#xe618</div>
+        </div>
+    </div>
+
+    <div class="divider-blank30"></div>
+
+    <div class="row">
+        @Html.Partial("_Issues", searchTopics)
+
+        @{
+            int currentPage = ViewBag.CurrentPage;
+            int totalPages = ViewBag.TotalPages;
+        }
+        <div class="col-md-12">
+            <div class="pager">
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    if (i != 1 && i != totalPages && (i - currentPage > 2 || currentPage - i > 2))
+                    {
+                        continue;
+                    }
+
+                    if (i == currentPage)
+                    {
+                        <span class="page current">@(i.FaDigit())</span>
+                    }
+                    else
+                    {
+                        if (i == totalPages && i - currentPage > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                        <a class="page" href="@Url.Action("Search","Issues",new {p = i})">
+                            @(i.FaDigit())
+                        </a>
+                        if (i == 1 && currentPage - i > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.issues-con #search_archive').on('keypress', function (e) {
+                console.log(e.keyCode);
+                var text = $('.issues-con #search_archive').val();
+                if (e.keyCode == 13) {
+                    seachInArchiveWithKeyword(text);
+                }
+            });
+
+            $(window).scroll(function () {
+                var contentH = $('body > .container').outerHeight();
+                var windowH = $(window).height();
+                var scrollToBottom = contentH - $(window).scrollTop() - windowH;
+
+                var offsetTop = $('.issues-con').offset().top;
+                var issuesH = $('.issues-con').outerHeight();
+                var offsetBottom = contentH - offsetTop - issuesH;
+
+                if (scrollToBottom < offsetBottom) {
+                    console.log("Bang");
+                }
+            });
+        });
+
+        function seachInArchive() {
+            seachInArchiveWithKeyword($('.issues-con #search_archive').val());
+        }
+
+        function seachInArchiveWithKeyword(k) {
+            k = k.trim();
+            if (k != '') {
+                window.location.href = '@Url.Action("Search", "Issues", new {id = ""})' + "/" + k;
+            }
+        }
+    </script>
+}

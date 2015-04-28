@@ -13,7 +13,7 @@
     counter++;
 
     <div class="item">
-        @if (imageAddress.IsNotEmpty())
+        @if (imageAddress.IsNotNothing())
         {
             <a class="image" href="@Url.Action("Index", "Issue", new { id = item.IssueId })">
                 <img src="@Url.Content(imageAddress)" alt="@item.Title" />

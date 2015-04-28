@@ -1,0 +1,27 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.Enititis.Topic
+
+@{
+    PersianDate pdate = Model.PublishDate;
+    var imageAddress = Model.ImageAddress();
+}
+
+@if (imageAddress.IsNotNothing())
+{
+    <a class="image hidden-xs" href="@Url.Action("Index", "Issue", new { id = Model.IssueId })">
+        <img src="@Url.Content(imageAddress)" alt="" />
+    </a>
+}
+<a class="title" href="@Url.Action("Index", "Issue", new { id = Model.IssueId })">
+    @Html.DisplayFor(m => m.Title).FaDigit()
+</a>
+@if (pdate != null)
+{
+    <div class="date">
+        <span>@pdate.ToStringDate().FaDigit()</span>
+        <span class="glyphbox">&#xe690</span>
+        <span>@pdate.ToStringTime().FaDigit()</span>
+    </div>
+}

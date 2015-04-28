@@ -1,0 +1,35 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model List<Squirrel.Domain.Enititis.Topic>
+
+
+<div class="topic">مطالب مرتبط</div>
+<div class="row">
+    @foreach (var topic in Model)
+    {
+        var item = topic;
+        PersianDate pdate = topic.PublishDate;
+
+        <div class="col-md-4">
+            <a class="image" href="@Url.Action("Index", "Issue", new { id = item.IssueId })">
+                @if (item.ImageAddress().IsNotNothing())
+                {
+                    <img src="@Url.Content(item.ImageAddress())" alt="" />
+                }
+            </a>
+            <a class="title" href="@Url.Action("Index", "Issue", new { id = item.IssueId })">
+                @Html.DisplayFor(m => item.Title).FaDigit()
+            </a>
+            @if (pdate != null)
+            {
+                <div class="date">
+                    @pdate.Year.FaDigit()
+                    ،
+                    @pdate.Day.FaDigit()
+                    @PersianDateTools.JalaliMonth(pdate.Month)
+                </div>
+            }
+        </div>
+    }
+</div>

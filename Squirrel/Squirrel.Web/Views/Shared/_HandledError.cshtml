@@ -1,0 +1,7 @@
+﻿@model Squirrel.Web.Models.ErrorViewModel
+
+<div class="message-box error">
+    <span class="msg-close glyphbox" onclick="$(this).parent().hide();">&#xe680</span>
+    <div class="msg-topic">@Html.DisplayFor(m => m.Topic)</div>
+    <div class="msg-text">@Html.DisplayFor(m => m.Message)</div>
+</div>

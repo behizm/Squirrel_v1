@@ -1,0 +1,36 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@{
+    Topic nextItem = ViewBag.NextTopic;
+    Topic previousItem = ViewBag.PreviousTopic;
+}
+
+
+<div class="row">
+    <div class="col-xs-6">
+        @if (previousItem != null)
+        {
+            <a class="item rightitem" href="@Url.Action("Index", "Issue", new { id = previousItem.IssueId })">
+                <div class="top">
+                    <span class="text">مطلب قبلی</span>
+                </div>
+                <div class="bottom hidden-xs">
+                    @Html.DisplayFor(m => previousItem.Title).FaDigit()
+                </div>
+            </a>
+        }
+    </div>
+    <div class="col-xs-6">
+        @if (nextItem != null)
+        {
+            <a class="item leftitem" href="@Url.Action("Index", "Issue", new { id = nextItem.IssueId })">
+                <div class="top">
+                    <span class="text">مطلب بعدی</span>
+                </div>
+                <div class="bottom hidden-xs">
+                    @Html.DisplayFor(m => nextItem.Title).FaDigit()
+                </div>
+            </a>
+        }
+    </div>
+</div>

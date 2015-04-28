@@ -19,13 +19,13 @@
         @Html.DisplayFor(m => m.Title).FaDigit()
     </a>
     <a class="image" href="@Url.Action("Index", "Issue", new { id = Model.IssueId })">
-        @if (imageAddress.IsNotEmpty())
+        @if (imageAddress.IsNotNothing())
         {
             <img src="@Url.Content(imageAddress)" alt="@Model.Title" />
         }
     </a>
 
-    @if (Model.Abstarct().IsNotEmpty())
+    @if (Model.Abstarct().IsNotNothing())
     {
         <div class="abstract hidden-xs">
             @Model.Abstarct()

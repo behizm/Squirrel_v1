@@ -1,10 +1,82 @@
-﻿@model Squirrel.Domain.Enititis.Topic
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Web.Models
+@model Topic
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = Model.Title;
+    var firstPost = Model.Posts.First();
+    List<Topic> relatedTopics = ViewBag.RelatedTopics;
 }
 
-@foreach (var post in Model.Posts)
+@if (firstPost.HeaderImageId.HasValue)
 {
-    @Html.Partial("Post", post)
+    <div class="col-md-12">
+        <div class="issuepage-firstimage">
+            <div class="image">
+                <img src="@Url.Content(firstPost.HeaderImage.Address)" alt="@Model.Title" />
+            </div>
+        </div>
+    </div>
 }
+
+<div class="col-md-8">
+    <div class="issuepage-posts">
+        <div class="post firstpost flatbox-shadow">
+            @Html.Partial("Post", firstPost)
+        </div>
+
+        <div class="divider-blank50"></div>
+        <div class="comments flatbox-shadow">
+            @if (firstPost.Comments != null && firstPost.Comments.Any())
+            {
+                @Html.Partial("Post_Comments", firstPost.Comments.Where(x => x.IsConfirmed).OrderBy(x => x.CreateDate))
+                <div class="hline-full"></div>
+            }
+            <div class="add-comment">
+                @Html.Partial("Post_AddComment", new CommentAddPublicModel { PostId = firstPost.Id })
+            </div>
+        </div>
+
+        <div class="divider-blank50"></div>
+        <div class="flatbox-shadow neighbors">
+            @Html.Partial("Item_Neighbors")
+        </div>
+
+        @if (relatedTopics != null && relatedTopics.Any())
+        {
+            <div class="divider-blank50 hidden-sm hidden-xs"></div>
+            <div class="related-posts flatbox-shadow hidden-sm hidden-xs">
+                @Html.Partial("Item_Related", relatedTopics)
+            </div>
+        }
+
+        @foreach (var post in Model.Posts.Where(x => x.Id != firstPost.Id))
+        {
+            <div class="divider-blank50"></div>
+            <div class="post flatbox-shadow">
+                @Html.Partial("Post", post)
+            </div>
+
+            if (post.Comments != null && post.Comments.Any())
+            {
+                <div class="divider-blank50"></div>
+                <div class="comments flatbox-shadow">
+                    @Html.Partial("Post_Comments", post.Comments.Where(x => x.IsConfirmed).OrderBy(x => x.CreateDate))
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="col-md-4 hidden-sm hidden-xs">
+    <div class="sidebar issuepage">
+        @Html.Partial("~/Views/Shared/Sidebar/Sidebar-Issue.cshtml")
+    </div>
+</div>
+
+
+<div class="col-md-12">
+    @(((PersianDate)CachedAppData.PopularPublishedTopics.LastUpdate).ToStringDateTime())
+</div>

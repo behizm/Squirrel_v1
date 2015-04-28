@@ -24,7 +24,7 @@ namespace Squirrel.Service.Services
             }
 
             User user = null;
-            if (!model.Username.IsEmpty())
+            if (!model.Username.IsNothing())
             {
                 model.Username = model.Username.TrimAndLower();
                 user = await RepositoryContext.RetrieveAsync<User>(x => x.Username == model.Username);
@@ -55,7 +55,7 @@ namespace Squirrel.Service.Services
             log.InfoId = logInfo.Id;
             log.Info = logInfo;
 
-            if (!model.ErrorMessage.IsEmpty())
+            if (!model.ErrorMessage.IsNothing())
             {
                 var error = new Error
                 {

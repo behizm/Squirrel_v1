@@ -1,6 +1,7 @@
 ﻿@using Squirrel.Domain.Enititis
 @using Squirrel.Web.Models
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "وبلاگ شخصی";
     List<Topic> topTopics = ViewBag.TopTopics;
 }
@@ -22,6 +23,6 @@
 
 <div class="col-md-4 hidden-sm hidden-xs">
     <div class="sidebar">
-        @Html.Partial("~/Views/Shared/Sidebar/Sidebar.cshtml")
+        @Html.Partial("~/Views/Shared/Sidebar/Sidebar-Home.cshtml")
     </div>
 </div>

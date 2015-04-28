@@ -14,7 +14,7 @@ namespace Squirrel.Web.Controllers
         public ActionResult Index(string id)
         {
             var imagedTopics = new List<Topic>();
-            foreach (var topic in CachedAppData.LastPublishedTopics.Items.Where(topic => topic.ImageAddress().IsNotEmpty()))
+            foreach (var topic in CachedAppData.LastPublishedTopics.Items.Where(topic => topic.ImageAddress().IsNotNothing()))
             {
                 if (imagedTopics.All(x => x.CategoryId != topic.CategoryId))
                 {
