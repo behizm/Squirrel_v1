@@ -1,7 +1,16 @@
-﻿
+﻿@using Squirrel.Web.Models
 @{
-    ViewBag.Title = "AccessDenied";
+    ViewBag.Title = "خطای دسترسی";
 }
 
-<h2>Access Denied</h2>
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="divider-blank50"></div>
+        @Html.Partial("_HandledError", new ErrorViewModel
+        {
+            Topic = "خطای دسترسی!",
+            Message = "شما دسترسی لازم برای مشاهده این صفحه را ندارید ."
+        })
+    </div>
+</div>
 

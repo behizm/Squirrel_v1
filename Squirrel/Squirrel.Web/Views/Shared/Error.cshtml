@@ -1,9 +1,17 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
-
+﻿@using Squirrel.Web.Models
 @{
-    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "خطا";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="divider-blank50"></div>
+        @Html.Partial("_HandledError", new ErrorViewModel
+        {
+            Topic = "خطای سیستمی !",
+            Message = "در هنگام انجام درخواست شما خطایی رخ داد، لطفا کمی دیرتر مجددا اقدام کنید."
+        })
+    </div>
+</div>
 

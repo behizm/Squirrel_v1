@@ -25,7 +25,7 @@ namespace Squirrel.Web.Controllers
             }
 
             const int count = 3;
-            var ralatedTask = CategoryService.PublishedTopicsAsync(topic.Category.Name, true, 0, count + 1);
+            var ralatedListModelTask = CategoryService.PublishedTopicsAsync(topic.Category.Name, true, 0, count + 1);
             var prevTopicTask =
                 TopicService.SearchAsync(
                     new TopicSearchModel
@@ -57,7 +57,8 @@ namespace Squirrel.Web.Controllers
 
             topic.Posts = topic.Posts.PublicOrderedPosts(topic.PostsOrdering);
 
-            var related = await ralatedTask;
+            var relatedListModel = await ralatedListModelTask;
+            var related = relatedListModel.List;
             related.Remove(related.Find(x => x.Id == topic.Id));
             if (related.Count < count)
             {

@@ -14,72 +14,94 @@ namespace Squirrel.Web.Controllers
 {
     public class IssuesController : BaseController
     {
-        public const int IssuesPageItemCount = 3;
-
-        public ActionResult Archive()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Archive(TopicPublishedSearchModel model, int searchPage)
-        {
-            var ordering = new OrderingModel<Topic, DateTime?>
-            {
-                IsAscending = false,
-                OrderByKeySelector = x => x.PublishDate,
-                Skip = (searchPage - 1) * 10,
-                Take = 10,
-            };
-
-            var topics = await TopicService.SearchInPublishedAsync(model, ordering);
-            if (topics == null)
-            {
-                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
-                topics = new List<Topic>();
-            }
-            ViewData.Model = topics;
-            return PartialView("Archive_Result");
-        }
+        public const int IssuesPageItemCount = 12;
 
         public async Task<ActionResult> Category(string id, int p = 1)
         {
-            var topics = await CategoryService.PublishedTopicsAsync(id, true, (p - 1) * 10, 10);
-            if (topics == null)
+            var errorModel = new ErrorViewModel
             {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                topics = new List<Topic>();
+                Topic = "موردی یافت نشد.",
+                Message = string.Format("گروهی با نام « {0} » وجود ندارد.", id),
+            };
+
+            var itemsModel =
+                await CategoryService.PublishedTopicsAsync(id, true, (p - 1) * IssuesPageItemCount, IssuesPageItemCount);
+            if (itemsModel == null)
+            {
+                return View("HandledError", errorModel);
             }
-            ViewData.Model = topics;
+
+            ViewBag.CategoryName = id;
+            ViewBag.SearchResults = itemsModel.List;
+            ViewBag.CurrentPage = p;
+            ViewBag.TotalPages = itemsModel.CountOfAll % IssuesPageItemCount == 0
+                ? itemsModel.CountOfAll / IssuesPageItemCount
+                : (itemsModel.CountOfAll / IssuesPageItemCount) + 1;
+
             return View();
         }
 
         public async Task<ActionResult> Tag(string id, int p = 1)
         {
-            var topics = await TagService.PublishedTopicsAsync(id, (p - 1) * 10, 10);
-            if (topics == null)
+            var errorModel = new ErrorViewModel
             {
-                ViewBag.ErrorMessage = TagService.Result.Errors.FirstOrDefault();
-                topics = new List<Topic>();
+                Topic = "موردی یافت نشد.",
+                Message = string.Format("برچسبی با نام « {0} » وجود ندارد.", id),
+            };
+
+            var items = await TagService.PublishedTopicsAsync(id, (p - 1) * IssuesPageItemCount, IssuesPageItemCount);
+            if (items == null)
+            {
+                return View("HandledError", errorModel);
             }
-            ViewData.Model = topics;
+
+            ViewBag.TagName = id;
+            ViewBag.SearchResults = items.List;
+            ViewBag.CurrentPage = p;
+            ViewBag.TotalPages = items.CountOfAll % IssuesPageItemCount == 0
+                ? items.CountOfAll / IssuesPageItemCount
+                : (items.CountOfAll / IssuesPageItemCount) + 1;
+
             return View();
         }
 
-        public ActionResult Date()
+        public async Task<ActionResult> Author(string id, int p = 1)
         {
-            return View();
-        }
+            var errorModel = new ErrorViewModel
+            {
+                Topic = "نویسنده مورد نظر یافت نشد.",
+            };
+            Guid guid;
+            var parseResult = Guid.TryParse(id, out guid);
+            if (!parseResult)
+            {
+                return View("HandledError", errorModel);
+            }
 
-        public ActionResult User(string id, int p = 1)
-        {
-            ViewBag.IssuesUser = id;
+            var user = await UserService.FindByIdAsync(guid);
+            if (user == null)
+            {
+                return View("HandledError", errorModel);
+            }
+
+            var items = await UserService.PublishedTopicsAsync(user.Id, (p - 1) * IssuesPageItemCount, IssuesPageItemCount);
+            if (items == null)
+            {
+                return View("HandledError", errorModel);
+            }
+
+            ViewBag.Author = user;
+            ViewBag.SearchResults = items.List;
+            ViewBag.CurrentPage = p;
+            ViewBag.TotalPages = items.CountOfAll % IssuesPageItemCount == 0
+                ? items.CountOfAll / IssuesPageItemCount
+                : (items.CountOfAll / IssuesPageItemCount) + 1;
+
             return View();
         }
 
         public async Task<ActionResult> Search(string id, int p = 1)
         {
-
             var searchModel = new TopicSearchModel
             {
                 Title = id,
@@ -130,5 +152,6 @@ namespace Squirrel.Web.Controllers
 
             return null;
         }
+
     }
 }

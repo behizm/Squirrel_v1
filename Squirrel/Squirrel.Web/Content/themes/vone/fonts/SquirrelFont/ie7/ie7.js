@@ -13,6 +13,7 @@
 		el.innerHTML = '<span style="font-family: \'SquirrelFont\'">' + entity + '</span>' + html;
 	}
 	var icons = {
+		'icon-socialglyphRss': '&#xe601;',
 		'icon-socialglyphLogo2': '&#xe600;',
 		'0': 0
 		},

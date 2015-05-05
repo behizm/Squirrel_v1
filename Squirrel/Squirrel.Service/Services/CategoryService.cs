@@ -557,7 +557,7 @@ namespace Squirrel.Service.Services
                         .ToListAsync();
         }
 
-        public async Task<List<Topic>> PublishedTopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
+        public async Task<ListModel<Topic>> PublishedTopicsAsync(string categoryName, bool isFamilyGet, int skip, int take)
         {
             if (categoryName.IsNothing())
             {
@@ -584,13 +584,17 @@ namespace Squirrel.Service.Services
             }
 
             Result = OperationResult.Success;
-            return
-                await
-                    items.Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
+            return new ListModel<Topic>
+            {
+                CountOfAll = items.Count(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now),
+                List =
+                    items
+                        .Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
                         .OrderByDescending(x => x.PublishDate)
                         .Skip(skip)
                         .Take(take)
-                        .ToListAsync();
+                        .ToList()
+            };
         }
 
         public async Task ChangeAvatarAsync(Guid categoryId, Guid fileId)

@@ -1,18 +1,64 @@
-﻿@model List<Squirrel.Domain.Enititis.Topic>
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "گروه " + ViewBag.CategoryName;
+    List<Topic> searchTopics = ViewBag.SearchResults;
+}
 
-<br/>
-<div style="color: red;">
-    @ViewBag.ErrorMessage
-</div>
-<hr/>
-<div class="row">
-    <div class="col-md-12">
-        @foreach (var topic in Model)
-        {
-            var item = topic;
-            <div>
-                @Html.DisplayFor(m => item.Title)
-            </div>
+<div class="divider-blank30"></div>
+
+<div class="issues-con">
+    <div class="content-title flatbox">
+        مطالبی که در گروه «
+        <span class="name">
+            @ViewBag.CategoryName
+        </span>
+        » قرار دارند ...
+        <a class="rss button circle" href="@Url.Action("Category", "Rss", new { id = ViewBag.CategoryName })">
+            <span class="siteglyphbox">&#xe601</span>
+        </a>
+    </div>
+
+    <div class="divider-blank30"></div>
+
+    <div class="row">
+        @Html.Partial("_Issues", searchTopics)
+
+        @{
+            int currentPage = ViewBag.CurrentPage;
+            int totalPages = ViewBag.TotalPages;
         }
+        <div class="col-sm-12">
+            <div class="pager">
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    if (i != 1 && i != totalPages && (i - currentPage > 2 || currentPage - i > 2))
+                    {
+                        continue;
+                    }
+
+                    if (i == currentPage)
+                    {
+                        <span class="page current">@(i.FaDigit())</span>
+                    }
+                    else
+                    {
+                        if (i == totalPages && i - currentPage > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                        <a class="page" href="@Url.Action("Category","Issues",new {p = i})">
+                            @(i.FaDigit())
+                        </a>
+                        if (i == 1 && currentPage - i > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
     </div>
 </div>

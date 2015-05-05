@@ -1,7 +1,18 @@
-﻿
+﻿@using Squirrel.Utility.FarsiTools
+@using Squirrel.Web.Models
 @{
-    ViewBag.Title = "NotFound";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "خطا";
 }
 
-<h2>Not Found</h2>
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="divider-blank50"></div>
+        @Html.Partial("_HandledError", new ErrorViewModel
+        {
+            Topic = "خطای 404 !".FaDigit(),
+            Message = "صفحه موردنظر شما در سایت یافت نشد."
+        })
+    </div>
+</div>
 

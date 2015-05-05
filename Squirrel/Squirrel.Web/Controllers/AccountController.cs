@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Helpers;
 using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Controllers
@@ -18,7 +19,7 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(AccountLoginModel model, string returnUrl)
         {
             var login = await UserService.LoginAsync(model.Username, null, model.Password);
@@ -35,9 +36,9 @@ namespace Squirrel.Web.Controllers
                 var faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
 
-                if (string.IsNullOrEmpty(returnUrl))
+                if (returnUrl.IsNothing())
                 {
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("Index", "Panel", new { Area = "Author" });
                 }
 
                 return Redirect(returnUrl);

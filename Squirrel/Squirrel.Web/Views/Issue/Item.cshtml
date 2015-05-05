@@ -1,7 +1,5 @@
 ﻿@using Squirrel.Domain.Enititis
 @using Squirrel.Domain.ViewModels
-@using Squirrel.Utility.FarsiTools
-@using Squirrel.Web.Models
 @model Topic
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,8 +19,16 @@
     </div>
 }
 
+<div class="col-md-12">
+    <div class="divider-blank30"></div>
+</div>
+
 <div class="col-md-8">
     <div class="issuepage-posts">
+        <div class="read-mode hidden-sm hidden-xs" title="تغییر مد خواندن">
+            <span class="glyphbox">&#xe657</span>
+        </div>
+
         <div class="post firstpost flatbox-shadow">
             @Html.Partial("Post", firstPost)
         </div>
@@ -76,7 +82,34 @@
     </div>
 </div>
 
+@section scripts{
+    @Scripts.Render("~/bundles/PostPage")
+    @Styles.Render("~/content/PostPage")
 
-<div class="col-md-12">
-    @(((PersianDate)CachedAppData.PopularPublishedTopics.LastUpdate).ToStringDateTime())
-</div>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+
+        $(function () {
+            $('.issuepage-posts').mouseover(function () {
+                $(this).children('.read-mode').stop().fadeIn(200);
+            });
+
+            $('.issuepage-posts').mouseleave(function () {
+                $(this).children('.read-mode').stop().fadeOut(200);
+            });
+
+            $('.read-mode').click(function () {
+                var $sectionRight = $(this).parent('.issuepage-posts').parent();
+                var $sectionLeft = $sectionRight.next();
+
+                if ($sectionRight.hasClass('col-md-8')) {
+                    $sectionRight.removeClass('col-md-8').addClass('col-md-12');
+                    $sectionLeft.hide();
+                } else if ($sectionRight.hasClass('col-md-12')) {
+                    $sectionRight.removeClass('col-md-12').addClass('col-md-8');
+                    $sectionLeft.show();
+                }
+            });
+        });
+    </script>
+}

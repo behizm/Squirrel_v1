@@ -14,7 +14,7 @@ namespace Squirrel.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             // BotDetect requests must not be routed
-            routes.IgnoreRoute("{*botdetect}", new {botdetect = @"(.*)BotDetectCaptcha\.ashx"});
+            routes.IgnoreRoute("{*botdetect}", new { botdetect = @"(.*)BotDetectCaptcha\.ashx" });
 
             routes.MapRoute(
                 name: "I&Id",
@@ -37,9 +37,15 @@ namespace Squirrel.Web
             );
 
             routes.MapRoute(
-                name: "User",
-                url: "User/{id}",
-                defaults: new { controller = "Issues", action = "User" }
+                name: "Tag",
+                url: "Tag/{id}",
+                defaults: new { controller = "Issues", action = "Tag" }
+            );
+
+            routes.MapRoute(
+                name: "Writer",
+                url: "Writer/{id}",
+                defaults: new { controller = "Issues", action = "Author" }
             );
 
             routes.MapRoute(

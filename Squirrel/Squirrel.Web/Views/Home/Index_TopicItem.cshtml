@@ -44,7 +44,7 @@
             </span>
         }
         توسط
-        <a class="name" href="@Url.Action("User", "Issues", new { id = Model.Owner.Username })">
+        <a class="name" href="@Url.Action("Author", "Issues", new { id = Model.OwnerId })">
             @Model.Owner.ShowName()
         </a>
     </div>

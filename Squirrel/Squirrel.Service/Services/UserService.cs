@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Squirrel.Data;
 using Squirrel.Domain.ConfigModels;
@@ -10,6 +11,7 @@ using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Service.Share;
+using Squirrel.Utility.Helpers;
 
 namespace Squirrel.Service.Services
 {
@@ -491,6 +493,27 @@ namespace Squirrel.Service.Services
             user.IsAdmin = isAdmin;
             user.LockDate = DateTime.Now;
             await UpdateAsync(user);
+        }
+
+        public async Task<ListModel<Topic>> PublishedTopicsAsync(Guid userId, int skip, int take)
+        {
+            var items = await
+                RepositoryContext.SearchAsync<Topic>(x =>
+                    x.IsPublished &&
+                    x.PublishDate <= DateTime.Now &&
+                    (x.OwnerId == userId || (x.Posts.Any(p => p.IsPublic && p.AuthorId == userId))));
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return new ListModel<Topic>
+            {
+                CountOfAll = items.Count(),
+                List = items.OrderByDescending(x => x.PublishDate).Skip(skip).Take(take).ToList(),
+            };
         }
 
 

@@ -30,7 +30,7 @@
             int currentPage = ViewBag.CurrentPage;
             int totalPages = ViewBag.TotalPages;
         }
-        <div class="col-md-12">
+        <div class="col-sm-12">
             <div class="pager">
                 @for (var i = 1; i <= totalPages; i++)
                 {
@@ -63,42 +63,3 @@
 
     </div>
 </div>
-
-@section scripts{
-    <script type="text/javascript">
-        $(function () {
-            $('.issues-con #search_archive').on('keypress', function (e) {
-                console.log(e.keyCode);
-                var text = $('.issues-con #search_archive').val();
-                if (e.keyCode == 13) {
-                    seachInArchiveWithKeyword(text);
-                }
-            });
-
-            $(window).scroll(function () {
-                var contentH = $('body > .container').outerHeight();
-                var windowH = $(window).height();
-                var scrollToBottom = contentH - $(window).scrollTop() - windowH;
-
-                var offsetTop = $('.issues-con').offset().top;
-                var issuesH = $('.issues-con').outerHeight();
-                var offsetBottom = contentH - offsetTop - issuesH;
-
-                if (scrollToBottom < offsetBottom) {
-                    console.log("Bang");
-                }
-            });
-        });
-
-        function seachInArchive() {
-            seachInArchiveWithKeyword($('.issues-con #search_archive').val());
-        }
-
-        function seachInArchiveWithKeyword(k) {
-            k = k.trim();
-            if (k != '') {
-                window.location.href = '@Url.Action("Search", "Issues", new {id = ""})' + "/" + k;
-            }
-        }
-    </script>
-}

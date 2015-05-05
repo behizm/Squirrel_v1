@@ -29,5 +29,7 @@ namespace Squirrel.Service
         Task LockAsync(Guid userId);
         Task UnlockAsync(Guid userId);
         Task ChangeAdminAsync(Guid userId, bool isAdmin);
+
+        Task<ListModel<Topic>> PublishedTopicsAsync(Guid userId, int skip, int take);
     }
 }

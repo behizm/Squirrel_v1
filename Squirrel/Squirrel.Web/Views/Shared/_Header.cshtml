@@ -2,13 +2,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-10">
+        <div class="col-md-10 col-xs-7">
             <div class="header-menu">
                 <a class="item logo" href="@Url.Action("Index", "Home")">&#xe600</a>
                 @foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount))
                 {
                     var item = cat;
-                    <a class="item hidden-sm hidden-xs" 
+                    <a class="item hidden-sm hidden-xs"
                        href="@Url.Action("Category", "Issues", new { id = item.Name })">
                         @Html.DisplayFor(m => item.Name)
                     </a>
@@ -16,8 +16,9 @@
                 <a class="item cat hidden-lg hidden-md" onclick="showBubbleMenu()">گروهها</a>
             </div>
         </div>
-        <div class="col-xs-2">
+        <div class="col-md-2 col-xs-5">
             <div class="header-search">
+                <a class="siteglyphbox" href="@Url.Action("Index", "Rss")">&#xe601</a>
                 <div class="glyphbox" onclick="showSearchBubble(this)">&#xe618</div>
                 <div class="searchbox">
                     <div class="materialtext">

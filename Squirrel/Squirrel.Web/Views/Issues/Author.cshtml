@@ -1,0 +1,66 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Topic> searchTopics = ViewBag.SearchResults;
+    User author = ViewBag.Author;
+    ViewBag.Title = author.ShowName();
+}
+
+<div class="divider-blank30"></div>
+
+<div class="issues-con">
+    <div class="content-title flatbox">
+        مطالبی که توسط «
+        <span class="name">
+            @author.ShowName()
+        </span>
+        » نوشته شده اند ...
+        <a class="rss button circle" href="@Url.Action("Author", "Rss", new { id = author.Id })">
+            <span class="siteglyphbox">&#xe601</span>
+        </a>
+    </div>
+
+    <div class="divider-blank30"></div>
+
+    <div class="row">
+        @Html.Partial("_Issues", searchTopics)
+
+        @{
+            int currentPage = ViewBag.CurrentPage;
+            int totalPages = ViewBag.TotalPages;
+        }
+        <div class="col-sm-12">
+            <div class="pager">
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    if (i != 1 && i != totalPages && (i - currentPage > 2 || currentPage - i > 2))
+                    {
+                        continue;
+                    }
+
+                    if (i == currentPage)
+                    {
+                        <span class="page current">@(i.FaDigit())</span>
+                    }
+                    else
+                    {
+                        if (i == totalPages && i - currentPage > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                        <a class="page" href="@Url.Action("Author","Issues",new {p = i})">
+                            @(i.FaDigit())
+                        </a>
+                        if (i == 1 && currentPage - i > 3)
+                        {
+                            <span class="far glyphbox">&#xe632</span>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

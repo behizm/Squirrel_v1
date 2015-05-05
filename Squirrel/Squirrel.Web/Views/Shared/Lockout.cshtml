@@ -1,10 +1,17 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
-
+﻿@using Squirrel.Web.Models
 @{
-    ViewBag.Title = "Locked Out";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "خطا";
 }
 
-<hgroup>
-    <h1 class="text-danger">Locked out.</h1>
-    <h2 class="text-danger">This account has been locked out, please try again later.</h2>
-</hgroup>
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="divider-blank50"></div>
+        @Html.Partial("_HandledError", new ErrorViewModel
+        {
+            Topic = "خطای کاربر !",
+            Message = "تعداد تلاش های ناموفق شما برای ورود به سایت بیش از حد مجاز بوده و نام کاربری شما قفل شده است."
+        })
+    </div>
+</div>
+

@@ -67,6 +67,13 @@ namespace Squirrel.Web
                 "~/Scripts/MdBootstrapPersianDateTimePicker/calendar.js",
                 "~/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"));
 
+            // Post Page Bundles
+            bundles.Add(new StyleBundle("~/content/PostPage").Include(
+                      "~/ckeditor/plugins/codesnippet/lib/highlight/styles/solarized_light.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/PostPage").Include(
+                "~/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"));
+
             BundleTable.EnableOptimizations = false;
         }
     }

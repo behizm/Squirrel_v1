@@ -94,7 +94,7 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
         }
 
-        public async Task<List<Topic>> PublishedTopicsAsync(string tagName, int skip, int take)
+        public async Task<ListModel<Topic>> PublishedTopicsAsync(string tagName, int skip, int take)
         {
             if (tagName.IsNothing())
             {
@@ -119,13 +119,17 @@ namespace Squirrel.Service.Services
             }
 
             Result = OperationResult.Success;
-            return
-                await topics
-                    .Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
-                    .OrderByDescending(x => x.PublishDate)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToListAsync();
+            return new ListModel<Topic>
+            {
+                CountOfAll = topics.Count(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now),
+                List =
+                    topics
+                        .Where(x => x.IsPublished && x.PublishDate.HasValue && x.PublishDate <= DateTime.Now)
+                        .OrderByDescending(x => x.PublishDate)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList(),
+            };
         }
 
         public async Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering, bool isPublished = false)

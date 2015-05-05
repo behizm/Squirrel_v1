@@ -1,5 +1,11 @@
-﻿@using Squirrel.Utility.FarsiTools
-@model List<Squirrel.Domain.Enititis.Topic>
+﻿@model List<Squirrel.Domain.Enititis.Topic>
+
+@if (!Model.Any())
+{
+    <div class="nothing">
+        «موردی یافت نشد.»
+    </div>
+}
 
 <div id="3col_items" class="hidden-sm hidden-xs">
     <div class="col-md-4">
@@ -66,13 +72,15 @@
 </div>
 
 <div id="1col_items" class="hidden-true visible-xs">
-    @for (var i = 0; i < Model.Count; i++)
-    {
-        if (i % 2 == 0)
+    <div class="col-xs-12">
+        @for (var i = 0; i < Model.Count; i++)
         {
-            <div class="flatbox-shadow item-box">
-                @Html.Partial("_Issues_Item", Model[i])
-            </div>
+            if (i % 2 == 0)
+            {
+                <div class="flatbox-shadow item-box">
+                    @Html.Partial("_Issues_Item", Model[i])
+                </div>
+            }
         }
-    }
+    </div>
 </div>

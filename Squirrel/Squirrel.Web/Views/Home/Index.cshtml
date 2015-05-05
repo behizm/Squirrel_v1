@@ -15,6 +15,10 @@
     </div>
 }
 
+<div class="col-md-12">
+    <div class="divider-blank50"></div>
+</div>
+
 <div class="col-md-8" id="t_page">
     <div class="home-lasttopics" id="home_lasttopics_con">
         @Html.Partial("Index_TopicItems", CachedAppData.LastPublishedTopics.Items.Skip(0).Take(5).ToList())
@@ -25,4 +29,8 @@
     <div class="sidebar">
         @Html.Partial("~/Views/Shared/Sidebar/Sidebar-Home.cshtml")
     </div>
+</div>
+
+<div class="col-md-12">
+    <div class="divider-blank30"></div>
 </div>

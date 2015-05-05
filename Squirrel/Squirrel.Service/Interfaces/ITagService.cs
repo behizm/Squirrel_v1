@@ -12,7 +12,7 @@ namespace Squirrel.Service
         Task<List<string>> SearchAsync(TagSearchModel model, OrderingModel<Tag> ordering);
         Task<int?> CountAsync(TagSearchModel model);
         Task DeleteAsync(Guid tagId, Guid userId);
-        Task<List<Topic>> PublishedTopicsAsync(string tagName, int skip, int take);
+        Task<ListModel<Topic>> PublishedTopicsAsync(string tagName, int skip, int take);
         Task<ListModel<TagWeightModel>> TagsWithWeightAsync<TKey>(OrderingModel<TagWeightModel, TKey> ordering, bool isPublished = false);
     }
 }
