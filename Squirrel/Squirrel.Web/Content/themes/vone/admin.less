@@ -1,0 +1,336 @@
+﻿@mainFont: 20px irsans;
+@mainFont-SmallScreen: 16px irsans;
+@glyphFont: 20px pe7;
+@SiteFont: 20px SquirrelFont;
+@flatBoxShadow: 0 3px 3px 0 rgba(0,0,0,0.05);
+@flatBoxShadowLeft: -1px 0 10px 0 rgba(0, 0, 0, 0.28);
+
+@import "palette.less";
+@import "functions.less";
+
+html {
+    height: 100%;
+    direction: rtl;
+
+    body {
+        height: 100%;
+        font: @mainFont;
+        color: @grayDark2;
+    }
+
+    a {
+        text-decoration: none;
+        .Transitions(color,background-color;linear,linear;.2s);
+
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        &:active {
+            text-decoration: none;
+        }
+
+        &:focus {
+            text-decoration: none;
+        }
+    }
+}
+
+.clearbox {
+    display: block;
+    clear: both;
+}
+
+.glyphbox {
+    font: @glyphFont;
+    text-align: center;
+}
+
+.siteglyphbox {
+    font: @SiteFont;
+    text-align: center;
+}
+
+/* ------ */
+/* ------ */
+
+.sidemenu {
+    position: fixed;
+    background-color: @grayDark2;
+    color: @grayLight7;
+    .absolutePostion(0,0,0,auto);
+    width: 200px;
+    overflow: hidden;
+    z-index: 100;
+    box-shadow: @flatBoxShadowLeft;
+    .Transitions(width;linear;.15s);
+
+    .expander {
+        padding: 10px 0;
+
+        .glyphbox {
+            display: block;
+            float: left;
+            font-size: 26px;
+            color: @grayLight1;
+            background-color: @grayDark3;
+            cursor: pointer;
+        }
+
+        .doexpand {
+            display: none;
+        }
+
+        .docollapse {
+            display: block;
+        }
+    }
+
+    &.tie-menu {
+        width: 65px;
+
+        .doexpand {
+            display: block;
+        }
+
+        .docollapse {
+            display: none;
+        }
+    }
+
+    .logo {
+        background-color: @mint1Color;
+        color: @mint2Color;
+        display: block;
+
+        .siteglyphbox {
+            display: block;
+            font-size: 42px;
+            line-height: 65px;
+            width: 100%;
+        }
+    }
+
+    .menu-con {
+        padding-top: 15px;
+
+        .item {
+            color: @grayLight2;
+            display: block;
+            height: 50px;
+            overflow: hidden;
+
+            .glyphbox {
+                display: block;
+                float: right;
+                font-size: 26px;
+                line-height: 50px;
+                width: 65px;
+            }
+
+            .text {
+                display: block;
+                float: right;
+                font-size: .75em;
+                font-weight: 300;
+                line-height: 50px;
+            }
+
+            &:hover {
+                color: @bitterSweet1Color;
+            }
+
+            &.active {
+                color: @white;
+                background-color: transparent;
+            }
+        }
+    }
+}
+
+.header-con {
+    position: fixed;
+    background-color: @grayDark2;
+    z-index: 100;
+    .absolutePostion(0,200px,auto,0);
+    .Transitions(right;linear;.15s);
+
+    &.tie-menu {
+        right: 65px;
+    }
+
+    .header {
+        background-color: @white;
+        height: 65px;
+        box-shadow: @flatBoxShadow;
+
+        .admin-avatar {
+            padding-top: 10px;
+            display: block;
+            color: @grayDark2;
+
+            &:hover {
+                color: @mint2Color;
+            }
+
+            .image {
+                float: left;
+                background-color: @grayLight6;
+                line-height: 45px;
+                width: 45px;
+                height: 45px;
+                text-align: center;
+                border-radius: 100%;
+                overflow: hidden;
+
+                .glyphbox {
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: 32px;
+                    color: @grayLight5;
+                }
+
+                img {
+                    vertical-align: middle;
+                    width: 45px;
+                    height: 45px;
+                }
+            }
+
+            .name {
+                float: left;
+                line-height: 45px;
+                padding-left: 15px;
+                font-size: .7em;
+            }
+        }
+    }
+}
+
+.mainpart-con {
+    background-color: @grayLight7;
+    padding-right: 200px;
+    padding-top: 65px;
+    padding-left: 50px;
+    padding: 65px 200px 0 50px;
+
+    &.tie-menu {
+        padding-right: 65px;
+    }
+
+    &.pin-secondry {
+        padding-left: 400px;
+    }
+}
+
+.secondry-content {
+    position: fixed;
+    background-color: @grayLight6;
+    .absolutePostion(65px,auto,0,0);
+    width: 400px;
+    overflow: hidden;
+    z-index: 90;
+    .Transitions(width;linear;.15s);
+
+    .expander {
+        padding: 10px 0;
+
+        .glyphbox {
+            display: block;
+            float: right;
+            font-size: 26px;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            color: @grayLight2;
+            background-color: @grayLight5;
+            cursor: pointer;
+
+
+            &.doexpand {
+                display: none;
+            }
+
+            &.docollapse {
+                display: block;
+            }
+
+            &.pin {
+                display: block;
+                margin-right: 5px;
+                font-size: 18px;
+            }
+        }
+    }
+
+    &.tie-secondry {
+        width: 50px;
+
+        .glyphbox {
+
+            &.doexpand {
+                display: block;
+            }
+
+            &.docollapse {
+                display: none;
+            }
+
+            &.pin {
+                display: none;
+            }
+        }
+    }
+
+    &.pin-secondry {
+        .glyphbox {
+            &.pin {
+                background-color: @mint2Color;
+                color: @white;
+            }
+        }
+    }
+}
+
+@media (min-width:960px) and (max-width: 1200px) {
+    .mainpart-con {
+        &.pin-secondry {
+            padding-left: 330px;
+        }
+    }
+
+    .secondry-content {
+        width: 330px;
+    }
+}
+
+@media (min-width:360px) and (max-width: 959px) {
+    .mainpart-con {
+        &.pin-secondry {
+            padding-left: 50px;
+        }
+    }
+
+    .secondry-content {
+        width: 280px;
+
+        .expander {
+            .glyphbox {
+                &.pin {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 360px) {
+    .mainpart-con {
+        padding-left: 50px;
+    }
+
+    .secondry-content {
+        display: none;
+    }
+}

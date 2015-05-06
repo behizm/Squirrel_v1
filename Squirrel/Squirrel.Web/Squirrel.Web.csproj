@@ -752,6 +752,12 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\themes\vone\admin.css">
+      <DependentUpon>admin.less</DependentUpon>
+    </Content>
+    <Content Include="Content\themes\vone\admin.min.css">
+      <DependentUpon>admin.css</DependentUpon>
+    </Content>
     <Content Include="Content\themes\vone\fonts.css" />
     <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRAN Sans.html" />
     <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\style.css" />
@@ -827,7 +833,6 @@
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Main\Index.cshtml" />
     <Content Include="Areas\Author\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Author\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Author\Views\Panel\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Users\List.cshtml" />
@@ -1032,6 +1037,14 @@
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.eot" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.woff" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansUL.woff2" />
+    <Content Include="Areas\Author\Views\Shared\_Layout.cshtml" />
+    <Content Include="Content\themes\vone\admin.less" />
+    <Content Include="Content\themes\vone\admin.css.map">
+      <DependentUpon>admin.css</DependentUpon>
+    </Content>
+    <Content Include="Areas\Author\Views\Shared\_SideMenu.cshtml" />
+    <Content Include="Areas\Author\Views\Shared\_Header.cshtml" />
+    <Content Include="Areas\Author\Views\Shared\_SecondryContents.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="npmPlaceholder.txt" />
     <Content Include="Scripts\bootstrap.js" />

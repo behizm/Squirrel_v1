@@ -1,0 +1,35 @@
+﻿@using Squirrel.Utility.Helpers
+@{
+    var showname = User.Identity.Name;
+    var avatarAddress = string.Empty;
+    if (User.Identity.Profile != null)
+    {
+        showname = User.Identity.Profile.Firstname + " " + User.Identity.Profile.Lastname;
+        if (User.Identity.Profile.AvatarId.HasValue)
+        {
+            avatarAddress = User.Identity.Profile.Avatar.Address;
+        }
+    }
+}
+
+
+<div class="col-md-6">
+    
+</div>
+
+<div class="col-md-6">
+    <a class="admin-avatar" href="#">
+        <div class="image">
+            @if (avatarAddress.IsNothing())
+            {
+                <span class="glyphbox">&#xe605</span>
+            }
+            else
+            {
+                <img alt="" src="@Url.Content(avatarAddress)" />
+            }
+        </div>
+        <div class="name">@showname</div>
+        <div class="clearbox"></div>
+    </a>
+</div>

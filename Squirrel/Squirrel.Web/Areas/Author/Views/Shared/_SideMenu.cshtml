@@ -1,0 +1,81 @@
+﻿<a class="logo" href="@Url.Action("Index", "Panel", new { Area = "Author"})">
+    <span class="siteglyphbox">&#xe600</span>
+</a>
+
+<div class="expander">
+    <span class="glyphbox docollapse" onclick="onSiteMenuExpanderClick()">&#xe684</span>
+    <span class="glyphbox doexpand" onclick="onSiteMenuExpanderClick()">&#xe686</span>
+    <span class="clearbox"></span>
+</div>
+
+<div class="menu-con">
+    @{
+        var currentUrl = Request.Url == null ? string.Empty : Request.Url.AbsolutePath;
+        var thisUrl = Url.Action("Index", "Publish", new { Area = "Author" });
+        var className = currentUrl == thisUrl ? "active" : string.Empty;
+    }
+    <a class="item @className" href="@thisUrl">
+        <span class="glyphbox">&#xe691</span>
+        <span class="text">انتشار</span>
+    </a>
+
+    @{
+        thisUrl = Url.Action("Index", "Comments", new { Area = "Author" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+    }
+    <a class="item @className" href="@thisUrl">
+        <span class="glyphbox">&#xe66d</span>
+        <span class="text">نظرات</span>
+    </a>
+
+    @{
+        thisUrl = Url.Action("Index", "Categories", new { Area = "Author" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+    }
+    <a class="item @className" href="@thisUrl">
+        <span class="glyphbox">&#xe67d</span>
+        <span class="text">گروهها</span>
+    </a>
+
+    @{
+        thisUrl = Url.Action("Index", "Files", new { Area = "Author" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+    }
+    <a class="item @className" href="@thisUrl">
+        <span class="glyphbox">&#xe65b</span>
+        <span class="text">فایلها</span>
+    </a>
+
+    @if (User.Identity.IsAdmin)
+    {
+        thisUrl = Url.Action("Index", "Users", new { Area = "Admin" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+        <a class="item @className" href="@thisUrl">
+            <span class="glyphbox">&#xe693</span>
+            <span class="text">کاربران</span>
+        </a>
+
+        thisUrl = Url.Action("Index", "Logs", new { Area = "Admin" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+        <a class="item @className" href="@thisUrl">
+            <span class="glyphbox">&#xe69d</span>
+            <span class="text">وقایع</span>
+        </a>
+        
+        thisUrl = Url.Action("Index", "Logs", new { Area = "Admin" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+        <a class="item @className" href="@thisUrl">
+            <span class="glyphbox">&#xe666</span>
+            <span class="text">تنظیمات</span>
+        </a>
+    }
+
+</div>
+
+<script type="text/javascript">
+    function onSiteMenuExpanderClick() {
+        $('.sidemenu').toggleClass('tie-menu');
+        $('.header-con').toggleClass('tie-menu');
+        //$('.mainpart-con').toggleClass('tie-menu');
+    }
+</script>

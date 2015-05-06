@@ -3,6 +3,7 @@
 @complementColor: #DF9A89;
 @complementDarkColor: #C0725E;
 @complementDarkestColor: #A4533E;*/
+/* Admin Colors */
 /* ------ */
 html {
   height: 100%;
@@ -33,6 +34,7 @@ html a:focus {
   text-decoration: none;
 }
 .clearbox {
+  display: block;
   clear: both;
 }
 .glyphbox {
