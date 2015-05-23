@@ -1,0 +1,55 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.ViewModels.PostEditModel
+           
+@{
+    Post thisPost = ViewBag.CurrentPost;
+    const int abstractMaxLength = 300;
+}
+
+<div class="box-uptitle">
+    <div class="text">خلاصه</div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    <div class="commontext">
+        <span class="topic">عنوان :</span>
+        @Html.DisplayFor(m => thisPost.Topic.Title)
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="full-line"></div>
+    <div class="input-con">
+        <div class="form-row">
+            @Html.TextArea("abstract_shadow", Model.Abstract, new { @class = "textarea fix small" })
+            <div class="char-counter" id="abstract_counter">
+                <span class="count"></span>
+                / @(abstractMaxLength.FaDigit())
+            </div>
+            <div class="validation" id="abstract_validation"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        onAbstractChangeCounter();
+        $('textarea#abstract_shadow').on('input', function () {
+            onAbstractChangeCounter();
+        });
+    });
+
+    function onAbstractChangeCounter() {
+        var shadowVal = $('textarea#abstract_shadow').val();
+        $('input#Abstract').val(shadowVal);
+        var absLen = shadowVal.length;
+        $("#abstract_counter .count").text(toPersianDigits(absLen));
+        var absMaxLen = parseInt('@abstractMaxLength');
+        if (absLen > absMaxLen) {
+            $("#abstract_counter").addClass('overflow');
+            $('#abstract_validation').text('خلاصه بیش از حد طولانی است.');
+        } else {
+            $("#abstract_counter").removeClass('overflow');
+            $('#abstract_validation').text('');
+        }
+    }
+</script>

@@ -1,18 +1,66 @@
 ﻿@model Squirrel.Domain.ViewModels.PostEditModel
 
-برچسب ها :
-<div>
-    <p class="tags-con-box">
+<div class="box-uptitle">
+    <div class="text">برچسب ها</div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    @{
+        var style1 = "";
+        var style2 = "";
+        if (Model.Tags.Any())
+        {
+            style2 = "display: none;";
+        }
+        else
+        {
+            style1 = "display: none;";
+        }
+    }
+    <div class="tags-list tags-con-box" style="@style1">
         @foreach (var tag in Model.Tags)
         {
             var item = tag;
-            <span>@Html.DisplayFor(m => item)</span>
+            <span class="item">@Html.DisplayFor(m => item)</span>
         }
-    </p>
-    <p>
-        @Html.TextBox("addTagBox")
-        <button type="button" onclick="addTag()">add</button>
-    </p>
+    </div>
+    <div class="no-content" id="tags_nocontent" style="margin-bottom: 10px; @style2">
+        موردی وجود ندارد.
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="full-line"></div>
+    <div class="input-con">
+        <div class="form-row">
+            @Html.TextBox("addTagBox", null, new { @class = "textbox" })
+        </div>
+        <div class="divider-blank15"></div>
+        <div>
+            <button type="button" class="button submit small" onclick="addTag()">افزودن</button>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    @*<div>
+        <p class="tags-con-box">
+            @foreach (var tag in Model.Tags)
+            {
+                var item = tag;
+                <span>@Html.DisplayFor(m => item)</span>
+            }
+        </p>
+        <p>
+            @Html.TextBox("addTagBox")
+            <button type="button" onclick="addTag()">add</button>
+        </p>
+    </div>*@
 </div>
 
 <script type="text/javascript">
@@ -23,9 +71,13 @@
             }
         });
 
-        $('.tags-con-box').on('click', 'span', function () {
+        $('.tags-con-box').on('click', '.item', function () {
             removeTag($(this).text().trim());
             $(this).remove();
+            if ($('.tags-con-box .item').length == 0) {
+                $('.tags-con-box').hide();
+                $('#tags_nocontent').show();
+            }
         });
     });
 
@@ -34,7 +86,12 @@
         var tag = $('#addTagBox').val().replace("#", "").trim();
         if (tag != '' && tags.toLowerCase().search('#' + tag.toLowerCase() + '#') == -1) {
             tags += tag + '#';
-            var html = '<span>' + tag + '</span>';
+            var html = '<span class="item">' + tag + '</span>';
+
+            if ($('.tags-con-box .item').length == 0) {
+                $('.tags-con-box').show();
+                $('#tags_nocontent').hide();
+            }
             $('.tags-con-box').append(html);
             $('#FlatedTags').val(tags);
         }
@@ -48,40 +105,3 @@
         $('#FlatedTags').val(tags);
     }
 </script>
-
-<style type="text/css">
-    .tags-con-box {
-        font-size: 0;
-    }
-
-        .tags-con-box > span {
-            display: inline-block;
-            background-color: #eee8aa;
-            padding: 5px;
-            font-size: 12px;
-            margin: 0 5px 5px 0;
-            cursor: pointer;
-            position: relative;
-            text-align: center;
-            height: 27px;
-            line-height: 17px;
-        }
-
-            .tags-con-box > span:before {
-                content: "X";
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: auto;
-                font-size: 25px;
-                height: 27px;
-                line-height: 27px;
-                opacity: 0;
-            }
-
-            .tags-con-box > span:hover:before {
-                opacity: .6;
-            }
-</style>

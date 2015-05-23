@@ -130,7 +130,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     {
                         result = true,
                         message = "مطلب با موفقیت ویرایش شد.",
-                        date = ((PersianDate)DateTime.Now).ToStringDateTime(), 
+                        date = ((PersianDate)DateTime.Now).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS), 
                         publishDate,
                     }, JsonRequestBehavior.AllowGet);
         }

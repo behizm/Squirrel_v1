@@ -10,6 +10,7 @@ using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Models;
+using WebGrease.Css.Extensions;
 
 namespace Squirrel.Web.Controllers
 {
@@ -65,6 +66,11 @@ namespace Squirrel.Web.Controllers
                 var lack = CachedAppData.LastPublishedTopics.Items.Where(x => x.Id != topic.Id && related.All(r => r.Id != x.Id)).Take(count - related.Count);
                 related.AddRange(lack);
             }
+            else if (related.Count > count)
+            {
+                var more = related.Skip(count).Take(related.Count - count).ToList();
+                more.ForEach(x => related.Remove(x));
+            }
             ViewBag.RelatedTopics = related;
 
             var prevTopic = await prevTopicTask;
@@ -88,9 +94,38 @@ namespace Squirrel.Web.Controllers
             return View("Item", topic);
         }
 
-        public ActionResult Perview(Guid id)
+        [Authorize]
+        public async Task<ActionResult> Preview(Guid id)
         {
-            return View("Item");
+            var topic = await TopicService.FindByIdAsync(id);
+            if (topic == null)
+            {
+                return View("NotFound");
+            }
+
+            if (!User.Identity.IsAdmin && topic.Owner.Username != User.Identity.Name.ToLower())
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای دسترسی",
+                    Message = "شما دسترسی لازم برای مشاهده این صفحه را ندارید.",
+                };
+                return View("HandledError");
+            }
+
+            if (topic.Posts == null || !topic.Posts.Any())
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای محتوا",
+                    Message = "این عنوان محتوای کافی برای نمایش را ندارد.",
+                };
+                return View("HandledError");
+            }
+
+            topic.Posts = topic.Posts.OrderByPostOrdering(topic.PostsOrdering);
+            ViewData.Model = topic;
+            return View();
         }
 
         [CaptchaValidation("Captcha", "SampleCaptcha", "کد امنیتی اشتباه است.")]

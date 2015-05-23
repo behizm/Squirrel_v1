@@ -1,0 +1,76 @@
+﻿@using Squirrel.Domain.Enititis
+@model Topic
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.Title;
+    var firstPost = Model.Posts.First();
+}
+
+@if (firstPost.HeaderImageId.HasValue)
+{
+    <div class="col-md-12">
+        <div class="issuepage-firstimage">
+            <div class="image">
+                <img src="@Url.Content(firstPost.HeaderImage.Address)" alt="@Model.Title" />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="col-md-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-md-8">
+    <div class="issuepage-posts">
+        <div class="read-mode hidden-sm hidden-xs" title="تغییر مد خواندن">
+            <span class="glyphbox">&#xe657</span>
+        </div>
+
+        <div class="post firstpost flatbox-shadow">
+            @Html.Partial("Post", firstPost)
+        </div>
+
+        <div class="divider-blank50"></div>
+
+        @foreach (var post in Model.Posts.Where(x => x.Id != firstPost.Id))
+        {
+            <div class="divider-blank50"></div>
+            <div class="post flatbox-shadow">
+                @Html.Partial("Post", post)
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/PostPage")
+    @Styles.Render("~/content/PostPage")
+
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+
+        $(function () {
+            $('.issuepage-posts').mouseover(function () {
+                $(this).children('.read-mode').stop().fadeIn(200);
+            });
+
+            $('.issuepage-posts').mouseleave(function () {
+                $(this).children('.read-mode').stop().fadeOut(200);
+            });
+
+            $('.read-mode').click(function () {
+                var $sectionRight = $(this).parent('.issuepage-posts').parent();
+                var $sectionLeft = $sectionRight.next();
+
+                if ($sectionRight.hasClass('col-md-8')) {
+                    $sectionRight.removeClass('col-md-8').addClass('col-md-12');
+                    $sectionLeft.hide();
+                } else if ($sectionRight.hasClass('col-md-12')) {
+                    $sectionRight.removeClass('col-md-12').addClass('col-md-8');
+                    $sectionLeft.show();
+                }
+            });
+        });
+    </script>
+}

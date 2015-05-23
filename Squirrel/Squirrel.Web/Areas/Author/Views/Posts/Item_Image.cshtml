@@ -1,113 +1,118 @@
 ﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.PostEditModel
 
 @{
     Post thisPost = ViewBag.CurrentPost;
 }
 
-عکس اصلی :
-<p id="header_image_name">
-    @if (thisPost.HeaderImageId.HasValue)
-    {
-        @Html.DisplayFor(m => thisPost.HeaderImage.Name)
-    }
-</p>
-<p>
-    @if (thisPost.HeaderImageId.HasValue)
-    {
-        <img id="header_image_pre" src="@Url.Content(thisPost.HeaderImage.Address)" style="width: 50%" />
-    }
-    else
-    {
-        <img id="header_image_pre" src="" style="width: 50%" />
-    }
-    <button type="button" onclick="loadImagesPopup()">ویرایش</button>
-</p>
 
-<div id="change_post_image_con">
-    <div class="change-post-image">
-        <div>عکس مورد نظر خود را انتخاب کنید.</div>
-        <div id="change_post_image"></div>
-        <button type="button" class="btn btn-success" onclick="confirmImagesPopup()">ثبت</button>
-        <button type="button" class="btn btn-warning" onclick="closeImagesPopup()">بستن</button>
+<div class="box-uptitle">
+    <div class="text">عکس اصلی</div>
+    <div class="links">
+        <span class="button small tile" onclick="clearHeaderImage()">
+            <span class="glyphbox">&#xe609</span>
+        </span>
+    </div>
+    <div class="links">
+        <span class="button small tile" onclick="loadImagesPopup()">
+            <span class="glyphbox">&#xe628</span>
+        </span>
+    </div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    @{
+        var style1 = "";
+        var style2 = "";
+        if (thisPost.HeaderImageId.HasValue)
+        {
+            style2 = "display: none;";
+        }
+        else
+        {
+            style1 = "display: none;";
+        }
+    }
+    <div class="header-image" style="@style1">
+        <div class="image">
+            @if (thisPost.HeaderImageId.HasValue)
+            {
+                <img id="header_image_pre" src="@Url.Content(thisPost.HeaderImage.Address)" onclick="showFullPicture(this, '@thisPost.HeaderImage.Name')" />
+            }
+            else
+            {
+                <img id="header_image_pre" />
+            }
+        </div>
+        <div class="info">
+            <div class="name" id="header_image_name">
+                @if (thisPost.HeaderImageId.HasValue)
+                {
+                    @Html.DisplayFor(m => thisPost.HeaderImage.Name)
+                }
+            </div>
+            <div class="line"></div>
+            <div class="size">
+                <span id="header_image_size">
+                    @if (thisPost.HeaderImageId.HasValue)
+                    {
+                        @(thisPost.HeaderImage.Size.ToByteUnit().FaDigit())
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="no-content" id="header_image_nocontent" style="@style2">
+        موردی وجود ندارد.
     </div>
 </div>
 
-@{
-    const string targetKey = "HeaderImage";
-}
-@Html.Hidden(string.Format("{0}_id", targetKey))
-@Html.Hidden(string.Format("{0}_name", targetKey))
-@Html.Hidden(string.Format("{0}_address", targetKey))
-
 <script type="text/javascript">
+    var headerImgPopupId = '@Guid.NewGuid()';
     $(function () {
-        $(document).on('@string.Format("on{0}Choice", targetKey)', headerImageChoiceHandler);
-        $(document).on('@string.Format("on{0}Pager", targetKey)', headerImagePagerHandler);
+        $(document).on('onFilePopupChoice', headerImageChoiceHandler);
     });
+
+    function clearHeaderImage() {
+        $('.post-edit-con .header-image').hide();
+        $('#header_image_nocontent').show();
+        $('#HeaderImageId').val('');
+    }
 
     function loadImagesPopup() {
         $.ajax({
             url: '@Url.Action("Popup", "Files")',
             data: {
                 Page: 1,
-                TargetKey: '@targetKey',
                 Type: '@FileType.Image',
                 IsFixedType: true,
             },
             type: "POST",
             success: function (r) {
-                $('#change_post_image').html(r);
-                $('#change_post_image_con').css('display', 'flex');
+                showPopupBox(headerImgPopupId, 'عکس مورد نظر خود را انتخاب کنید.', r);
             }
         });
     }
 
     function headerImageChoiceHandler(e) {
-        $('@string.Format("#{0}_id", targetKey)').val(e.id);
-        $('@string.Format("#{0}_name", targetKey)').val(e.name);
-        $('@string.Format("#{0}_address", targetKey)').val(e.address);
+        if (headerImgPopupId == e.popupId) {
+            $('#HeaderImageId').val(e.id);
+            $('#header_image_name').text(e.name);
+            $('#header_image_pre')
+                .attr('src', '@Url.Content("~")' + e.address.replace("~/", ""))
+                .attr('onclick', 'showFullPicture(this, "' + e.name + '")');
+
+            var size = parseFloat(e.size);
+            $('#header_image_size').text(toPersianDigits(toByteUnitPersian(size)));
+
+            $('.post-edit-con .header-image').show();
+            $('#header_image_nocontent').hide();
+        }
     }
 
-    function headerImagePagerHandler(e) {
-        $('#change_post_image').html(e.content);
-    }
-
-    function closeImagesPopup() {
-        $('@string.Format("#{0}_id", targetKey)').val('');
-        $('@string.Format("#{0}_name", targetKey)').val('');
-        $('@string.Format("#{0}_address", targetKey)').val('');
-        $('#change_post_image_con').css('display', 'none');
-    }
-
-    function confirmImagesPopup() {
-        $('#HeaderImageId').val($('@string.Format("#{0}_id", targetKey)').val());
-        $('#header_image_name').text($('@string.Format("#{0}_name", targetKey)').val());
-        $('#header_image_address').text($('@string.Format("#{0}_address", targetKey)').val());
-        $('#header_image_pre').attr('src', '@Url.Content("~")' + $('@string.Format("#{0}_address", targetKey)').val().replace("~/", ""));
-        closeImagesPopup();
+    function showFullPicture(e, name) {
+        fullPicturePopup(name, $(e).attr('src'));
     }
 </script>
-
-<style type="text/css">
-    #change_post_image_con {
-        position: fixed;
-        z-index: 10000;
-        background-color: #000000;
-        background-color: rgba(0,0,0,.8);
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        /*display: flex;*/
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-
-        #change_post_image_con .change-post-image {
-            background-color: #fff;
-            width: 80%;
-            padding: 20px 30px;
-        }
-</style>

@@ -1,4 +1,5 @@
 ﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ExtensionMethods
 @using Squirrel.Utility.FarsiTools
 @model Squirrel.Domain.ViewModels.PostEditModel
 
@@ -6,68 +7,115 @@
     Post thisPost = ViewBag.CurrentPost;
 }
 
-@Styles.Render("~/Content/PersianDatatimePicker")
-@Scripts.Render("~/bundles/PersianDatatimePicker")
-
 <div>
-    تاریخ ایجاد :
-    <p>@(((PersianDate)thisPost.CreateDate).ToStringDateTime())</p>
+    <button type="button" class="button submit full" onclick="savePost()">ذخیره کردن تغییرات</button>
+    <div class="divider-blank10"></div>
+    <a class="button primary full" href="@Url.Action("Preview", "Issue", new { Area = "", id = Model.TopicId })" target="_blank">پیش نمایش عنوان</a>
 </div>
+
+<div class="divider-blank50"></div>
+
+<div class="detail-row">
+    <span class="title">تاریخ ایجاد :</span>
+    <span class="value">
+        @(((PersianDate)thisPost.CreateDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit())
+    </span>
+</div>
+
 @if (thisPost.EditDate.HasValue)
 {
-    <div>
-        تاریخ ویرایش :
-        <p id="post_editdate">
-            @(((PersianDate)thisPost.EditDate).ToStringDateTime())
-        </p>
+    <div class="divider-blank15"></div>
+
+    <div class="detail-row">
+        <span class="title">تاریخ ویرایش :</span>
+        <span class="value" id="post_editdate">
+            @(((PersianDate)thisPost.EditDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit())
+        </span>
     </div>
 }
-<div>
-    نویسنده :
-    <p>
-        @Html.DisplayFor(m => thisPost.Author.Username)
-    </p>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">نویسنده :</span>
+    <span class="value">
+        @thisPost.Author.ShowName()
+    </span>
 </div>
-<p>
-    <button type="button" class="btn btn-success" style="width: 200px;" onclick="savePost()">ذخیره کردن</button>
-</p>
-<p>
-    <button type="button" class="btn btn-success" style="width: 200px;">پیش نمایش</button>
-</p>
-<hr style="border-color: #ddd" />
-<div>
-    تاریخ انتشار :
-    <p>
-        @Html.TextBox("publishdate_editpost", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })<br />
-        @Html.ValidationMessageFor(m => m.PublishPersianDate)
-    </p>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">
+    مشاهده
 </div>
-<p>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">وضعیت :</span>
     @if (thisPost.IsPublic)
     {
-        <button type="button" class="btn btn-primary" style="width: 200px;display: none;" onclick="publishPost(this)">ذخیره و انتشار</button>
-        <button type="button" class="btn btn-warning" style="width: 200px;" onclick="privatePost(this)">ذخیره و خصوصی کردن</button>
+        <span class="value" id='post_publishstate'>عمومی</span>
     }
     else
     {
-        <button type="button" class="btn btn-primary" style="width: 200px;" onclick="publishPost(this)">ذخیره و انتشار</button>
-        <button type="button" class="btn btn-warning" style="width: 200px;display: none;" onclick="privatePost(this)">ذخیره و خصوصی کردن</button>
+        <span class="value" id='post_publishstate'>خصوصی</span>
     }
-</p>
+</div>
 
-<script type="text/javascript">
-    $('#publishdate_editpost').MdPersianDateTimePicker({
-        Placement: 'bottom', // default is 'bottom'
-        Trigger: 'focus', // default is 'focus',
-        EnableTimePicker: true, // default is true,
-        TargetSelector: '', // default is empty,
-        GroupId: '', // default is empty,
-        ToDate: false, // default is false,
-        FromDate: false, // default is false,
-    });
+<div class="divider-blank15"></div>
 
-    $('#publishdate_editpost').on('change', function () {
-        var dateVal = $(this).val();
-        $('#PublishPersianDate').val(toEnglishDigits(dateVal));
-    });
-</script>
+<div class="detail-row">
+    <span class="title">تاریخ :</span>
+    <span class="value" id='post_publishdate'>
+        @if (thisPost.IsPublic)
+        {
+            @(((PersianDate)thisPost.PublishDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit())
+        }
+    </span>
+</div>
+
+<div class="divider-blank15"></div>
+
+@{
+    var style1 = "";
+    var style2 = "";
+    if (thisPost.IsPublic)
+    {
+        style1 = "display: none;";
+    }
+    else
+    {
+        style2 = "display: none;";
+    }
+}
+<div>
+    <button type="button" class="button submit small" style="@style1" onclick="publishPost(this)">عمومی سازی</button>
+    <button type="button" class="button alert small" style="@style2" onclick="privatePost(this)">خصوصی سازی</button>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">موارد دیگر</div>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">نظرات :</span>
+    <a href="@Url.Action("Post", "Comments", new { thisPost.Id })">
+        @thisPost.Comments.Count().FaDigit()
+    </a>
+</div>
+
+<div class="detail-row">
+    <span class="title">نظرات خوانده نشده :</span>
+    <a href="@Url.Action("Post", "Comments", new { thisPost.Id })">
+        @thisPost.Comments.Count(c => !c.IsReaded).FaDigit()
+    </a>
+</div>
+
+<div class="divider-blank15"></div>
+
+<div>
+    <button type="button" class="button small error" onclick="loadRemovePost('@Model.Id')">حذف مطلب</button>
+</div>

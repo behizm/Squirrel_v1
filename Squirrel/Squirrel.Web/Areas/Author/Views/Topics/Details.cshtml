@@ -1,0 +1,167 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.Enititis.Topic
+
+<div class="detail-row">
+    <span class="title"></span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Title).FaDigit()
+    </span>
+</div>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">گروه :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Category.Name)
+    </span>
+</div>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">مرتب سازی مطالب :</span>
+    <span class="value">
+        @Model.PostsOrdering.Description()
+    </span>
+</div>
+
+<div class="divider-blank15"></div>
+
+<div>
+    <button type="submit" class="button small submit" onclick="loadEditTopic('@Model.Id')">ویرایش</button>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">
+    انتشار
+</div>
+
+<div class="divider-blank15"></div>
+
+<div class="detail-row">
+    <span class="title">وضیعت انتشار :</span>
+    @if (Model.IsPublished)
+    {
+        if (Model.PublishDate.HasValue && Model.PublishDate.Value <= DateTime.Now)
+        {
+            <span class="value">
+                منتشر شده است
+            </span>
+        }
+        else if (Model.PublishDate.HasValue && Model.PublishDate.Value > DateTime.Now)
+        {
+            <span class="value">
+                در حال انتظار
+            </span>
+        }
+    }
+    else
+    {
+        <span class="value">
+            منتشر نشده است
+        </span>
+    }
+</div>
+
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">زمان انتشار :</span>
+    @if (Model.PublishDate.HasValue)
+    {
+        PersianDate publishDate = Model.PublishDate;
+        <span class="value">
+            @publishDate.ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit()
+        </span>
+    }
+    <span class="glyphbox" onclick="loadEditPdate('@Model.Id')" style="padding-right: 5px;">&#xe60b</span>
+</div>
+<div id="publishdate_edit_con"></div>
+
+
+<div class="divider-blank15"></div>
+
+<div>
+    @if (Model.IsPublished)
+    {
+        <button type="submit" class="button small alert" onclick="unpublishTopic('@Model.Id')">عدم انتشار</button>
+    }
+    else
+    {
+        <button type="submit" class="button small submit" onclick="publishTopic('@Model.Id')">انتشار عنوان</button>
+    }
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">
+    پست ها
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    @if (!Model.Posts.Any())
+    {
+        <span class="value">موردی وجود ندارد!</span>
+    }
+</div>
+@foreach (var post in Model.Posts.OrderByPostOrdering(Model.PostsOrdering))
+{
+    PersianDate createDate = post.CreateDate;
+    <div class="detail-row postitem">
+        @if (!post.IsPublic)
+        {
+            <span class="title">(خصوصی)</span>
+        }
+        <a class="value" href="@Url.Action("Item", "Posts", new { id = post.Id })">
+            ساخته شده در
+            @createDate.ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit()
+        </a>
+    </div>
+}
+<div class="detail-row">
+    <a href="#" onclick="addPostToTopic('@Model.Id')">+ افزودن پست</a>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">
+    جزئیات
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">تاریخ ایجاد :</span>
+    <span class="value">
+        @(((PersianDate)Model.CreateDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit())
+    </span>
+</div>
+@if (Model.EditDate.HasValue)
+{
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">تاریخ ویرایش :</span>
+        <span class="value">
+            @(((PersianDate)Model.EditDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit())
+        </span>
+    </div>
+}
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">شناسه :</span>
+    <a href="@Url.Action("Preview", "Issue", new { Area = "", Model.Id })" target="_blank">
+        @Html.DisplayFor(m => m.IssueId).FaDigit()
+    </a>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">بازدید :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.View).FaDigit()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div>
+    <button type="submit" class="button small error" onclick="loadDeleteTopic('@Model.Id')">حذف عنوان</button>
+</div>

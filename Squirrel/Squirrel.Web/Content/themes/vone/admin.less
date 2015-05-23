@@ -20,11 +20,13 @@ html {
 
     a {
         text-decoration: none;
+        color: @grayDark2;
         .Transitions(color,background-color;linear,linear;.2s);
 
 
         &:hover {
             text-decoration: none;
+            color: @grayLight2;
         }
 
         &:active {
@@ -50,6 +52,415 @@ html {
 .siteglyphbox {
     font: @SiteFont;
     text-align: center;
+}
+
+.divider-blank10 {
+    display: block;
+    width: 100%;
+    height: 10px;
+}
+
+.divider-blank15 {
+    display: block;
+    width: 100%;
+    height: 15px;
+}
+
+.divider-blank20 {
+    display: block;
+    width: 100%;
+    height: 20px;
+}
+
+.divider-blank30 {
+    display: block;
+    width: 100%;
+    height: 30px;
+}
+
+.divider-blank50 {
+    display: block;
+    width: 100%;
+    height: 50px;
+}
+
+.hline {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: @grayLight5;
+    margin: 15px 0;
+}
+
+.box-uptitle {
+    display: block;
+    line-height: 42px;
+
+    .text {
+        display: block;
+        float: right;
+        font-size: .7em;
+        color: @grayDark4;
+    }
+
+    .links {
+        display: block;
+        float: left;
+        margin-right: 5px;
+    }
+}
+
+.flatbox {
+    background: #fff;
+    padding: 30px;
+    border-radius: 4px;
+    border: 1px solid @grayLight5;
+    box-shadow: 0 0 1px 0 rgba(255,255,255,1);
+
+    .commontext {
+        font-size: .8em;
+
+        .topic {
+            color: @grayLight2;
+        }
+    }
+
+    .input-con {
+        margin: 0 -30px -30px -30px;
+        padding: 30px;
+        background-color: @grayLight6-1;
+        border-radius: 0 0 4px 4px;
+    }
+
+    .line {
+        display: block;
+        height: 1px;
+        background-color: @grayLight5;
+    }
+
+    .full-line {
+        margin: 0 -30px;
+        display: block;
+        height: 1px;
+        background-color: @grayLight5;
+    }
+
+    .no-content {
+        text-align: center;
+        font-size: .7em;
+        color: @grayLight1;
+        line-height: 30px;
+    }
+}
+
+.button {
+    display: inline-block;
+    .BorderBox();
+    margin: 0;
+    padding: 0 40px;
+    cursor: pointer;
+    height: 44px;
+    line-height: 44px;
+    vertical-align: middle;
+    font-size: .7em;
+    text-align: center;
+    border-radius: 3px;
+    background-color: transparent;
+    color: @grayDark6;
+    border: 1px solid @grayLight3;
+    .Transitions(color,border-color;linear,linear;.2s);
+
+    .glyphbox, .siteglyphbox {
+        font-size: 24px;
+        line-height: 44px;
+        vertical-align: middle;
+    }
+
+    &:focus {
+        outline: none;
+        color: @grayLight1;
+    }
+
+    &.submit {
+        border-color: @pitterRiverColor;
+        color: @blizeHoleColor;
+    }
+
+    &.alert {
+        border-color: @orangeColor;
+        color: @carrotColor;
+    }
+
+    &.error {
+        border-color: @bitterSweet1Color;
+        color: @bitterSweet2Color;
+    }
+
+    &.primary {
+        border-color: @mint1Color;
+        color: @mint2Color;
+    }
+
+    &:hover {
+        border-color: @grayLight4;
+        color: @grayLight2;
+    }
+
+    &:active {
+        border-color: @grayLight2;
+        color: @grayLight1;
+    }
+
+    &.inline {
+        margin-bottom: 15px;
+    }
+
+    &.icon {
+        font: @glyphFont;
+        font-size: 26px;
+        line-height: 42px;
+    }
+
+    &.tile {
+        padding: 0;
+        width: 44px;
+    }
+
+    &.circle {
+        padding: 0;
+        width: 44px;
+        text-align: center;
+        border-radius: 100px;
+
+        .glyphbox, .siteglyphbox {
+            font-size: 22px;
+        }
+    }
+
+    &.small {
+        height: 34px;
+        line-height: 32px;
+        font-size: .6em;
+        padding: 0 30px;
+
+        &.tile {
+            padding: 0;
+            width: 34px;
+        }
+
+        .glyphbox, .siteglyphbox {
+            font-size: 20px;
+            line-height: 32px;
+        }
+    }
+
+    &.large {
+        height: 54px;
+        line-height: 52px;
+        font-size: .8em;
+    }
+
+    &.full {
+        width: 100%;
+    }
+}
+
+.pager-row {
+    display: block;
+    text-align: center;
+    line-height: 0;
+
+    .pager {
+        display: inline-block;
+        overflow: hidden;
+        direction: ltr;
+        margin: 0;
+        vertical-align: middle;
+
+        .page {
+            display: block;
+            float: left;
+            background-color: @white;
+            color: @grayDark2;
+            font-size: .65em;
+            line-height: 34px;
+            width: 34px;
+            height: 34px;
+            text-align: center;
+            overflow: hidden;
+            cursor: pointer;
+            .BorderBox();
+            border: 1px solid @grayLight5;
+            margin-left: -1px;
+
+            &:hover {
+                background-color: @grayLight6;
+                color: @grayDark4;
+            }
+
+            &.glyphbox {
+                font-size: 24px;
+                line-height: 46px;
+            }
+
+            &.current {
+                background-color: @grayLight6;
+                color: @grayLight2;
+                cursor: default;
+            }
+
+            &:first-child {
+                margin-left: 0;
+                border-radius: 3px 0 0 3px;
+            }
+
+            &:last-child {
+                border-radius: 0 3px 3px 0;
+            }
+        }
+
+        .far {
+            display: inline-block;
+            background-color: transparent;
+            color: @grayLight3;
+            font-size: 26px;
+            line-height: 48px;
+            width: 44px;
+            height: 44px;
+            text-align: center;
+            overflow: hidden;
+        }
+    }
+}
+
+.form-row {
+    line-height: 0;
+
+    label, .title {
+        display: block;
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: .7em;
+        line-height: 30px;
+    }
+
+    .validation {
+        font-size: .6em;
+        line-height: 28px;
+        color: @bitterSweet1Color;
+    }
+
+    .char-counter {
+        font-size: .6em;
+        line-height: 26px;
+        direction: ltr;
+        text-align: left;
+        color: @grayLight1;
+
+        .count {
+            color: @blizeHoleColor;
+        }
+
+        &.overflow {
+            .count {
+                color: @bitterSweet2Color;
+            }
+        }
+    }
+}
+
+.textbox, .textarea {
+    .BorderBox();
+    vertical-align: middle;
+    height: 44px;
+    width: 100%;
+    margin: 0;
+    padding: 0 15px;
+    font-size: .8em;
+    background-color: @white;
+    color: @grayDark5;
+    border: 1px solid @grayLight5;
+    border-radius: 3px;
+    .Transitions(border-color,color;linear,linear;.15s);
+
+    &:focus {
+        border-color: @grayLight3;
+        color: @grayDark2;
+        outline: none;
+    }
+
+    &.inline {
+        margin-left: 15px;
+    }
+
+    &.small {
+        height: 32px;
+        padding: 0 10px;
+        font-size: .7em;
+    }
+
+    &.full {
+        width: 100%;
+    }
+
+    &.height2 {
+        height: 118px;
+    }
+
+    &.height3 {
+        height: 192px;
+    }
+
+    &.readonly {
+        background-color: @grayLight7;
+
+        &:focus {
+            border-color: @grayLight5;
+            color: @grayDark5;
+            outline: none;
+        }
+    }
+}
+
+.textarea {
+    padding-top: 10px;
+    line-height: 30px;
+    height: 170px;
+
+    &.small {
+        padding-top: 10px;
+        line-height: 30px;
+        height: 170px;
+    }
+
+    &.fix {
+        resize: none;
+    }
+
+    &.vertical {
+        resize: vertical;
+    }
+}
+
+.select {
+    width: 100%;
+    height: 44px;
+    background-color: @white;
+    color: @grayDark5;
+    border: 1px solid @grayLight5;
+    font-size: .8em;
+    .Transitions(border-color,color;linear,linear;.15s);
+
+    &.small {
+        height: 32px;
+        font-size: .7em;
+    }
+
+    &:focus {
+        border-color: @grayLight3;
+        color: @grayDark2;
+        outline: none;
+    }
 }
 
 /* ------ */
@@ -165,19 +576,56 @@ html {
         height: 65px;
         box-shadow: @flatBoxShadow;
 
-        .admin-avatar {
-            padding-top: 10px;
-            display: block;
-            color: @grayDark2;
+        .global-messagebox {
+            height: 65px;
+            overflow: hidden;
 
-            &:hover {
-                color: @mint2Color;
+            .date {
+                font-size: .6em;
+                line-height: 65px;
+                color: @grayLight3;
+                text-align: left;
+            }
+
+            .message {
+                line-height: 65px;
+                color: @grayDark4;
+
+                span {
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: .6em;
+                    line-height: 32px;
+                }
+            }
+
+            &.error {
+                .message {
+                    color: @orangeColor;
+                }
+            }
+
+            &.success {
+                .message {
+                    color: @mint1Color;
+                }
+            }
+        }
+
+        .profile-data {
+            direction: ltr;
+            height: 65px;
+            overflow: hidden;
+
+            a {
+                display: block;
+                float: left;
+                line-height: 45px;
+                margin-top: 10px;
             }
 
             .image {
-                float: left;
                 background-color: @grayLight6;
-                line-height: 45px;
                 width: 45px;
                 height: 45px;
                 text-align: center;
@@ -199,10 +647,191 @@ html {
             }
 
             .name {
-                float: left;
-                line-height: 45px;
                 padding-left: 15px;
                 font-size: .7em;
+            }
+
+            .exit {
+                font-size: .5em;
+                color: @grayLight3;
+                margin-left: 15px;
+            }
+        }
+    }
+}
+
+.popup-con {
+    position: fixed;
+    .absolutePostion(0,0,0,0);
+    background-color: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    &.showed {
+        display: flex;
+    }
+
+    .alertbox {
+        display: none;
+        background-color: @white;
+        width: 700px;
+        text-align: right;
+        margin: auto;
+
+        .question {
+            font-weight: 200;
+            font-size: .9em;
+            padding: 50px 30px;
+            line-height: 35px;
+        }
+
+        .choice {
+            overflow: hidden;
+
+            & > div {
+                float: right;
+                width: 50%;
+                color: @white;
+                text-align: center;
+                line-height: 100px;
+                font-size: .9em;
+                font-weight: 300;
+                cursor: pointer;
+                .Transition(background-color;linear;.2s);
+
+                &.yes {
+                    background-color: @mint1Color;
+
+                    &:hover {
+                        background-color: @mint2Color;
+                    }
+                }
+
+                &.no {
+                    background-color: @grayLight3;
+
+                    &:hover {
+                        background-color: @grayLight2;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 760px) {
+        .alertbox {
+            width: auto;
+            margin: auto 30px;
+
+            .question {
+                font-weight: 200;
+                font-size: .8em;
+                padding: 50px 30px;
+                line-height: 32px;
+            }
+
+            .choice {
+                & > div {
+                    line-height: 90px;
+                    font-size: .8em;
+                }
+            }
+        }
+    }
+
+    .dynamic-content {
+        display: none;
+        background-color: @white;
+        width: 1200px;
+        text-align: right;
+        margin: 30px auto;
+        overflow: auto;
+
+        .topic {
+            font-weight: 200;
+            font-size: .9em;
+            margin: 30px;
+            line-height: 35px;
+        }
+
+        .content {
+            margin: 30px;
+
+            & > .image {
+                text-align: center;
+
+                img {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 1260px) {
+        .dynamic-content {
+            width: auto;
+            margin: 30px;
+        }
+    }
+
+    .file-popup {
+        .item {
+            padding: 15px;
+            margin-bottom: 30px;
+            height: 150px;
+            text-align: center;
+            border: 1px solid @grayLight5;
+            position: relative;
+            cursor: pointer;
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            .glyphbox {
+                line-height: 80px;
+                font-size: 4em;
+                color: @grayLight3;
+            }
+
+            .info {
+                position: absolute;
+                .absolutePostion(auto,0,0,0);
+                z-index: 1;
+                background-color: rgba(255, 255, 255, 0.7);
+                padding-top: 3px;
+
+                .name {
+                    font-size: .65em;
+                }
+
+                .size {
+                    font-size: .55em;
+                }
+            }
+
+            &:before {
+                position: absolute;
+                content: "";
+                font: @glyphFont;
+                font-size: 0;
+                line-height: 148px;
+                .absolutePostion(0,0,0,0);
+                z-index: 2;
+                color: @mint2Color;
+                .Transitions(background-color,font-size;linear,linear;.1s,.25s);
+            }
+
+            &.choosed {
+                &:before {
+                    font-size: 5em;
+                    background-color: rgba(255,255,255,.8);
+                }
             }
         }
     }
@@ -229,12 +858,15 @@ html {
     background-color: @grayLight6;
     .absolutePostion(65px,auto,0,0);
     width: 400px;
-    overflow: hidden;
+    overflow: auto;
     z-index: 90;
-    .Transitions(width;linear;.15s);
+    .Transitions(left;linear;.15s);
 
     .expander {
         padding: 10px 0;
+        width: 100%;
+        height: 46px;
+        overflow: hidden;
 
         .glyphbox {
             display: block;
@@ -258,17 +890,117 @@ html {
 
             &.pin {
                 display: block;
-                margin-right: 5px;
+                margin-right: 10px;
                 font-size: 18px;
+                opacity: 1;
             }
         }
     }
 
+    #secondry_content {
+        margin: 30px;
+        overflow: hidden;
+
+        .topic-row {
+            font-size: .65em;
+            color: @grayDark6;
+            border-bottom: 1px solid @grayLight3;
+            line-height: 32px;
+        }
+
+        .detail-row {
+            line-height: 26px;
+            font-size: .6em;
+
+            .title {
+                color: @grayLight1;
+            }
+
+            .value {
+                color: @grayDark2;
+            }
+
+            /*.notification {
+                display: inline-block;
+                vertical-align: middle;
+                background-color: #3498db;
+                height: 22px;
+                min-width: 22px;
+                padding: 0 5px;
+                color: #fff;
+                border-radius: 22px;
+                text-align: center;
+                line-height: 26px;
+            }*/
+
+            & > a {
+                color: @pitterRiverColor;
+
+                &:hover {
+                    color: @grayLight2;
+                }
+            }
+
+            &.postitem {
+                padding-bottom: 5px;
+
+                &:hover {
+                    .value {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .glyphbox {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 22px;
+                cursor: pointer;
+
+                &:hover {
+                    color: @grayLight2;
+                }
+            }
+        }
+
+        .categories-tree {
+            line-height: 20px;
+            font-size: .6em;
+            border: 1px solid @grayLight5;
+            padding: 10px;
+            margin-top: 5px;
+            background-color: @white;
+            border-radius: 3px;
+            max-height: 202px;
+            overflow: auto;
+
+            .node {
+                span {
+                    cursor: pointer;
+                }
+            }
+
+            .childs {
+                padding-right: 20px;
+            }
+        }
+
+        #publishdate_edit_con {
+            display: none;
+            border: 1px solid @grayLight3;
+            padding: 10px;
+        }
+    }
+
+    .previous {
+        display: none;
+    }
+
     &.tie-secondry {
-        width: 50px;
+        left: -350px;
+        overflow: hidden;
 
         .glyphbox {
-
             &.doexpand {
                 display: block;
             }
@@ -293,6 +1025,141 @@ html {
     }
 }
 
+.mainpart {
+    margin: 0;
+
+    .topics-list {
+        .item {
+            line-height: 36px;
+
+            .glyphbox {
+                display: block;
+                float: right;
+                vertical-align: middle;
+                font-size: 32px;
+                margin-left: 5px;
+
+                &.published {
+                    color: @mint1Color;
+                }
+
+                &.unpublished {
+                    color: @grayLight3;
+                }
+            }
+
+            .text {
+                vertical-align: middle;
+                cursor: pointer;
+                font-size: .75em;
+            }
+        }
+    }
+
+    .post-edit-con {
+        .header-image {
+            overflow: hidden;
+            margin: -30px;
+
+            .image {
+                float: right;
+                margin-left: 30px;
+                padding: 30px;
+                border-left: 1px solid @grayLight5;
+
+                img {
+                    height: 75px;
+                }
+            }
+
+            .info {
+                float: right;
+                line-height: 37px;
+                padding: 30px 0;
+
+                .name {
+                    font-size: .7em;
+                    height: 37px;
+                    overflow: hidden;
+                }
+
+                .size {
+                    font-size: .6em;
+                    overflow: hidden;
+                    color: @grayLight2;
+                }
+            }
+        }
+
+        .attachments-list {
+            .item {
+                overflow: hidden;
+
+                .name {
+                    float: right;
+                    font-size: .7em;
+                    line-height: 36px;
+                    height: 36px;
+                    overflow: hidden;
+                    margin-left: 15px;
+                }
+
+                .size {
+                    float: right;
+                    font-size: .6em;
+                    line-height: 36px;
+                    color: @grayLight2;
+                    margin-left: 15px;
+                }
+
+                .action {
+                    float: right;
+                    line-height: 36px;
+                }
+            }
+        }
+
+        .tags-list {
+            overflow: hidden;
+
+            .item {
+                display: block;
+                float: right;
+                padding: 0 15px;
+                margin: 0 0 10px 10px;
+                vertical-align: middle;
+                font-size: .65em;
+                background-color: @pitterRiverColor;
+                line-height: 30px;
+                color: @white;
+                font-weight: 200;
+                position: relative;
+
+                &:before {
+                    content: '';
+                    font: @glyphFont;
+                    font-size: 0;
+                    position: absolute;
+                    .absolutePostion(0,0,0,0);
+                    background-color: transparent;
+                    text-align: center;
+                    line-height: 30px;
+                    cursor: pointer;
+                    .Transitions(background-color,font-size;linear,linear;.2s,.2s);
+                }
+
+                &:hover {
+
+                    &:before {
+                        background-color: @bitterSweet1Color;
+                        font-size: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media (min-width:960px) and (max-width: 1200px) {
     .mainpart-con {
         &.pin-secondry {
@@ -302,6 +1169,10 @@ html {
 
     .secondry-content {
         width: 330px;
+
+        &.tie-secondry {
+            left: -280px;
+        }
     }
 }
 
@@ -315,6 +1186,10 @@ html {
     .secondry-content {
         width: 280px;
 
+        &.tie-secondry {
+            left: -230px;
+        }
+
         .expander {
             .glyphbox {
                 &.pin {
@@ -325,7 +1200,7 @@ html {
     }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 359px) {
     .mainpart-con {
         padding-left: 50px;
     }

@@ -496,7 +496,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
         [HttpPost]
         public async Task<ActionResult> Popup(FileRequestModel filterModel)
         {
-            const int countInPage = 6;
+            const int countInPage = 8;
             filterModel.Page = filterModel.Page < 1 ? 1 : filterModel.Page;
             var orderingModel = new OrderingModel<Domain.Enititis.File>
             {
@@ -534,7 +534,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 PagingMethod = "LoadPopupFileList(#)"
             };
             ViewBag.RequestFileFilter = filterModel;
-            return PartialView(items);
+            return PartialView("ChoosePopup", items);
         }
 
 

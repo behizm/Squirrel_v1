@@ -1,99 +1,90 @@
 ﻿@using Squirrel.Domain.Enititis
 @using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.PostEditModel
 
 @{
     Post thisPost = ViewBag.CurrentPost;
 }
 
-فایل های ضمیمه :
-
-<div id="post_attach_list">
-    @if (thisPost.Attachments != null && thisPost.Attachments.Any())
-    {
-        foreach (var attachment in thisPost.Attachments)
+<div class="box-uptitle">
+    <div class="text">فایل های ضمیمه</div>
+    <div class="links">
+        <span class="button small tile" onclick="loadFileChoicePopup()">
+            <span class="glyphbox">&#xe623</span>
+        </span>
+    </div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    @{
+        var style1 = "";
+        var style2 = "";
+        if (Model.Attachments.Any())
         {
-            var item = attachment;
-            <p id='@string.Format("attach_con_{0}",item.Id)'>
-                @Html.DisplayFor(m => item.Filename)
-                <span>(@Html.DisplayFor(m => item.Size))</span>
-                <button type="button" onclick="removeAttach(this,'@item.Id')">X</button>
-            </p>
+            style2 = "display: none;";
+        }
+        else
+        {
+            style1 = "display: none;";
         }
     }
-</div>
-<div>
-    <button type="button" onclick="loadFilesPopup()">+</button>
-</div>
-
-<div id="add_post_attach_con">
-    <div class="add-post-attach">
-        <div>فایل مورد نظر خود را انتخاب کنید.</div>
-        <div id="add_post_attach"></div>
-        <button type="button" class="btn btn-success" onclick="confirmFilesPopup()">ثبت</button>
-        <button type="button" class="btn btn-warning" onclick="closeFilesPopup()">بستن</button>
+    <div class="attachments-list" style="@style1">
+        @foreach (var file in thisPost.Attachments)
+        {
+            var item = file;
+            <div class="item">
+                <div class="name">
+                    @Html.DisplayFor(m => item.Name)
+                </div>
+                <div class="size">
+                    @item.Size.ToByteUnit().FaDigit()
+                    -
+                    @item.Filename.Split('.').Last()
+                </div>
+                <div class="action">
+                    <button class="button tile small" onclick="removeAttach(this,'@item.Id')">
+                        <span class="glyphbox">&#xe680</span>
+                    </button>
+                </div>
+            </div>
+            if (file != thisPost.Attachments.Last())
+            {
+                <div class="hline"></div>
+            }
+        }
+    </div>
+    <div class="no-content" id="attachments_nocontent" style="@style2">
+        موردی وجود ندارد.
+    </div>
+    <div id="attachment_item_ghost" style="display: none;">
+        <div class="name"></div>
+        <div class="size"></div>
+        <div class="action">
+            <button class="button tile small">
+                <span class="glyphbox">&#xe680</span>
+            </button>
+        </div>
     </div>
 </div>
 
-@{
-    const string targetKey = "AttachmentFile";
-}
-@Html.Hidden(string.Format("{0}_id", targetKey))
-@Html.Hidden(string.Format("{0}_filename", targetKey))
-@Html.Hidden(string.Format("{0}_size", targetKey))
-
 <script type="text/javascript">
+    var attachmentPopupId = '@Guid.NewGuid()';
     $(function () {
-        $(document).on('@string.Format("on{0}Choice", targetKey)', attachFileChoiceHandler);
-        $(document).on('@string.Format("on{0}Pager", targetKey)', attachFilePagerHandler);
+        $(document).on('onFilePopupChoice', attachFileChoiceHandler);
     });
 
-    function loadFilesPopup() {
+    function loadFileChoicePopup() {
         $.ajax({
             url: '@Url.Action("Popup", "Files")',
             data: {
                 Page: 1,
-                TargetKey: '@targetKey',
-                IsFixedType: false,
             },
             type: "POST",
             success: function (r) {
-                $('#add_post_attach').html(r);
-                $('#add_post_attach_con').css('display', 'flex');
+                showPopupBox(attachmentPopupId, 'فایل مورد نظر خود را انتخاب کنید.', r);
             }
         });
-    }
-
-    function attachFileChoiceHandler(e) {
-        $('@string.Format("#{0}_id", targetKey)').val(e.id);
-        $('@string.Format("#{0}_filename", targetKey)').val(e.filename);
-        $('@string.Format("#{0}_size", targetKey)').val(e.size);
-    }
-
-    function attachFilePagerHandler(e) {
-        $('#add_post_attach').html(e.content);
-    }
-
-    function closeFilesPopup() {
-        $('@string.Format("#{0}_id", targetKey)').val('');
-        $('@string.Format("#{0}_filename", targetKey)').val('');
-        $('@string.Format("#{0}_size", targetKey)').val('');
-        $('#add_post_attach_con').css('display', 'none');
-    }
-
-    function confirmFilesPopup() {
-        var fileId = $('@string.Format("#{0}_id", targetKey)').val();
-        if (!addFileIdToAttachments(fileId)) {
-            closeFilesPopup();
-            return;
-        }
-
-        var filename = $('@string.Format("#{0}_filename", targetKey)').val();
-        var filesize = $('@string.Format("#{0}_size", targetKey)').val();
-        var html = "<p id='attach_con_{0}'>{1}<span> ({2}) </span><button type='button' onclick=\"removeAttach(this,'{3}')\">X</button></p>";
-        html = html.replace("{0}", fileId).replace("{1}", filename).replace("{2}", filesize).replace("{3}", fileId);
-        $('#post_attach_list').append(html);
-        closeFilesPopup();
     }
 
     function addFileIdToAttachments(id) {
@@ -107,34 +98,47 @@
         return true;
     }
 
+    function attachFileChoiceHandler(e) {
+        if (attachmentPopupId == e.popupId && addFileIdToAttachments(e.id)) {
+            var $hline = $('<div class="hline"></div>');
+
+            var $newItem = $('<div class="item"></div>');
+            $newItem.html($('#attachment_item_ghost').html());
+            $newItem.children('.name').text(e.name);
+            var size = parseInt(e.size);
+            var type = e.filename.split('.')[e.filename.split('.').length - 1];
+            $newItem.children('.size').text(toPersianDigits(toByteUnitPersian(size)) + ' - ' + type);
+            $newItem.children('.action').children('button').attr('onclick', 'removeAttach(this,"' + e.id + '")');
+
+            if ($('.attachments-list .item').length == 0) {
+                $('#attachments_nocontent').hide();
+                $('.attachments-list').show();
+                $('.attachments-list').append($newItem);
+            } else {
+                $('.attachments-list').append($hline);
+                $('.attachments-list').append($newItem);
+            }
+        }
+    }
+
     function removeAttach(e, id) {
         var code = "#" + id + "#";
         var fAttachs = $('#FlatedAttachments').val();
         fAttachs = fAttachs.replace(code, "#");
         $('#FlatedAttachments').val(fAttachs);
-        $('#attach_con_' + id).remove();
+
+        var $item = $(e).parent('.action').parent('.item');
+        if ($('.attachments-list .item').length == 1) {
+            $item.remove();
+            $('#attachments_nocontent').show();
+            $('.attachments-list').hide();
+        }
+        else if ($item.is(':first-child')) {
+            $item.next('.hline').remove();
+            $item.remove();
+        } else {
+            $item.prev('.hline').remove();
+            $item.remove();
+        }
     }
 </script>
-
-<style type="text/css">
-    #add_post_attach_con {
-        position: fixed;
-        z-index: 10000;
-        background-color: #000000;
-        background-color: rgba(0,0,0,.8);
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        /*display: flex;*/
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-
-        #add_post_attach_con .add-post-attach {
-            background-color: #fff;
-            width: 80%;
-            padding: 20px 30px;
-        }
-</style>

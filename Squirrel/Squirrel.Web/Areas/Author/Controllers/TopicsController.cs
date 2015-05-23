@@ -96,7 +96,8 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await TopicService.PublishAsync(id, User.Identity.Name);
             if (TopicService.Result.Succeeded)
             {
-                return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = true, message = "عنوان مورد نظر منتشر شد." }, 
+                    JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
@@ -108,7 +109,8 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await TopicService.UnPublishAsync(id, User.Identity.Name);
             if (TopicService.Result.Succeeded)
             {
-                return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = true, message = "انتشار عنوان مورد نظر لغو شد."  },
+                    JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
@@ -138,6 +140,31 @@ namespace Squirrel.Web.Areas.Author.Controllers
 
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> PublishDate(Guid id)
+        {
+            var item = await TopicService.FindByIdAsync(id);
+            if (item == null)
+            {
+                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
+                return PartialView("_Message");
+            }
+
+            var model = new TopicEditModel
+            {
+                CategoryId = item.CategoryId,
+                CategoryName = item.Category.Name,
+                PostsOrdering = item.PostsOrdering,
+                Title = item.Title,
+                Id = item.Id,
+            };
+            if (item.PublishDate.HasValue)
+            {
+                model.PublishPersianDate =
+                    ((PersianDate)item.PublishDate.Value).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS);
+            }
+            return PartialView(model);
         }
 
         public async Task<ActionResult> Edit(Guid id)
@@ -229,10 +256,35 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await PostService.AddAsync(post);
             if (PostService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "مطلب با موفقیت افزوده شد." }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = true, message = "پست با موفقیت افزوده شد." }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> Details(Guid id)
+        {
+            var item = await TopicService.FindByIdAsync(id);
+            if (item == null)
+            {
+                throw new Exception(TopicService.Result.Errors.FirstOrDefault());
+            }
+            ViewData.Model = item;
+            return PartialView();
+        }
+
+        [UpdateCachedDataFilter]
+        public async Task<JsonResult> Remove(Guid id)
+        {
+            await TopicService.DeleteAsync(new TopicDeleteModel {Id = id}, User.Identity.UserId);
+            if (TopicService.Result.Succeeded)
+            {
+                return Json(new { result = true, message = "عنوان با موفقیت حذف شد." }, 
+                    JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
+                JsonRequestBehavior.AllowGet);
+            
         }
 
     }

@@ -1,46 +1,53 @@
 ﻿@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.TopicAddModel
 
-<div style="border: 1px solid #ddd;" class="col-lg-12">
-    <div style="color: orangered; text-align: center;" class="col-lg-12" id="addtopic_error_massage"></div>
-
-    @using (Ajax.BeginForm("Add", "Topics", null, new AjaxOptions { OnSuccess = "onAddTopicSuccess" }, new { id = "topic_add_form" }))
-    {
-        @Html.AntiForgeryToken()
-        <div class="col-lg-6">
-            <p class="form-group">
-                @Html.LabelFor(m => m.Title)
-                <br />
-                @Html.TextBoxFor(m => m.Title)
-                @Html.ValidationMessageFor(m => m.Title)
-            </p>
-            <p class="form-group">
-                @Html.LabelFor(m => m.PostsOrdering)
-                <br />
-                @Html.EnumDropDownListFor(m => m.PostsOrdering, true)
-                @Html.ValidationMessageFor(m => m.PostsOrdering)
-            </p>
-            <p class="form-group">
-                @Html.LabelFor(m => m.CategoryId)
-                <br />
-                @Html.TextBox("category_addtopic_name", null, new { @readonly = "readonly" })
-                @Html.HiddenFor(m => m.CategoryId, new { id = "category_addtopic_id" })
-                @Html.ValidationMessageFor(m => m.CategoryId)
-            </p>
-        </div>
-        <div class="col-lg-6">
-            <div id="topicadd_categories_con"></div>
-        </div>
-        <div class="col-lg-12" style="text-align: center;">
-            <hr />
-            <p>
-                <button type="submit" class="btn btn-default">افزودن</button>
-                <button type="button" class="btn btn-default" onclick="cancelAddTopic()">انصراف</button>
-            </p>
-        </div>
-    }
+<div class="topic-row">
+    افزودن عنوان
 </div>
-<div style="clear: both;"></div>
+
+@using (Ajax.BeginForm("Add", "Topics", null, new AjaxOptions { OnFailure = "onAddTopicError", OnSuccess = "onAddTopicSuccess" }, new { id = "topic_add_form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Title)
+        </div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.PostsOrdering)
+        @Html.EnumDropDownListFor(m => m.PostsOrdering, true, new { @class = "select small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.PostsOrdering)
+        </div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.CategoryId)
+        @Html.TextBox("category_addtopic_name", null, new { @readonly = "readonly", @class = "textbox small readonly" })
+        @Html.HiddenFor(m => m.CategoryId, new { id = "category_addtopic_id" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.CategoryId)
+        </div>
+        <div class="categories-tree" id="topicadd_categories_con"></div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div>
+        <button type="submit" class="button small submit">افزودن</button>
+        <button type="button" class="button small" onclick="cancelAddTopic()">انصراف</button>
+    </div>
+}
 
 <script type="text/javascript">
     $(function () {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Squirrel.Utility.Helpers
 {
@@ -111,6 +108,31 @@ namespace Squirrel.Utility.Helpers
             {
                 return null;
             }
+        }
+
+        public static string ToByteUnit(this int num, bool isFarsiText = true)
+        {
+            int value;
+            if (num < 1024)
+            {
+                return isFarsiText ? "یک کیلوبایت" : "1 KB";
+            }
+            if (num >= 1024 && num < 1024 * 1024)
+            {
+                value = num / 1024;
+                return string.Format(isFarsiText ? "{0} کیلوبایت" : "{0} KB", value);
+            }
+            if (num >= 1024 * 1024 && num < 1024 * 1024 * 1024)
+            {
+                value = num / (1024 * 1024);
+                return string.Format(isFarsiText ? "{0} مگابایت" : "{0} MB", value);
+            }
+            if (num >= 1024 * 1024 * 1024)
+            {
+                value = num / (1024 * 1024 * 1024);
+                return string.Format(isFarsiText ? "{0} گیگابایت" : "{0} GB", value);
+            }
+            return string.Empty;
         }
     }
 

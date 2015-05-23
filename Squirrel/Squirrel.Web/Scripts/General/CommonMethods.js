@@ -33,6 +33,144 @@ function toEnglishDigits(text) {
     return str;
 }
 
+function GetNowTimeFa() {
+    var now = new Date();
+    var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+    return toPersianDigits(time);
+}
+
+function toByteUnitPersian(num) {
+    if (num <= 1024) {
+        return 'یک کیلوبایت';
+    }
+    var value;
+    if (num >= 1024 && num < 1024 * 1024) {
+        value = num / 1024;
+        return Math.round(value) + ' کیلوبایت';
+    }
+    if (num >= 1024 && num < 1024 * 1024) {
+        value = num / (1024 * 1024);
+        return Math.round(value) + ' مگابایت';
+    }
+    if (num >= 1024 * 1024 * 1024) {
+        value = num / (1024 * 1024 * 1024);
+        return Math.round(value) + ' گیگابایت';
+    }
+    return '';
+}
+
+// SecondryContent >>> start :
+function onSecondryPinClick() {
+    $('.secondry-content').toggleClass('pin-secondry');
+    $('.mainpart-con').toggleClass('pin-secondry');
+}
+
+function showSecondryContent() {
+    $('.secondry-content').removeClass('tie-secondry');
+}
+
+function fillSecondryContent(html) {
+    $('#secondry_content').html(html);
+}
+
+function hideSecondryContent() {
+    $('.secondry-content').addClass('tie-secondry');
+
+    if ($('.mainpart-con').hasClass('pin-secondry')) {
+        $('.secondry-content').removeClass('pin-secondry');
+        $('.mainpart-con').removeClass('pin-secondry');
+    }
+}
+
+function hideAndClearSecondryContent() {
+    $('.secondry-content').addClass('tie-secondry');
+
+    if ($('.mainpart-con').hasClass('pin-secondry')) {
+        $('.secondry-content').removeClass('pin-secondry');
+        $('.mainpart-con').removeClass('pin-secondry');
+    }
+
+    $('#secondry_content').text('');
+}
+
+function checkpointSecondryContent() {
+    var content = $('#secondry_content').html();
+    $('.secondry-content .previous').html(content);
+}
+
+function restoreSecondryContent() {
+    var pre = $('.secondry-content .previous').html();
+    $('#secondry_content').html(pre);
+}
+// SecondryContent <<< end.
+
+// GlobalMessage >>> start :
+function GlobalMessage(date, message, type) {
+    var $messagebox = $('.global-messagebox');
+    $messagebox.fadeOut(100);
+    setTimeout(function () {
+        $messagebox.attr('class', '');
+        $messagebox.addClass('global-messagebox').addClass(type);
+        $messagebox.find('.date').text(date);
+        $messagebox.find('.message').find('span').text(message);
+        $messagebox.fadeIn(200);
+    }, 100);
+}
+// GlobalMessage <<< end.
+
+// Popup >>> start :
+function showPopupAlert(question, onclickYes, onclickNo) {
+    $('.popup-con .alertbox').find('.question').text(question);
+    $('.popup-con .alertbox').find('.yes').attr('onclick', 'hidePopupAlert();' + onclickYes);
+    $('.popup-con .alertbox').find('.no').attr('onclick', 'hidePopupAlert();' + onclickNo);
+    $('.popup-con').addClass('showed');
+    $('.popup-con .alertbox').fadeIn(200);
+}
+
+function hidePopupAlert() {
+    $('.popup-con .alertbox').fadeOut(200);
+    setTimeout(function () {
+        $('.popup-con').removeClass('showed');
+    }, 200);
+}
+
+function showPopupBox(id, topic, content) {
+    $('.popup-con').addClass('showed');
+    $('.popup-con .dynamic-content').find('input#PopBoxId').val(id);
+    $('.popup-con .dynamic-content').find('.topic').text(topic);
+    $('.popup-con .dynamic-content').find('.content').html(content);
+    $('.popup-con .dynamic-content').fadeIn(200);
+}
+
+function fullPicturePopup(title, imageSrc) {
+    var $image = $('<img />');
+    $image.attr('src', imageSrc);
+
+    var $divider = $('<div></div>');
+    $divider.addClass('divider-blank30');
+
+    var $button = $('<button></button>');
+    $button.text('بستن').addClass('button').attr('onclick', 'cancelPopupBox()');
+
+    var $buttonCon = $('<div></div>');
+    $buttonCon.append($button);
+
+    var $imageCon = $('<div></div>');
+    $imageCon.addClass('image');
+    $imageCon.append($image).append($divider).append($buttonCon);
+
+    showPopupBox('', title, $imageCon);
+}
+
+function cancelPopupBox() {
+    $('.popup-con .dynamic-content').fadeOut(200);
+    setTimeout(function () {
+        $('.popup-con').removeClass('showed');
+        $('.popup-con .dynamic-content').find('.content').html('');
+    }, 200);
+}
+// Popup <<< end.
+
 (function ($) {
 
     $(function () {

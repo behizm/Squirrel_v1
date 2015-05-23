@@ -1,62 +1,61 @@
-﻿@using Squirrel.Domain.Enititis
-@model Squirrel.Domain.ViewModels.PostEditModel
+﻿@model Squirrel.Domain.ViewModels.PostEditModel
 
 @{
     ViewBag.Title = "ویرایش مطلب";
-    Post thisPost = ViewBag.CurrentPost;
 }
 
-<div class="col-lg-12" style="height: 40px; line-height: 40px; margin-bottom: 10px;">
-    <div id="editpost_success_message" style="color: #3cb371; background-color: #fafad2; display: none; text-align: center;"></div>
-    <div id="editpost_error_message" style="color: #ff7f50; background-color: #fafad2; display: none; text-align: center;"></div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
 </div>
 
-<div class="col-lg-8">
-    <div>
-        @Html.Partial("Item_Topic")
-    </div>
-    <hr />
-    @using (Ajax.BeginForm("Edit", "Posts", null, new AjaxOptions { OnSuccess = "onEditPostSuccess", OnFailure = "onEditPostError" }, new { id = "post_edit_form" }))
+<div class="post-edit-con">
+    @using (Ajax.BeginForm("Edit", "Posts", null,
+        new AjaxOptions { OnSuccess = "onEditPostSuccess", OnFailure = "onEditPostError" },
+        new { id = "post_edit_form" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
         @Html.HiddenFor(m => m.TopicId)
         @Html.HiddenFor(m => m.IsPublic)
+        @Html.HiddenFor(m => m.Abstract)
         @Html.HiddenFor(m => m.FlatedTags)
         @Html.HiddenFor(m => m.HeaderImageId)
         @Html.HiddenFor(m => m.FlatedAttachments)
         @Html.HiddenFor(m => m.Body)
         @Html.HiddenFor(m => m.PublishPersianDate)
 
-        <div>
-            خلاصه :
-            <p>
-                @Html.TextAreaFor(m => m.Abstract)
-            </p>
-        </div>
-        <hr />
-        <div>
-            @Html.Partial("Item_Content")
+        <div class="col-lg-12">
+            <div class="box-uptitle">
+                <div class="text">محتوا</div>
+                <div class="clearbox"></div>
+            </div>
+            <div>
+                @Html.Partial("Item_Content")
+            </div>
         </div>
     }
+
+    <div class="col-lg-12">
+        <div class="divider-blank30"></div>
+    </div>
+
+    <div class="col-lg-6">
+        @Html.Partial("Item_Abstract")
+        <div class="divider-blank30"></div>
+        @Html.Partial("Item_Attachments")
+        <div class="divider-blank30"></div>
+    </div>
+
+    <div class="col-lg-6">
+        @Html.Partial("Item_Image")
+        <div class="divider-blank30"></div>
+        @Html.Partial("Item_Tags")
+        <div class="divider-blank30"></div>
+    </div>
 </div>
 
-<div class="col-lg-4">
-    <div style="padding: 20px;text-align: center; background-color: #eee;">
-        @Html.Partial("Item_Action")
-    </div>
-    <br />
-    <div>
-        @Html.Partial("Item_Image")
-    </div>
-    <hr />
-    <div>
-        @Html.Partial("Item_Tags")
-    </div>
-    <hr />
-    <div>
-        @Html.Partial("Item_Attachments")
-    </div>
+<div style="display: none;" id="post_actions_con">
+    @Html.Partial("Item_Action")
 </div>
 
 @section scripts{
@@ -64,11 +63,19 @@
         $(function () {
             $.validator.unobtrusive.parse("#post_edit_form");
             $("#post_edit_form").data("validator").settings.ignore = "";
+            fillSecondryContent($('#post_actions_con').html());
+            $('#post_actions_con').remove();
         });
 
         function savePost() {
+            if (!$('#post_edit_form').valid()) {
+                var message = 'اطلاعات وارد شده قابل ثبت نیست.';
+                GlobalMessage(GetNowTimeFa(), message, 'error');
+                return false;
+            }
             onEditPostBegin();
             $('#post_edit_form').submit();
+            return true;
         }
 
         function publishPost(e) {
@@ -80,8 +87,6 @@
 
         function privatePost(e) {
             $('#IsPublic').val('False');
-            $('#publishdate_editpost').val('');
-            $('#PublishPersianDate').val('');
             $(e).hide();
             $(e).prev().show();
             savePost();
@@ -95,50 +100,40 @@
 
         function onEditPostSuccess(data) {
             if (data.result == true) {
-                showMessage(data.message, '');
-                $('#post_editdate').text(data.date);
-                var publishDate = data.publishDate;
-                $('#publishdate_editpost').val(publishDate);
-                $('#PublishPersianDate').val(toEnglishDigits(publishDate));
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                $('#post_editdate').text(toPersianDigits(data.date));
+                $('#post_publishdate').text(toPersianDigits(data.publishDate));
+                if (data.publishDate == '') {
+                    $('#post_publishstate').text("خصوصی");
+                } else {
+                    $('#post_publishstate').text("عمومی");
+                }
             } else {
-                showMessage('', data.message);
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
         }
 
         function onEditPostError() {
-            showMessage('', 'هنگام انجام درخواست خطا رخ داد.');
+            var message = 'در هنگام افزودن عنوان خطا رخ داد.';
+            GlobalMessage(GetNowTimeFa(), message, 'error');
         }
 
-        function showMessage(success, error) {
-            $('#editpost_success_message').text('').hide();
-            $('#editpost_error_message').text('').hide();
-
-            if (success != '') {
-                $('#editpost_success_message').text(success).slideDown(100);
-            }
-            if (error != '') {
-                $('#editpost_error_message').text(error).slideDown(100);
-            }
+        function loadRemovePost(id) {
+            showPopupAlert('آیا مطمئن هستید که این مطلب پاک شود؟', 'onRemovePostClick("' + id + '")', '');
         }
 
-        function loadTopics(p) {
+        function onRemovePostClick(id) {
             $.ajax({
-                url: '@Url.Action("SimpleSearch", "Topics")',
-                data: {
-                    page: p,
-                },
+                url: '@Url.Action("Remove", "Posts")',
+                data: { id: id },
                 success: function (r) {
-                    $('#change_topic_con #change_topic').html(r);
-                    $('#change_topic_con').css('display', 'flex');
-                    $('#topic_row_' + $('#TopicId').val()).css('color', 'blueviolet');
+                    if (r.result == true) {
+                        window.location.href = '@Url.Action("Index", "Publish")';
+                    } else {
+                        GlobalMessage(GetNowTimeFa(), r.message, 'error');
+                    }
                 },
             });
-        }
-
-        function onTopicClicked(e, id, title) {
-            $('#TopicId').val(id);
-            $('#topic_title').text(title);
-            $('#change_topic_con').css('display', 'none');
         }
     </script>
 }

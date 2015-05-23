@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ExtensionMethods;
 using Squirrel.Domain.Resources;
@@ -153,8 +154,8 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var taskUser = RepositoryContext.RetrieveAsync<User>(x => x.Id == userId);
-            var taskTopic = RepositoryContext.RetrieveAsync<Topic>(x => x.Id == model.Id);
+            var taskTopic = WarehouseContext.RetrieveAsync<Topic>(x => x.Id == model.Id);
+            var taskUser = WarehouseContext2.RetrieveAsync<User>(x => x.Id == userId);
 
             var user = await taskUser;
             if (user == null)
@@ -176,10 +177,18 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            // todo: بررسی ارتباطها
+            topic.Posts.ForEach(p =>
+            {
+                if (p.Comments != null && p.Comments.Any())
+                    WarehouseContext.Delete(p.Comments.ToArray());
 
-            await RepositoryContext.DeleteAsync(topic);
-            if (RepositoryContext.OperationResult.Succeeded)
+                if (p.Votes != null && p.Votes.Any())
+                    WarehouseContext.Delete(p.Votes.ToArray());
+            });
+            WarehouseContext.Delete(topic.Posts.ToArray());
+            WarehouseContext.Delete(topic);
+            await WarehouseContext.SaveChangesAsync();
+            if (WarehouseContext.OperationResult.Succeeded)
             {
                 Result = OperationResult.Success;
                 return;

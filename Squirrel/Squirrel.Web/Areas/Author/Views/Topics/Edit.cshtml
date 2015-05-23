@@ -1,56 +1,55 @@
-﻿@using Squirrel.Utility.FarsiTools
-@using Squirrel.Utility.Helpers
+﻿@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.TopicEditModel
 
-<div style="border: 1px solid #ddd;" class="col-lg-12">
-    <div style="color: orangered; text-align: center;" class="col-lg-12" id="edittopic_error_massage"></div>
-
-    @using (Ajax.BeginForm("Edit", "Topics", null, new AjaxOptions { OnSuccess = "onEditTopicSuccess" }, new { id = "topic_edit_form" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Id)
-        @Html.HiddenFor(m => m.PublishPersianDate)
-
-        <div class="col-lg-6">
-            <p class="form-group">
-                @Html.LabelFor(m => m.Title)
-                <br />
-                @Html.TextBoxFor(m => m.Title)
-                @Html.ValidationMessageFor(m => m.Title)
-            </p>
-            <p class="form-group">
-                @Html.LabelFor(m => m.PostsOrdering)
-                <br />
-                @Html.EnumDropDownListFor(m => m.PostsOrdering, true)
-                @Html.ValidationMessageFor(m => m.PostsOrdering)
-            </p>
-            <p class="form-group" id='@string.Format("edittopiccategory_con_{0}",Model.Id)'>
-                @Html.LabelFor(m => m.CategoryId)
-                <br />
-                @Html.TextBoxFor(m => m.CategoryName, new { @readonly = "readonly", id = "category_edittopic_name" })
-                @Html.HiddenFor(m => m.CategoryId, new { id = "category_edittopic_id" })
-                @Html.ValidationMessageFor(m => m.CategoryId)
-            </p>
-            <p class="form-group">
-                @Html.LabelFor(m => m.PublishPersianDate)
-                <br />
-                @Html.TextBox("publishpdate_edit", Model.PublishPersianDate.FaDigit(), new { @readonly = "readonly" })
-                @Html.ValidationMessageFor(m => m.PublishPersianDate)
-            </p>
-        </div>
-        <div class="col-lg-6">
-            <div id="topicedit_categories_con"></div>
-        </div>
-        <div class="col-lg-12" style="text-align: center;">
-            <hr />
-            <p>
-                <button type="submit" class="btn btn-default">ثبت</button>
-                <button type="button" class="btn btn-default" onclick="hideTopicOptionBox()">انصراف</button>
-            </p>
-        </div>
-    }
+<div class="topic-row">
+    ویرایش عنوان
 </div>
-<div style="clear: both;"></div>
+
+@using (Ajax.BeginForm("Edit", "Topics", null, new AjaxOptions { OnFailure = "onEditTopicError", OnSuccess = "onEditTopicSuccess" }, new { id = "topic_edit_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.PublishPersianDate)
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Title)
+        </div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.PostsOrdering)
+        @Html.EnumDropDownListFor(m => m.PostsOrdering, true, new { @class = "select small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.PostsOrdering)
+        </div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.CategoryId)
+        @Html.TextBoxFor(m => m.CategoryName, new { @id = "category_edittopic_name", @readonly = "readonly", @class = "textbox small readonly" })
+        @Html.HiddenFor(m => m.CategoryId, new { id = "category_edittopic_id" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.CategoryId)
+        </div>
+        <div class="categories-tree" id="topicedit_categories_con"></div>
+    </div>
+
+    <div class="divider-blank15"></div>
+
+    <div>
+        <button type="submit" class="button small submit">ثبت</button>
+        <button type="button" class="button small" onclick="cancelEditTopic()">انصراف</button>
+    </div>
+}
 
 <script type="text/javascript">
     $(function () {
@@ -61,30 +60,15 @@
             $(this).valid();
         });
 
-        loadCategoriesForEdit('@Model.Id');
+        loadCategoriesForEdit();
         $(document).on('onCategoryChoosed', editTopicCategoryHandler);
     });
 
-    $('#publishpdate_edit').MdPersianDateTimePicker({
-        Placement: 'bottom', // default is 'bottom'
-        Trigger: 'focus', // default is 'focus',
-        EnableTimePicker: true, // default is true,
-        TargetSelector: '', // default is empty,
-        GroupId: '', // default is empty,
-        ToDate: false, // default is false,
-        FromDate: false, // default is false,
-    });
-
-    $('#publishpdate_edit').on('change', function () {
-        var dateVal = $(this).val();
-        $('#PublishPersianDate').val(toEnglishDigits(dateVal));
-    });
-
-    function loadCategoriesForEdit(key) {
+    function loadCategoriesForEdit() {
         $.ajax({
             url: '@Url.Action("SimpleTreeByKey", "Categories")',
             data: {
-                key: key,
+                key: 'new',
             },
             success: function (r) {
                 $('#topicedit_categories_con').html(r);
@@ -93,10 +77,9 @@
     }
 
     function editTopicCategoryHandler(e) {
-        if (e.key == '@Model.Id') {
-            var $con = $('#edittopiccategory_con_' + '@Model.Id');
-            $con.find('#category_edittopic_name').val(e.name);
-            $con.find('#category_edittopic_id').val(e.id).trigger('change');
+        if (e.key == "new") {
+            $('#category_edittopic_name').val(e.name);
+            $('#category_edittopic_id').val(e.id).trigger('change');
         }
     }
 </script>

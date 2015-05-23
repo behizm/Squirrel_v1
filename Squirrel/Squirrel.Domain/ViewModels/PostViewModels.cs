@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 
 namespace Squirrel.Domain.ViewModels
@@ -21,6 +16,8 @@ namespace Squirrel.Domain.ViewModels
 
     public class PostAddModel : PostAddSimpleModel
     {
+        [Display(Name = @"خلاصه")]
+        [StringLength(300, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
         public string Abstract { get; set; }
         public Guid? HeaderImageId { get; set; }
         public List<Guid> Attachments { get; set; }

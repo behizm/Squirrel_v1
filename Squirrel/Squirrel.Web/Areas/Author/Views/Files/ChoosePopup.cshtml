@@ -1,0 +1,146 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model List<Squirrel.Domain.Enititis.File>
+
+@{
+    FileRequestModel filterModel = ViewBag.RequestFileFilter;
+}
+
+@using (Ajax.BeginForm("Popup", "Files", null, new AjaxOptions { UpdateTargetId = "popup_content_con" }, new { id = "popup_file_form" }))
+{
+    @Html.HiddenFor(m => filterModel.Page, new { id = "popup_file_filter_page" })
+    @Html.HiddenFor(m => filterModel.IsFixedType)
+    @Html.HiddenFor(m => filterModel.TargetKey)
+
+    <div class="row">
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => filterModel.Name, new { id = "popup_file_filter_name", placeholder = "نام فایل", @class = "textbox" })
+            <div class="divider-blank15"></div>
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => filterModel.Category, new { id = "popup_file_filter_category", placeholder = "گروه فایل", @class = "textbox" })
+            <div class="divider-blank15"></div>
+        </div>
+        @if (filterModel.IsFixedType)
+        {
+            @Html.HiddenFor(m => filterModel.Type)
+        }
+        else
+        {
+            <div class="col-md-3">
+                @Html.DropDownListFor(m => filterModel.Type, typeof(FileType).ToSelectList(true), new { id = "popup_file_filter_type", @class = "select" })
+                <div class="divider-blank15"></div>
+            </div>
+        }
+        <div class="col-md-3">
+            <button type="submit" onclick="$('#popup_file_filter_page').val(1);" class="button tile">
+                <span class="glyphbox">&#xe618</span>
+            </button>
+            <div class="divider-blank15"></div>
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+}
+
+<div class="row file-popup">
+    @foreach (var file in Model)
+    {
+        var item = file;
+        <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="item" onclick="choosingFile(this,'@item.Id', '@item.Name', '@item.Address', '@item.Size', '@item.Filename')">
+                @if (item.Type == FileType.Image)
+                {
+                    <img src="@Url.Content(item.Address)" />
+                }
+                else if (item.Type == FileType.Document)
+                {
+                    <span class="glyphbox">&#xe656</span>
+                }
+                else if (item.Type == FileType.Archive)
+                {
+                    <span class="glyphbox">&#xe653</span>
+                }
+                else if (item.Type == FileType.Audio)
+                {
+                    <span class="glyphbox">&#xe630</span>
+                }
+                else if (item.Type == FileType.Program)
+                {
+                    <span class="glyphbox">&#xe672</span>
+                }
+                else if (item.Type == FileType.Video)
+                {
+                    <span class="glyphbox">&#xe6a5</span>
+                }
+                else
+                {
+                    <span class="glyphbox">&#xe64a</span>
+                }
+                <div class="info">
+                    <div class="name">
+                        @Html.DisplayFor(m => item.Name)
+                    </div>
+                    <div class="size">
+                        @(item.Size.ToByteUnit().FaDigit())
+                        -
+                        @item.Filename.Split('.').Last()
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (ViewBag.Paging != null)
+{
+    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+    <div class="divider-blank30"></div>
+}
+
+<div>
+    <button class="button submit" id="popup_file_savebutton" style="display: none;" onclick="confirmChoosedFile()">تائید</button>
+    <button class="button alert" onclick="cancelPopupBox()">انصراف</button>
+</div>
+
+<script type="text/javascript">
+    var fileId;
+    var fileshowname;
+    var fileName;
+    var fileAddr;
+    var filesize;
+    var element;
+
+    function LoadPopupFileList(page) {
+        $('#popup_file_filter_page').val(page);
+        $('#popup_file_form').submit();
+    }
+
+    function choosingFile(e, id, name, address, size, filename) {
+        fileId = id;
+        fileshowname = name;
+        fileAddr = address;
+        filesize = size;
+        fileName = filename;
+        element = e;
+
+        $('.popup-con .file-popup .item').removeClass('choosed');
+        $(e).addClass('choosed');
+        $('#popup_file_savebutton').show();
+    }
+
+    function confirmChoosedFile() {
+        $.event.trigger({
+            type: 'onFilePopupChoice',
+            id: fileId,
+            name: fileshowname,
+            address: fileAddr,
+            size: filesize,
+            filename: fileName,
+            element: element,
+            popupId: $('#PopBoxId').val(),
+        });
+        cancelPopupBox();
+    }
+</script>

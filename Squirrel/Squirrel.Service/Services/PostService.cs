@@ -248,10 +248,10 @@ namespace Squirrel.Service.Services
             }
 
             if (post.Comments != null && post.Comments.Any())
-                WarehouseContext.Delete(post.Comments);
+                WarehouseContext.Delete(post.Comments.ToArray());
 
             if (post.Votes != null && post.Votes.Any())
-                WarehouseContext.Delete(post.Votes);
+                WarehouseContext.Delete(post.Votes.ToArray());
 
             if (post.IsPublic && !post.Topic.Posts.Any(p => p.Id != post.Id && p.IsPublic))
             {
