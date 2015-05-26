@@ -45,7 +45,7 @@
     -webkit-transform: rotateZ(@deg);
     -moz-transform: rotateZ(@deg);
     -ms-transform: rotateZ(@deg);
-    -o-transform:  rotateZ(@deg);
+    -o-transform: rotateZ(@deg);
     transform: rotateZ(@deg);
 }
 
@@ -93,4 +93,17 @@
     right: @right;
     bottom: @bottom;
     left: @left;
+}
+
+.linearGradientVertical(@topColor,@bottonColor) {
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(@bottonColor), to(@topColor));
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, @topColor, @bottonColor);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, @topColor, @bottonColor);
+    /* IE 10 */
+    background: -ms-linear-gradient(top, @topColor, @bottonColor);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, @topColor, @bottonColor);
 }

@@ -5,77 +5,50 @@
     var counter = 0;
 }
 
-<div class="col-md-12">
-    <div class="flatbox">
-        @foreach (var topic in Model)
-        {
-            var item = topic;
-            counter++;
-
-            <div class="item">
-                @if (item.IsPublished)
-                {
-                    <span class="glyphbox published">&#xe66c</span>
-                }
-                else
-                {
-                    <span class="glyphbox unpublished">&#xe681</span>
-                }
-
-                <a class="text" onclick="showTopicDetails('@item.Id')">@Html.DisplayFor(x => item.Title).FaDigit()</a>
-            </div>
-            if (counter != Model.Count)
-            {
-                <div class="hline"></div>
-            }
-        }
-        @if (ViewBag.Paging != null)
-        {
-            <div class="hline"></div>
-            <div class="divider-blank15"></div>
-            @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
-        }
-    </div>
-
-    <div class="divider-blank20"></div>
-</div>
-
-
-
-@*<table class="table">
-        <tbody>
+@if (Model.Any())
+{
+    <div class="col-md-12">
+        <div class="flatbox">
             @foreach (var topic in Model)
             {
                 var item = topic;
-                var style1 = string.Empty;
-                var style2 = string.Empty;
+                counter++;
 
-                <tr>
-                    <td>
-                        <div id="@string.Format("listitem_con_{0}",item.Id)">
-                            @Html.Partial("ListItem", item)
-                        </div>
-                        <div class="topic-options" id="@string.Format("op_con_{0}",item.Id)" style="display: none; padding: 15px 0;"></div>
-                    </td>
-                    <td>
-                        @if (item.IsPublished)
-                        {
-                            style1 = "display:none;";
-                        }
-                        else
-                        {
-                            style2 = "display:none;";
-                        }
-                        <span style="color: #cccccc; @style1" onclick="publishTopic(this, '@item.Id')">Published</span>
-                        <span style="color: #7b68ee; @style2" onclick="unpublishTopic(this, '@item.Id')">Published</span>
-                    </td>
+                <div class="item">
+                    @if (item.IsPublished)
+                    {
+                        <span class="glyphbox published">&#xe66c</span>
+                    }
+                    else
+                    {
+                        <span class="glyphbox unpublished">&#xe681</span>
+                    }
 
-                </tr>
+                    <a class="text" onclick="showTopicDetails('@item.Id')">@Html.DisplayFor(x => item.Title).FaDigit()</a>
+                </div>
+                if (counter != Model.Count)
+                {
+                    <div class="hline"></div>
+                }
             }
-        </tbody>
-    </table>*@
+            @if (ViewBag.Paging != null)
+            {
+                <div class="hline"></div>
+                <div class="divider-blank15"></div>
+                @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+            }
+        </div>
 
-@*@if (ViewBag.Paging != null)
-    {
-        @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
-    }*@
+        <div class="divider-blank20"></div>
+    </div>
+}
+else
+{
+    <div class="col-lg-12">
+        <div class="flatbox">
+            <div class="no-content">
+                موردی وجود ندارد.
+            </div>
+        </div>
+    </div>
+}

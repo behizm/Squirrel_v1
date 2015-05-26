@@ -642,6 +642,18 @@ namespace Squirrel.Service.Services
             return originNodes.Select(x => CreateSimpleTreeNode(x, cats)).ToList();
         }
 
+        public async Task<List<string>> AllCategoriesName()
+        {
+            var items = await RepositoryContext.SearchAsync<Category>(x => true);
+            if (items == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+            Result = OperationResult.Success;
+            return await items.Select(x => x.Name).ToListAsync();
+        }
+
 
 
         private async Task UpdateAsync(Category category)

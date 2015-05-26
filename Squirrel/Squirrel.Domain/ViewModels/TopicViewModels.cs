@@ -43,10 +43,15 @@ namespace Squirrel.Domain.ViewModels
 
     public class TopicSearchModel
     {
+        [Display(Name = @"عنوان")]
         public string Title { get; set; }
         public PostsOrdering? PostsOrdering { get; set; }
+
+        [Display(Name = @"گروه")]
         public string Category { get; set; }
         public string Username { get; set; }
+
+        [Display(Name = @"منتشر شده است؟")]
         public bool? IsPublished { get; set; }
         public DateTime? PublishDateFrom { get; set; }
         public DateTime? PublishDateTo { get; set; }

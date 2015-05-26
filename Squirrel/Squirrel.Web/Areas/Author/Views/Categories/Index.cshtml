@@ -3,16 +3,11 @@
     ViewBag.Title = "گروه ها";
 }
 
-<h2>گروه ها</h2>
-<hr />
-
-<div class="col-lg-6">
-    <div>
-        <button type="button" class="btn btn-default" onclick="LoadAddForm()">+</button>
-    </div>
-    <br />
-    <div id="tree_con" style="direction: rtl"></div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
 </div>
+
+<div id="tree_con" class="col-lg-12"></div>
 
 <div class="col-lg-6">
     <div id="option_con_1"></div>
@@ -26,10 +21,10 @@
 
     <script type="text/javascript">
         $(function () {
-            ReloadTree();
+            reloadTree();
         });
 
-        function ReloadTree() {
+        function reloadTree() {
             $.ajax({
                 url: '@Url.Action("Tree", "Categories")',
                 success: function (r) {
@@ -38,15 +33,34 @@
             });
         }
 
-        function LoadAddForm() {
+        function loadAddForm() {
             $.ajax({
                 url: '@Url.Action("Add", "Categories")',
+                error: function () {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری فرم افزودن گروه خطا رخ داد.', 'error');
+                },
                 success: function (r) {
-                    $('#option_con_1').html(r);
-                    $('#option_con_2').html('');
+                    fillSecondryContent(r);
+                    showSecondryContent();
                 }
             });
         }
+
+        function onAddCategorySuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                hideAndClearSecondryContent();
+                reloadTree();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        ///////////////////
+        ///////////////////
+        ///////////////////
+        ///////////////////
+        ///////////////////
 
         function LoadDetails(id) {
             $.ajax({
@@ -80,7 +94,7 @@
         }
 
         function EditCompleteReload(id) {
-            ReloadTree();
+            reloadTree();
             LoadDetails(id);
         }
 
@@ -95,7 +109,7 @@
         }
 
         function RemoveCompleteReload() {
-            ReloadTree();
+            reloadTree();
             $('#option_con_1').html('');
         }
 
@@ -110,7 +124,7 @@
         }
 
         function ReplaceCompleteReload(id) {
-            ReloadTree();
+            reloadTree();
             LoadDetails(id);
         }
 

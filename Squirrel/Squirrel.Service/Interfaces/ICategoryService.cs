@@ -28,5 +28,6 @@ namespace Squirrel.Service
         Task ChangeAvatarAsync(Guid categoryId, Guid fileId);
         Task<List<CategoryTreeModel>> FamilyTreeAsync(bool isPublishedTopics = false);
         Task<List<CategorySimpleTreeModel>> SimpleFamilyTreeAsync();
+        Task<List<string>> AllCategoriesName();
     }
 }

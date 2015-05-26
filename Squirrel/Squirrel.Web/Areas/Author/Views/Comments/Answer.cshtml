@@ -1,33 +1,31 @@
 ﻿@model Squirrel.Domain.ViewModels.CommentAddModel
-@{
-    var formId = "answer_comment_form_" + Model.ParentId;
-}
 
-<h4>پاسخ دادن</h4>
+<div class="topic-row">
+    ثبت پاسخ
+</div>
+<div class="divider-blank15"></div>
 
-<div class="answercomments-messagebox" style="background-color: #f5f5dc; text-align: center;"></div>
-
-@using (Ajax.BeginForm("Add", "Comments", null, new AjaxOptions { OnSuccess = "onAnswerCommentSuccess" }, new { id = formId }))
+@using (Ajax.BeginForm("Add", "Comments", null, new AjaxOptions { OnSuccess = "onAnswerCommentSuccess" }, new { id = "answer_comment_form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ParentId)
     @Html.HiddenFor(m => m.PostId)
 
-    <p class="form-group">
+    <div class="form-row">
         @Html.LabelFor(m => m.Body)
-        <br />
-        @Html.TextAreaFor(m => m.Body)
-        @Html.ValidationMessageFor(m => m.Body)
-    </p>
-
-    <p>
-        <button type="button" class="btn btn-default" onclick="cancelOptionComment('@Model.ParentId')">انصراف</button>
-        <button type="submit" class="btn btn-default">ثبت</button>
-    </p>
+        @Html.TextAreaFor(m => m.Body, new { @class = "textarea small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Body)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">ثبت</button>
+    </div>
 }
 
 <script type="text/javascript">
     $(function () {
-        $.validator.unobtrusive.parse('#' + '@formId');
+        $.validator.unobtrusive.parse('#answer_comment_form');
     });
 </script>

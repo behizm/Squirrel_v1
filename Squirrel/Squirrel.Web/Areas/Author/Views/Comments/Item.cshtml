@@ -1,0 +1,124 @@
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@model Comment
+
+<div>
+    @if (Model.IsConfirmed)
+    {
+        <button type="button" class="button submit full" style="display: none;" onclick="ConfirmComment(this,'@Model.Id')">تائید</button>
+        <button type="button" class="button alert full" onclick="UnconfirmComment(this, '@Model.Id')">عدم تائید</button>
+    }
+    else
+    {
+        <button type="button" class="button submit full" onclick="ConfirmComment(this, '@Model.Id')">تائید</button>
+        <button type="button" class="button alert full" style="display: none;" onclick="UnconfirmComment(this, '@Model.Id')">عدم تائید</button>
+    }
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="detail-row">
+    <span class="title">تاریخ :</span>
+    <span class="value">
+        @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">نام :</span>
+    <span class="value">
+        @if (Model.UserId.HasValue)
+        {
+            @Model.User.ShowName()
+        }
+        else
+        {
+            @Html.DisplayFor(m => m.Name)
+        }
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">ایمیل :</span>
+    <span class="value">
+        @if (Model.UserId.HasValue)
+        {
+            @Model.User.Email
+        }
+        else
+        {
+            @Html.DisplayFor(m => m.Email)
+        }
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">نظر :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Body)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">تائید شده است؟</span>
+    <span class="value" id="comment_confirm_state">
+        @(Model.IsConfirmed ? "بله" : "خیر")
+    </span>
+</div>
+@if (Model.EditeDate.HasValue)
+{
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">تاریخ ویرایش :</span>
+        <span class="value" id="comment_edit_date">
+            @Model.EditeDate.Value.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
+}
+<div class="divider-blank15"></div>
+<div>
+    <button type="button" class="button submit small" onclick="loadEditComment()">ویرایش</button>
+    <button type="button" class="button error small" onclick="loadRemoveComment()">حذف</button>
+</div>
+
+<div class="divider-blank50"></div>
+
+@{
+    Comment adminAnswer = ViewBag.AdminAnswer;
+}
+@if (adminAnswer == null)
+{
+    @Html.Partial("Answer", new CommentAddModel { ParentId = Model.Id, PostId = Model.PostId })
+}
+else
+{
+    <div class="topic-row">پاسخ</div>
+    <div class="divider-blank15"></div>
+    <div class="detail-row">
+        <span class="title">تاریخ :</span>
+        <span class="value">
+            @adminAnswer.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">نظر :</span>
+        <span class="value">
+            @Html.DisplayFor(m => adminAnswer.Body)
+        </span>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="button" class="button submit small" onclick="reloadItem('@adminAnswer.Id')">ویرایش</button>
+    </div>
+}
+
+<div id="comment_editform_con" style="display: none;">
+    @Html.Partial("Edit", new CommentEditModel { Id = Model.Id, Body = Model.Body })
+</div>
+
+<div id="comment_removeform_con">
+    @Html.Partial("Remove", new CommentRemoveModel { Id = Model.Id })
+</div>

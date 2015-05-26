@@ -1,20 +1,69 @@
 ﻿@model Squirrel.Domain.ViewModels.CommentSearchModel
 
-@using (Ajax.BeginForm("Search", "Comments", null, 
-    new AjaxOptions { OnBegin = "onSearchCommentBegin", OnSuccess = "onSearchCommentSuccess" }, 
+<div class="box-uptitle">
+    <div class="text">لیست نظرات</div>
+    <div class="links">
+        <span class="button small tile" onclick="loadAddComment()">
+            <span class="glyphbox">&#xe6b9</span>
+        </span>
+    </div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    @using (Ajax.BeginForm("Search", "Comments", null,
+    new AjaxOptions { OnBegin = "onSearchCommentBegin", OnFailure = "onSearchCommentError", OnSuccess = "onSearchCommentSuccess" },
     new { id = "comment_search_from" }))
-{
-    <div class="form-group">
+    {
         @Html.AntiForgeryToken()
         @Html.Hidden("searchPage", 1)
         @Html.HiddenFor(m => m.PostId)
+        
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 form-row">
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class="textbox", @id = "searchCommentFrom_name" })
+                <div class="divider-blank15 hidden-lg"></div>
+            </div>
+            <div class="col-lg-3 col-sm-6 form-row">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "textbox", @id = "searchCommentFrom_email" })
+                <div class="divider-blank15 hidden-lg"></div>
+            </div>
+            <div class="col-lg-3 col-sm-6 form-row">
+                @Html.LabelFor(m => m.IsConfirmed)
+                <select class="select" id="searchCommentFrom_confirm" name="IsConfirmed">
+                    <option selected="selected" value=""></option>
+                    <option value="true">بله</option>
+                    <option value="false">خیر</option>
+                </select>
+                <div class="divider-blank15 visible-xs"></div>
+            </div>
+            <div class="col-lg-3 col-sm-6 form-row">
+                @Html.LabelFor(m => m.IsRead)
+                <select class="select" id="searchCommentFrom_read" name="IsRead">
+                    <option selected="selected" value=""></option>
+                    <option value="true">بله</option>
+                    <option value="false">خیر</option>
+                </select>
+            </div>
+        </div>
+        @*<button type="button" class="btn btn-default" onclick="searchInComment(1)">جستجو</button>*@
+    }
+</div>
 
-        @Html.TextBoxFor(m => m.Name, new { placeholder = "نام" })
-        @Html.TextBoxFor(m => m.Email, new { placeholder = "ایمیل" })
-        @Html.LabelFor(m => m.IsConfirmed)
-        @Html.EditorFor(m => m.IsConfirmed)
-        @Html.LabelFor(m => m.IsRead)
-        @Html.EditorFor(m => m.IsRead)
-        <button type="button" class="btn btn-default" onclick="searchInComment(1)">جستجو</button>
-    </div>
-}
+<script type="text/javascript">
+    $(function () {
+        $('#searchCommentFrom_name').on('input', function () {
+            searchInComment(1);
+        });
+        $('#searchCommentFrom_email').on('input', function () {
+            searchInComment(1);
+        });
+        $('#searchCommentFrom_confirm').on('change', function () {
+            searchInComment(1);
+        });
+        $('#searchCommentFrom_read').on('change', function () {
+            searchInComment(1);
+        });
+    });
+</script>

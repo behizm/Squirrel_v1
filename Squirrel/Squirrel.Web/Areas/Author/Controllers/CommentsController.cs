@@ -7,19 +7,61 @@ using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.FarsiTools;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
     public class CommentsController : BaseController
     {
+        public async Task<ActionResult> Index()
+        {
+            var statsTask = CommentService.Statistics(new CommentStatisticsModel { AuthorId = User.Identity.UserId });
+            var unreadedTask = CommentService2.Topics(new CommentSearchModel
+            {
+                AuthorId = User.Identity.UserId,
+                IsRead = false,
+            });
+
+            var statistics = await statsTask;
+            if (statistics == null)
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا در اطلاعات",
+                    Message = CommentService.Result.Errors.FirstOrDefault(),
+                };
+                return View("HandledError");
+            }
+
+            var unreaded = await unreadedTask;
+            if (unreaded == null)
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا در اطلاعات",
+                    Message = CommentService2.Result.Errors.FirstOrDefault(),
+                };
+                return View("HandledError");
+            }
+
+            ViewBag.CommentsStatistics = statistics;
+            ViewData.Model = unreaded;
+            return View();
+        }
+
         public async Task<ActionResult> Post(Guid id)
         {
             var post = await PostService.FindByIdAsync(id);
             if (post == null)
             {
-                ViewBag.ErrorMessage = PostService.Result.Errors.FirstOrDefault();
-                return View();
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا در اطلاعات",
+                    Message = PostService.Result.Errors.FirstOrDefault(),
+                };
+                return View("HandledError");
             }
             ViewData.Model = post;
             return View();
@@ -27,42 +69,87 @@ namespace Squirrel.Web.Areas.Author.Controllers
 
         public async Task<ActionResult> Item(Guid id)
         {
-            var item = await CommentService.FindByIdAsync(id);
+            var itemTask = CommentService.FindByIdAsync(id);
+            var answerTask =
+                CommentService2.SearchAsync(
+                    new CommentSearchModel
+                    {
+                        UserId = User.Identity.UserId,
+                        ParentId = id
+                    },
+                    new OrderingModel<Comment, DateTime>
+                    {
+                        OrderByKeySelector = x => x.CreateDate,
+                        Skip = 0,
+                        Take = 1,
+                    });
+
+            var item = await itemTask;
             if (item == null)
             {
-                ViewBag.ErrorMessage = CommentService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای دریافت اطلاعات",
+                    Message = CommentService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
+            }
+
+            var answerList = await answerTask;
+            if (answerList == null)
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای دریافت اطلاعات",
+                    Message = CommentService2.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
+            }
+
+            if (answerList.Any())
+            {
+                ViewBag.AdminAnswer = answerList.First();
             }
             ViewData.Model = item;
-            return PartialView("SearchItem");
+            return PartialView();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Search(CommentSearchModel model, int searchPage = 1)
         {
+            const int pageSize = 10;
+
             if (!model.PostId.HasValue)
             {
-                ViewBag.ErrorMessage = ServiceMessages.General_LackOfInputData;
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = ServiceMessages.General_LackOfInputData,
+                };
+                return PartialView("_HandledError");
             }
 
             var orderingModel = new OrderingModel<Comment, DateTime>
             {
                 IsAscending = false,
                 OrderByKeySelector = x => x.CreateDate,
-                Skip = (searchPage - 1) * 10,
-                Take = 10,
+                Skip = (searchPage - 1) * pageSize,
+                Take = pageSize,
             };
 
-            model.PostAuthorUsername = User.Identity.IsAdmin ? string.Empty : User.Identity.Name;
+            model.AuthorName = User.Identity.IsAdmin ? string.Empty : User.Identity.Name;
             var itemsTask = CommentService.SearchAsync(model, orderingModel);
             var countTask = CommentService2.CountAsync(model);
 
             var items = await itemsTask;
             if (items == null)
             {
-                ViewBag.ErrorMessage = CommentService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای دریافت اطلاعات",
+                    Message = CommentService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var count = await countTask;
@@ -71,7 +158,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 ViewBag.Paging = new PagingModel
                 {
                     CurrentPage = searchPage,
-                    PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
+                    PageCount = count.Value % pageSize == 0 ? count.Value / pageSize : (count.Value / pageSize) + 1,
                     PagingMethod = "searchInComment(#)"
                 };
             }
@@ -102,7 +189,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.ParentId },
+            return Json(new { result = false, message = CommentService.Result.Errors.FirstOrDefault(), id = model.ParentId },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -123,7 +210,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.Id },
+            return Json(new { result = false, message = CommentService.Result.Errors.FirstOrDefault(), id = model.Id },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -144,7 +231,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault(), id = model.Id },
+            return Json(new { result = false, message = CommentService.Result.Errors.FirstOrDefault(), id = model.Id },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -160,7 +247,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             {
                 return Json(new { result = true, message = "نظر با موفقیت خوانده شد." }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
+            return Json(new { result = false, message = CommentService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -175,10 +262,24 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await CommentService.ChangeConfirmState(model);
             if (CommentService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "نظر با موفقیت تائید شد." }, JsonRequestBehavior.AllowGet);
+                return
+                    Json(
+                        new
+                        {
+                            result = true,
+                            message = "نظر با موفقیت تائید شد.",
+                            date = DateTime.Now.ToPersianDate().ToStringDateTime()
+                        }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
-                JsonRequestBehavior.AllowGet);
+            return
+                Json(
+                    new
+                    {
+                        result = false,
+                        message = CommentService.Result.Errors.FirstOrDefault(),
+                        date = DateTime.Now.ToPersianDate().ToStringDateTime()
+                    },
+                    JsonRequestBehavior.AllowGet);
         }
 
         public async Task<JsonResult> Unconfirm(Guid id)
@@ -187,15 +288,29 @@ namespace Squirrel.Web.Areas.Author.Controllers
             {
                 Id = id,
                 Username = User.Identity.Name,
-                IsConfirm = true,
+                IsConfirm = false,
             };
             await CommentService.ChangeConfirmState(model);
             if (CommentService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "عدم تائید نظر با موفقیت  ثبت شد." }, JsonRequestBehavior.AllowGet);
+                return
+                    Json(
+                        new
+                        {
+                            result = true,
+                            message = "عدم تائید نظر با موفقیت  ثبت شد.",
+                            date = DateTime.Now.ToPersianDate().ToStringDateTime()
+                        }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { result = false, message = PostService.Result.Errors.FirstOrDefault() },
-                JsonRequestBehavior.AllowGet);
+            return
+                Json(
+                    new
+                    {
+                        result = false,
+                        message = CommentService.Result.Errors.FirstOrDefault(),
+                        date = DateTime.Now.ToPersianDate().ToStringDateTime()
+                    },
+                    JsonRequestBehavior.AllowGet);
         }
     }
 }

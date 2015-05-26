@@ -135,6 +135,9 @@
   <data name="CommentService_CommentNotFound" xml:space="preserve">
     <value>نظر مورد نظر یافت نشد.</value>
   </data>
+  <data name="CommentService_NotRemovable" xml:space="preserve">
+    <value>برای این نظر یک یا چند پاسخ ثبت شده است و قابل حذف نیست.</value>
+  </data>
   <data name="ConfigService_ConfigExisted" xml:space="preserve">
     <value>این تنظیم وجود دارد.</value>
   </data>

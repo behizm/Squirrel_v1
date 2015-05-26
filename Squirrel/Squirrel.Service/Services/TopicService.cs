@@ -559,7 +559,7 @@ namespace Squirrel.Service.Services
 
             return x =>
                 (string.IsNullOrEmpty(model.Title) || x.Title.Contains(model.Title)) &&
-                (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Title)) &&
+                (string.IsNullOrEmpty(model.Category) || x.Category.Name.Contains(model.Category)) &&
                 (string.IsNullOrEmpty(model.Username) || x.Owner.Username.ToLower() == model.Username) &&
                 (!model.IsPublished.HasValue || x.IsPublished == model.IsPublished) &&
                 (!model.PostsOrdering.HasValue || x.PostsOrdering == model.PostsOrdering) &&

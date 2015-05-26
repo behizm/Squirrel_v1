@@ -19,5 +19,7 @@ namespace Squirrel.Service
         Task<int?> CountAsync(CommentSearchModel model);
         Task MarkAsRead(CommentMarkModel model);
         Task ChangeConfirmState(CommentConfirmModel model);
+        Task<CommentStatisticsResultModel> Statistics(CommentStatisticsModel model);
+        Task<List<Topic>> Topics(CommentSearchModel model);
     }
 }

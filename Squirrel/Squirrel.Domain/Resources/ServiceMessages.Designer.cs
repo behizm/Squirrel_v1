@@ -115,6 +115,15 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to برای این نظر یک یا چند پاسخ ثبت شده است و قابل حذف نیست..
+        /// </summary>
+        public static string CommentService_NotRemovable {
+            get {
+                return ResourceManager.GetString("CommentService_NotRemovable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to این تنظیم وجود دارد..
         /// </summary>
         public static string ConfigService_ConfigExisted {

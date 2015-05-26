@@ -1,207 +1,219 @@
 ﻿@using Squirrel.Domain.ViewModels
 @model Squirrel.Domain.Enititis.Post
 @{
-    ViewBag.Title = "کامنت ها";
+    ViewBag.Title = "نظرات";
 }
 
-@if (ViewBag.ErrorMessage != null)
-{
-    @Html.Partial("_Message")
-}
-else
-{
-    <div class="col-lg-12" style="height: 30px; line-height: 30px; text-align: center;">
-        <div id="comments_message_box" style="background-color: #f5f5dc"></div>
-    </div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
 
-    <div class="col-lg-12">
-        <div style="margin-bottom: 10px; padding: 10px; background-color: #eee;">
-            @Html.Partial("PostDetails")
-        </div>
-    </div>
+<div class="col-lg-12">
+    @Html.Partial("PostDetails")
+</div>
 
-    <div class="col-lg-12">
-        <div style="margin: 10px 0; padding: 10px; background-color: #eee;">
-            @Html.Partial("SearchFilter", new CommentSearchModel { PostId = Model.Id })
-        </div>
-        <div id="add_comment_loader" onclick="loadAddComment()">
-            <button type="button" class="btn btn-default">+</button>
-        </div>
-        <div id="add_comment_content" style="display: none; border: 1px dashed #ddd; padding: 10px;">
-            @Html.Partial("Add", new CommentAddModel { PostId = Model.Id })
-        </div>
-        <div id="list_con"></div>
-    </div>
-}
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-lg-12">
+    @Html.Partial("SearchFilter", new CommentSearchModel { PostId = Model.Id })
+</div>
+
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-lg-12">
+    <div id="list_con" class="row"></div>
+</div>
+
+<div id="add_comment_content" style="display: none;">
+    @Html.Partial("Add", new CommentAddModel { PostId = Model.Id })
+</div>
 
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
+    $(function () {
+        searchInComment(1);
+    });
+
+    function searchInComment(p) {
+        $('#searchPage').val(p);
+        $('#comment_search_from').submit();
+    }
+
+    function reloadSearchInComment() {
+        $('#comment_search_from').submit();
+    }
+
+    function onSearchCommentBegin() {
+        //$('#list_con').text("waiting ...");
+    }
+
+    function onSearchCommentError() {
+        GlobalMessage(GetNowTimeFa(), 'در هنگام جستجو خطایی رخ داد.', 'error');
+    }
+
+    function onSearchCommentSuccess(data) {
+        $('#list_con').html(data);
+    }
+
+    function loadAddComment() {
+        fillSecondryContent($('#add_comment_content').html());
+        $('#secondry_content').find('form#add_comment_form').attr('id', 'add_comment_form_mirror');
+        $.validator.unobtrusive.parse("#add_comment_form_mirror");
+        showSecondryContent();
+    }
+
+    function cancelAddComment() {
+        hideAndClearSecondryContent();
+    }
+
+    function onAddCommentSuccess(data) {
+        if (data.result == true) {
+            GlobalMessage(GetNowTimeFa(), data.message, 'success');
+            cancelAddComment();
             searchInComment(1);
+        } else {
+            GlobalMessage(GetNowTimeFa(), data.message, 'error');
+        }
+    }
+
+    function markAsReadComment(id) {
+        $.ajax({
+            url: '@Url.Action("MarkAsRead")',
+            data: { id: id },
+            success: function (r) {
+                if (r.result == true) {
+                    GlobalMessage(GetNowTimeFa(), r.message, 'success');
+                } else {
+                    GlobalMessage(GetNowTimeFa(), r.message, 'error');
+                }
+            }
         });
+    }
 
-        function searchInComment(p) {
-            $('#searchPage').val(p);
-            $('#comment_search_from').submit();
-        }
+    function loadItem(e, id, isreaded) {
+        $.ajax({
+            url: '@Url.Action("Item")',
+            data: { id: id },
+            error: function () {
+                GlobalMessage(GetNowTimeFa(), "در هنگام دریافت اطلاعات خطا رخ داد.", 'error');
+            },
+            success: function (r) {
+                fillSecondryContent(r);
+                showSecondryContent();
+                if (isreaded == 'False') {
+                    markAsReadComment(id);
+                    $(e).removeClass('unread');
+                }
+            }
+        });
+    }
 
-        function onSearchCommentBegin() {
-            $('#list_con').text("waiting ...");
-        }
+    function reloadItem(id) {
+        $.ajax({
+            url: '@Url.Action("Item")',
+            data: { id: id },
+            error: function () {
+                GlobalMessage(GetNowTimeFa(), "در هنگام دریافت اطلاعات خطا رخ داد.", 'error');
+            },
+            success: function (r) {
+                fillSecondryContent(r);
+                showSecondryContent();
+            }
+        });
+    }
 
-        function onSearchCommentSuccess(data) {
-            $('#list_con').html(data);
-        }
+    function ConfirmComment(e, id) {
+        $.ajax({
+            url: '@Url.Action("Confirm")',
+            data: { id: id },
+            success: function (r) {
+                if (r.result == true) {
+                    $(e).hide();
+                    $(e).next().show();
+                    reloadSearchInComment();
+                    GlobalMessage(GetNowTimeFa(), r.message, 'success');
+                    $('#comment_confirm_state').fadeOut(200);
+                    $('#comment_edit_date').fadeOut(200);
+                    setTimeout(function () {
+                        $('#comment_confirm_state').text('بله');
+                        $('#comment_confirm_state').fadeIn(200);
+                        $('#comment_edit_date').text(toPersianDigits(r.date));
+                        $('#comment_edit_date').fadeIn(200);
+                    }, 200);
+                } else {
+                    GlobalMessage(GetNowTimeFa(), r.message, 'error');
+                }
+            }
+        });
+    }
 
-        function loadItem(id) {
-            $.ajax({
-                url: '@Url.Action("Item")',
+    function UnconfirmComment(e, id) {
+        $.ajax({
+            url: '@Url.Action("Unconfirm")',
                 data: { id: id },
-                success: function (r) {
-                    var $parent = $("#citem_" + id);
-                    $parent.html(r);
+                success: function(r) {
+                    if (r.result == true) {
+                        $(e).hide();
+                        $(e).prev().show();
+                        reloadSearchInComment();
+                        GlobalMessage(GetNowTimeFa(), r.message, 'success');
+                        $('#comment_confirm_state').fadeOut(200);
+                        $('#comment_edit_date').fadeOut(200);
+                        setTimeout(function() {
+                            $('#comment_confirm_state').text('خیر');
+                            $('#comment_confirm_state').fadeIn(200);
+                            $('#comment_edit_date').text(toPersianDigits(r.date));
+                            $('#comment_edit_date').fadeIn(200);
+                        }, 200);
+                    } else {
+                        GlobalMessage(GetNowTimeFa(), r.message, 'error');
+                    }
                 }
             });
-
         }
 
-        function showCommentMessage(success, error) {
-            $('#comments_message_box').text('').hide();
-            if (success != '') {
-                $('#comments_message_box').text(success).slideDown(200);
-            } else if (error != '') {
-                $('#comments_message_box').text(error).slideDown(200);
-            }
-        }
-
-        function loadAddComment() {
-            $('#add_comment_loader').hide();
-            $('#add_comment_content').show();
-        }
-
-        function cancelAddComment() {
-            $('#add_comment_loader').show();
-            $('#add_comment_content').hide();
-        }
-
-        function onAddCommentSuccess(data) {
-            if (data.result == true) {
-                cancelAddComment();
-                showCommentMessage(data.message, '');
-                searchInComment(1);
-                $("#add_comment_form").find('textarea#Body').val('');
-            } else {
-                showCommentMessage('', data.message);
-            }
-        }
-
-        function cancelOptionComment(id) {
-            var $parent = $("#citem_" + id);
-            $parent.find('.comment-opt-edit').hide();
-            $parent.find('.comment-opt-remove').hide();
-            $parent.find('.comment-opt-answer').hide();
-            $parent.find('.comment-opt-loader').show();
-        }
-
-        function loadEditComment(id) {
-            var $parent = $("#citem_" + id);
-            $parent.find('.comment-opt-loader').hide();
-            $parent.find('.comment-opt-edit').show();
-
-            var $form = $("#edit_comment_form_" + id);
-            $form.find('textarea#Body').valid();
+        function loadEditComment() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#comment_editform_con').html());
+            showSecondryContent();
         }
 
         function onEditCommentSuccess(data) {
             if (data.result == true) {
-                showCommentMessage(data.message, '');
-                cancelOptionComment(data.id);
-                loadItem(data.id);
+                reloadItem(data.id);
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
             } else {
-                var $parent = $("#citem_" + data.id);
-                $parent.find('.editcomments-messagebox').text(data.message);
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
-        }
-
-        function loadRemoveComment(id) {
-            var $parent = $("#citem_" + id);
-            $parent.find('.comment-opt-loader').hide();
-            $parent.find('.comment-opt-remove').show();
-        }
-
-        function onRemoveCommentSuccess(data) {
-            var $parent = $("#citem_" + data.id);
-            if (data.result == true) {
-                showCommentMessage(data.message, '');
-                $parent.fadeOut(250);
-            } else {
-                $parent.find('.removecomments-messagebox').text(data.message);
-            }
-        }
-
-        function loadAnswerComment(id) {
-            var $parent = $("#citem_" + id);
-            $parent.find('.comment-opt-loader').hide();
-            $parent.find('.comment-opt-answer').show();
         }
 
         function onAnswerCommentSuccess(data) {
-            var $parent = $("#citem_" + data.id);
             if (data.result == true) {
-                showCommentMessage(data.message, '');
-                cancelOptionComment(data.id);
-                $parent.find('.markasread-btn').remove();
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                reloadItem(data.id);
+                reloadSearchInComment();
             } else {
-                $parent.find('.answercomments-messagebox').text(data.message);
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
         }
 
-        function markAsReadComment(e, id) {
-            $.ajax({
-                url: '@Url.Action("MarkAsRead")',
-                data: { id: id },
-                success: function (r) {
-                    if (r.result == true) {
-                        $(e).remove();
-                        showCommentMessage(r.message, '');
-                    } else {
-                        showCommentMessage('', data.message);
-                    }
-                }
-            });
+        function loadRemoveComment() {
+            showPopupAlert('آیا مطمئن هستید که این نظر پاک شود؟', '$("#remove_comment_form").submit();', '');
         }
 
-        function ConfirmComment(e, id) {
-            $.ajax({
-                url: '@Url.Action("Confirm")',
-                data: { id: id },
-                success: function (r) {
-                    if (r.result == true) {
-                        $(e).hide();
-                        $(e).next().show();
-                        showCommentMessage(r.message, '');
-                    } else {
-                        showCommentMessage('', data.message);
-                    }
-                }
-            });
-        }
-
-        function UnconfirmComment(e, id) {
-            $.ajax({
-                url: '@Url.Action("Unconfirm")',
-                data: { id: id },
-                success: function (r) {
-                    if (r.result == true) {
-                        $(e).hide();
-                        $(e).prev().show();
-                        showCommentMessage(r.message, '');
-                    } else {
-                        showCommentMessage('', data.message);
-                    }
-                }
-            });
+        function onRemoveCommentSuccess(data) {
+            if (data.result == true) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                hideAndClearSecondryContent();
+                reloadSearchInComment();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
     </script>
 }

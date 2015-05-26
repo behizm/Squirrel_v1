@@ -1,14 +1,29 @@
 ﻿@using Squirrel.Domain.ViewModels
 @model List<Squirrel.Domain.Enititis.Comment>
 
+@{
+    var counter = 0;
+}
+
 @foreach (var comment in Model)
 {
-    <div style="border: 1px solid #ddd; margin-top: 10px; padding: 10px;" id="@string.Format("citem_{0}",comment.Id)">
+    counter++;
+    <div class="col-lg-6">
         @Html.Partial("SearchItem", comment)
+        <div class="divider-blank30"></div>
     </div>
+    if (counter % 2 == 0)
+    {
+        <div class="col-lg-12"></div>
+    }
 }
 
 @if (ViewBag.Paging != null)
 {
-    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+    <div class="col-lg-12">
+        @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
+    </div>
+    <div class="col-lg-12">
+        <div class="divider-blank30"></div>
+    </div>
 }

@@ -1,30 +1,31 @@
 ﻿@model Squirrel.Domain.ViewModels.CommentEditModel
-@{
-    var formId = "edit_comment_form_" + Model.Id;
-}
 
-<div class="editcomments-messagebox" style="background-color: #f5f5dc; text-align: center;"></div>
+<div class="topic-row">
+    ویرایش نظر
+</div>
+<div class="divider-blank15"></div>
 
-@using (Ajax.BeginForm("Edit", "Comments", null, new AjaxOptions { OnSuccess = "onEditCommentSuccess" }, new { id = formId }))
+@using (Ajax.BeginForm("Edit", "Comments", null, new AjaxOptions { OnSuccess = "onEditCommentSuccess" }, new { id = "edit_comment_form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)
 
-    <p class="form-group">
+    <div class="form-row">
         @Html.LabelFor(m => m.Body)
-        <br />
-        @Html.TextAreaFor(m => m.Body)
-        @Html.ValidationMessageFor(m => m.Body)
-    </p>
-
-    <p>
-        <button type="button" class="btn btn-default" onclick="cancelOptionComment('@Model.Id')">انصراف</button>
-        <button type="submit" class="btn btn-default">ثبت</button>
-    </p>
+        @Html.TextAreaFor(m => m.Body, new { @class = "textarea small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Body)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">ثبت</button>
+        <button type="button" class="button small" onclick="restoreSecondryContent()">انصراف</button>
+    </div>
 }
 
 <script type="text/javascript">
     $(function () {
-        $.validator.unobtrusive.parse('#' + '@formId');
+        $.validator.unobtrusive.parse('#edit_comment_form');
     });
 </script>

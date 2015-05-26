@@ -1,35 +1,42 @@
 ﻿@model Squirrel.Domain.ViewModels.CategoryAddModel
 
-@Html.Partial("_Message")
+<div class="topic-row">
+    افزودن گروه
+</div>
 
-@using (Ajax.BeginForm("Add", "Categories", null, new AjaxOptions { UpdateTargetId = "option_con_1" }, new { id = "cat_ops_form" }))
+@using (Ajax.BeginForm("Add", "Categories", null, new AjaxOptions { OnSuccess = "onAddCategorySuccess" }, new { id = "cat_ops_form" }))
 {
     @Html.AntiForgeryToken()
 
-    <p class="form-group">
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Name)
-        <br />
-        @Html.TextBoxFor(m => m.Name)
-        @Html.ValidationMessageFor(m => m.Name)
-    </p>
-
-    <p class="form-group">
+        @Html.TextBoxFor(m => m.Name, new { @class = "textbox" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Parent)
-        <br />
-        @Html.TextBoxFor(m => m.Parent, new { id = "parent_add" })
-        @Html.ValidationMessageFor(m => m.Parent)
-    </p>
-
-    <p class="form-group">
+        @Html.TextBoxFor(m => m.Parent, new { id = "parent_add", @class = "textbox" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Parent)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Description)
-        <br />
-        @Html.TextAreaFor(m => m.Description)
-        @Html.ValidationMessageFor(m => m.Description)
-    </p>
-
-    <p>
-        <button type="submit" class="btn btn-default">افزودن</button>
-    </p>
+        @Html.TextAreaFor(m => m.Description, new { @class = "textarea" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Description)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">افزودن</button>
+        <a class="button small" onclick="hideAndClearSecondryContent()">انصراف</a>
+    </div>
 }
 
 <script type="text/javascript">
@@ -50,7 +57,9 @@
                             };
                         }));
                     },
-                    //error: function () { alert('خطا'); }
+                    error: function() {
+                        GlobalMessage(GetNowTimeFa(), 'خطا در یافتن گروه', 'error');
+                    }
                 });
             },
             minLength: 2,

@@ -1,6 +1,46 @@
-﻿@model Squirrel.Domain.Enititis.Post
+﻿@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.Enititis.Post
 
-<div>@Html.DisplayFor(m => m.Topic.Title)</div>
-<div>c : @Html.DisplayFor(m => m.CreateDate)</div>
-<div>p : @Html.DisplayFor(m => m.PublishDate)</div>
-<div>@Html.DisplayFor(m => m.Abstract)</div>
+<div class="box-uptitle">
+    <div class="text">اطلاعات مطلب</div>
+    <div class="links">
+        <a class="button small tile" href="@Url.Action("Item", "Posts", new { Model.Id })">
+            <span class="glyphbox">&#xe628</span>
+        </a>
+    </div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="commontext">
+                <span class="topic">عنوان :</span>
+                @Html.DisplayFor(m => m.Topic.Title)
+            </div>
+            <div class="divider-blank10"></div>
+            <div class="commontext">
+                <span class="topic">تاریخ ایجاد :</span>
+                @(Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit())
+            </div>
+            @if (Model.PublishDate.HasValue)
+            {
+                <div class="divider-blank10"></div>
+                <div class="commontext">
+                    <span class="topic">تاریخ انتشار :</span>
+                    @(Model.PublishDate.Value.ToPersianDate().ToStringDateTime().FaDigit())
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            @if (Model.Abstract.IsNotNothing())
+            {
+                <div class="commontext">
+                    <span class="topic">خلاصه :</span>
+                    @Html.DisplayFor(m => m.Abstract)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

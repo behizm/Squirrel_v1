@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ using Squirrel.Utility.FarsiTools;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Filters;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
@@ -47,6 +49,141 @@ namespace Squirrel.Web.Areas.Author.Controllers
                     CurrentPage = page,
                     PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
                     PagingMethod = "loadTopics(#)"
+                };
+            }
+            return PartialView("List", items);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Search(TopicSearchModel model, string sortingBy, int searchPage)
+        {
+            OrderingModel<Topic, DateTime> ordering1;
+            OrderingModel<Topic, DateTime?> ordering2;
+            OrderingModel<Topic, string> ordering3;
+            const int pageSize = 10;
+
+            switch (sortingBy)
+            {
+                case "1":
+                    ordering1 = new OrderingModel<Topic, DateTime>
+                    {
+                        IsAscending = false,
+                        OrderByKeySelector = x => x.CreateDate,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering2 = null;
+                    ordering3 = null;
+                    break;
+
+                case "2":
+                    ordering1 = new OrderingModel<Topic, DateTime>
+                    {
+                        IsAscending = true,
+                        OrderByKeySelector = x => x.CreateDate,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering2 = null;
+                    ordering3 = null;
+                    break;
+
+                case "3":
+                    ordering2 = new OrderingModel<Topic, DateTime?>
+                    {
+                        IsAscending = false,
+                        OrderByKeySelector = x => x.PublishDate,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering1 = null;
+                    ordering3 = null;
+                    break;
+
+                case "4":
+                    ordering2 = new OrderingModel<Topic, DateTime?>
+                    {
+                        IsAscending = true,
+                        OrderByKeySelector = x => x.PublishDate,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering1 = null;
+                    ordering3 = null;
+                    break;
+
+                case "5":
+                    ordering3 = new OrderingModel<Topic, string>
+                    {
+                        IsAscending = false,
+                        OrderByKeySelector = x => x.Title,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering2 = null;
+                    ordering1 = null;
+                    break;
+
+                case "6":
+                    ordering3 = new OrderingModel<Topic, string>
+                    {
+                        IsAscending = true,
+                        OrderByKeySelector = x => x.Title,
+                        Skip = (searchPage - 1) * pageSize,
+                        Take = pageSize,
+                    };
+                    ordering2 = null;
+                    ordering1 = null;
+                    break;
+
+                default:
+                    ViewData.Model = new ErrorViewModel
+                    {
+                        Topic = "خطا",
+                        Message = ServiceMessages.General_LackOfInputData,
+                    };
+                    return PartialView("_HandledError");
+            }
+
+            if (!User.Identity.IsAdmin)
+            {
+                model.Username = User.Identity.Name;
+            }
+
+            Task<List<Topic>> itemsTask;
+            if (ordering1 != null)
+            {
+                itemsTask = TopicService.SearchAsync(model, ordering1);
+            }
+            else if (ordering2 != null)
+            {
+                itemsTask = TopicService.SearchAsync(model, ordering2);
+            }
+            else
+            {
+                itemsTask = TopicService.SearchAsync(model, ordering3);
+            }
+            var countTask = TopicService2.CountAsync(model);
+
+            var items = await itemsTask;
+            if (items == null)
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطای دریافت اطلاعات",
+                    Message = ServiceMessages.General_LackOfInputData,
+                };
+                return PartialView("_HandledError");
+            }
+
+            var count = await countTask;
+            if (count.HasValue)
+            {
+                ViewBag.Paging = new PagingModel
+                {
+                    CurrentPage = searchPage,
+                    PageCount = count.Value % pageSize == 0 ? count.Value / pageSize : (count.Value / pageSize) + 1,
+                    PagingMethod = "searchInTopics(#)"
                 };
             }
             return PartialView("List", items);
@@ -96,7 +233,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await TopicService.PublishAsync(id, User.Identity.Name);
             if (TopicService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "عنوان مورد نظر منتشر شد." }, 
+                return Json(new { result = true, message = "عنوان مورد نظر منتشر شد." },
                     JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
@@ -109,7 +246,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await TopicService.UnPublishAsync(id, User.Identity.Name);
             if (TopicService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "انتشار عنوان مورد نظر لغو شد."  },
+                return Json(new { result = true, message = "انتشار عنوان مورد نظر لغو شد." },
                     JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
@@ -147,8 +284,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var item = await TopicService.FindByIdAsync(id);
             if (item == null)
             {
-                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = TopicService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var model = new TopicEditModel
@@ -172,8 +313,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var item = await TopicService.FindByIdAsync(id);
             if (item == null)
             {
-                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = TopicService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var model = new TopicEditModel
@@ -225,8 +370,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var item = await TopicService.FindByIdAsync(id);
             if (item == null)
             {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = TopicService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
             ViewData.Model = item;
             return PartialView();
@@ -237,7 +386,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var items = await TopicService.Posts(id);
             if (items == null)
             {
-                ViewBag.ErrorMessage = TopicService.Result.Errors.FirstOrDefault();
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = TopicService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             ViewBag.TopicId = id;
@@ -267,7 +421,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var item = await TopicService.FindByIdAsync(id);
             if (item == null)
             {
-                throw new Exception(TopicService.Result.Errors.FirstOrDefault());
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = TopicService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
             ViewData.Model = item;
             return PartialView();
@@ -276,15 +435,15 @@ namespace Squirrel.Web.Areas.Author.Controllers
         [UpdateCachedDataFilter]
         public async Task<JsonResult> Remove(Guid id)
         {
-            await TopicService.DeleteAsync(new TopicDeleteModel {Id = id}, User.Identity.UserId);
+            await TopicService.DeleteAsync(new TopicDeleteModel { Id = id }, User.Identity.UserId);
             if (TopicService.Result.Succeeded)
             {
-                return Json(new { result = true, message = "عنوان با موفقیت حذف شد." }, 
+                return Json(new { result = true, message = "عنوان با موفقیت حذف شد." },
                     JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = false, message = TopicService.Result.Errors.FirstOrDefault() },
                 JsonRequestBehavior.AllowGet);
-            
+
         }
 
     }

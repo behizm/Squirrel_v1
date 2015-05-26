@@ -108,8 +108,23 @@ namespace Squirrel.Domain.ViewModels
         public Guid? ParentId { get; set; }
 
         [Display(Name = @"نام کاربری")]
-        public string PostAuthorUsername { get; set; }
+        public string AuthorName { get; set; }
 
-        public Guid? PostAuthorUserId { get; set; }
+        public Guid? AuthorId { get; set; }
+
+        public Guid? UserId { get; set; }
     }
+
+    public class CommentStatisticsModel
+    {
+        public Guid AuthorId { get; set; }
+    }
+
+    public class CommentStatisticsResultModel
+    {
+        public int All { get; set; }
+        public int Unread { get; set; }
+        public int Unconfirmed { get; set; }
+    }
+
 }

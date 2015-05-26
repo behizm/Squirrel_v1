@@ -1,21 +1,15 @@
 ﻿@using Squirrel.Domain.ViewModels
 @model List<CategoryTreeModel>
 
-@foreach (var cat in Model)
-{
-    var item = cat;
-    <div>
-        <div>
-            <span style="border-bottom: 1px solid; padding-right: 20px;" onclick="LoadDetailsFromList('@cat.Node.Id')">
-                @Html.DisplayFor(m => item.Node.Name)
-                [@Html.DisplayFor(m => item.Node.TopicCount) : @Html.DisplayFor(m => item.Node.ChildTopicCount)]
-            </span>
-        </div>
-        @if (cat.Childs != null && cat.Childs.Any())
-        {
-            <div style="border-right: 1px solid; margin-right: 20px;">
-                @Html.Partial("Tree", cat.Childs)
-            </div>
-        }
+<div class="box-uptitle">
+    <div class="text">نمایش درختی گروهها</div>
+    <div class="links">
+        <a class="button small tile" onclick="loadAddForm()">
+            <span class="glyphbox"></span>
+        </a>
     </div>
-}
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox categories-tree">
+    @Html.Partial("Tree_Item")
+</div>

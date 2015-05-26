@@ -1,0 +1,35 @@
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
+@model List<CategoryTreeModel>
+
+@foreach (var cat in Model.OrderBy(x => x.Node.Name))
+{
+    var item = cat;
+    var parentStyle = string.Empty;
+    if (cat.Node.ParentName.IsNothing())
+    {
+        parentStyle = "base";
+    }
+
+    <div class="node @parentStyle">
+        <span class="name" onclick="LoadDetailsFromList('@cat.Node.Id')">
+            @Html.DisplayFor(m => item.Node.Name)
+        </span>
+        <span class="info">...</span>
+        <span class="info">
+            تعداد عناوین این گروه :
+            @Html.DisplayFor(m => item.Node.TopicCount).FaDigit()
+        </span>
+        <span class="info">
+            تعداد عناوین فرزندان :
+            @Html.DisplayFor(m => item.Node.ChildTopicCount).FaDigit()
+        </span>
+    </div>
+    if (cat.Childs != null && cat.Childs.Any())
+    {
+        <div class="childs @parentStyle">
+            @Html.Partial("Tree_Item", cat.Childs)
+        </div>
+    }
+}

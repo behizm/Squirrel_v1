@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
+using Squirrel.Utility.Async;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Filters;
 
@@ -33,24 +35,22 @@ namespace Squirrel.Web.Areas.Author.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
-        public async Task<ActionResult> Add(CategoryAddModel model)
+        public async Task<JsonResult> Add(CategoryAddModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                    JsonRequestBehavior.AllowGet);
             }
 
             await CategoryService.AddAsync(model);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت ایجاد شد.";
-                ViewBag.JsMethod = "ReloadTree();";
-                return PartialView("_Message");
+                return Json(new { result = true, message = "گروه با موفقیت ایجاد شد." },
+                    JsonRequestBehavior.AllowGet);
             }
-
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = false, message = CategoryService.Result.Errors.FirstOrDefault() },
+                    JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> Details(Guid id)

@@ -113,6 +113,7 @@ namespace Squirrel.Service.Services
 
             var commentTask = RepositoryContext.RetrieveAsync<Comment>(x => x.Id == model.Id);
             var userTask = RepositoryContext2.RetrieveAsync<User>(x => x.Username == model.Username);
+            var childsTask = RepositoryContext3.SearchAsync<Comment>(x => x.ParentId == model.Id);
 
             var comment = await commentTask;
             if (comment == null)
@@ -131,6 +132,18 @@ namespace Squirrel.Service.Services
                 comment.Post.Author.Id != user.Id && comment.Post.Topic.Owner.Id != user.Id)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_NoAccessForThisOp);
+                return;
+            }
+
+            var childs = await childsTask;
+            if (childs == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return;
+            }
+            if (childs.Any())
+            {
+                Result = OperationResult.Failed(ServiceMessages.CommentService_NotRemovable);
                 return;
             }
 
@@ -309,11 +322,79 @@ namespace Squirrel.Service.Services
             Result = OperationResult.Failed(RepositoryContext.OperationResult.Errors);
         }
 
+        public async Task<CommentStatisticsResultModel> Statistics(CommentStatisticsModel model)
+        {
+            var allCountTask =
+                RepositoryContext.CountAsync<Comment>(c =>
+                    c.Post.AuthorId == model.AuthorId || c.Post.Topic.OwnerId == model.AuthorId);
+
+            var unreadCountTask =
+                RepositoryContext2.CountAsync<Comment>(c => !c.IsReaded &&
+                    (c.Post.AuthorId == model.AuthorId || c.Post.Topic.OwnerId == model.AuthorId));
+
+            var unconfirmedCountTask =
+                RepositoryContext3.CountAsync<Comment>(c => !c.IsConfirmed &&
+                    (c.Post.AuthorId == model.AuthorId || c.Post.Topic.OwnerId == model.AuthorId));
+
+            var allCount = await allCountTask;
+            if (allCount == null)
+            {
+                Result = OperationResult.Failed(RepositoryContext.OperationResult.Errors);
+                return null;
+            }
+
+            var unreadCount = await unreadCountTask;
+            if (unreadCount == null)
+            {
+                Result = OperationResult.Failed(RepositoryContext2.OperationResult.Errors);
+                return null;
+            }
+
+            var unconfirmedCount = await unconfirmedCountTask;
+            if (unconfirmedCount == null)
+            {
+                Result = OperationResult.Failed(RepositoryContext3.OperationResult.Errors);
+                return null;
+            }
+
+            Result = OperationResult.Success;
+            return new CommentStatisticsResultModel
+            {
+                All = allCount.Value,
+                Unconfirmed = unconfirmedCount.Value,
+                Unread = unreadCount.Value,
+            };
+        }
+
+        public async Task<List<Topic>> Topics(CommentSearchModel model)
+        {
+            var searchExpression = GetSearchExpression(model);
+            var searchTask = RepositoryContext.SearchAsync(searchExpression);
+
+            var searchResult = await searchTask;
+            if (searchResult == null)
+            {
+                Result = OperationResult.Failed(RepositoryContext.OperationResult.Errors);
+                return null;
+            }
+
+            try
+            {
+                Result = OperationResult.Success;
+                return await searchResult.Select(c => c.Post.Topic).Distinct().ToListAsync();
+            }
+            catch (Exception)
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
+                return null;
+            }
+        }
+
 
 
         private static Expression<Func<Comment, bool>> GetSearchExpression(CommentSearchModel model)
         {
-            model.PostAuthorUsername = model.PostAuthorUsername.IsNotNothing() ? model.PostAuthorUsername.TrimAndLower() : string.Empty;
+            model.AuthorName = model.AuthorName.IsNotNothing() ? model.AuthorName.TrimAndLower() : string.Empty;
 
             return
                 x =>
@@ -323,11 +404,12 @@ namespace Squirrel.Service.Services
                      (x.User != null && x.User.Profile != null && x.User.Profile.Lastname.Contains(model.Name))) &&
                     (string.IsNullOrEmpty(model.Email) || x.Email.Contains(model.Email) ||
                      (x.User != null && x.User.Email.Contains(model.Email))) &&
-                    (!model.PostAuthorUserId.HasValue || x.Post.AuthorId == model.PostAuthorUserId) &&
-                    (string.IsNullOrEmpty(model.PostAuthorUsername) || x.Post.Author.Username == model.PostAuthorUsername) &&
+                    (!model.AuthorId.HasValue || x.Post.AuthorId == model.AuthorId || x.Post.Topic.OwnerId == model.AuthorId) &&
+                    (string.IsNullOrEmpty(model.AuthorName) || x.Post.Author.Username == model.AuthorName || x.Post.Topic.Owner.Username == model.AuthorName) &&
                     (!model.IsConfirmed.HasValue || x.IsConfirmed == model.IsConfirmed) &&
                     (!model.IsRead.HasValue || x.IsReaded == model.IsRead) &&
                     (!model.ParentId.HasValue || x.ParentId == model.ParentId) &&
+                    (!model.UserId.HasValue || x.UserId == model.UserId) &&
                     (!model.PostId.HasValue || x.PostId == model.PostId);
         }
     }

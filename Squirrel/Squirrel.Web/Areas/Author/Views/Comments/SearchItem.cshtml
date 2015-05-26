@@ -1,78 +1,66 @@
-﻿@using Squirrel.Domain.ViewModels
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.FarsiTools
 @model Squirrel.Domain.Enititis.Comment
 
-<table style="width: 100%; border-bottom: 1px solid #ddd;">
-    <tbody>
-        <tr>
-            @if (Model.UserId.HasValue)
-            {
-                if (Model.User.Profile != null)
-                {
-                    <td>
-                        @Html.DisplayFor(m => m.User.Profile.Firstname)
-                        @Html.DisplayFor(m => m.User.Profile.Lastname)
-                    </td>
-                }
-                <td>@Html.DisplayFor(m => m.User.Email)</td>
-            }
-            else
-            {
-                <td>@Html.DisplayFor(m => m.Name)</td>
-                <td>@Html.DisplayFor(m => m.Email)</td>
-            }
-            <td>
-                @Html.DisplayFor(m => m.CreateDate)
-            </td>
-        </tr>
-    </tbody>
-</table>
-@if (Model.ParentId.HasValue)
-{
-    <div style="text-align: center;">
-        <span>در جواب نظر</span>
+@{
+    var style = string.Empty;
+    if (!Model.IsReaded)
+    {
+        style = "unread ";
+    }
+    if (!Model.IsConfirmed)
+    {
+        style += "unconfirm";
+    }
+}
+
+<div class="flatbox comment-item @style" onclick="loadItem(this, '@Model.Id', '@Model.IsReaded.ToString()')">
+    <div class="signs">
+        <div class="glyphbox read">&#xe651</div>
+        <div class="glyphbox confirm">&#xe66c</div>
+    </div>
+
+    <div class="detailsrow">
+        <span class="topic">نام :</span>
         @if (Model.UserId.HasValue)
         {
-            if (Model.User.Profile != null)
-            {
-                @Html.DisplayFor(m => m.Parent.User.Profile.Firstname)
-                @Html.DisplayFor(m => m.Parent.User.Profile.Lastname)
-            }
+            @Model.User.ShowName()
         }
         else
         {
-            @Html.DisplayFor(m => m.Parent.Name)
+            @Html.DisplayFor(m => m.Name)
         }
-        <span>نوشته شده در</span>
-        @Html.DisplayFor(m => m.Parent.CreateDate)
     </div>
-}
-@Html.DisplayFor(m => m.Body)
-<hr />
-<div class="comment-opt-loader" style="text-align: right;">
-    <button type="button" class="btn btn-default btn-xs" onclick="loadEditComment('@Model.Id')">Edit</button>
-    <button type="button" class="btn btn-default btn-xs" onclick="loadAnswerComment('@Model.Id')">Answer</button>
-    <button type="button" class="btn btn-default btn-xs" onclick="loadRemoveComment('@Model.Id')">Remove</button>
-    @if (!Model.IsReaded)
+    <div class="divider-blank10"></div>
+    <div class="detailsrow">
+        <span class="topic">تاریخ :</span>
+        @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+    </div>
+    <div class="divider-blank10"></div>
+    <div class="detailsrow body">
+        <span class="topic">نظر :</span>
+        @Html.DisplayFor(m => m.Body).FaDigit()
+    </div>
+    @if (Model.ParentId.HasValue)
     {
-        <button type="button" class="btn btn-default btn-xs markasread-btn" onclick="markAsReadComment(this, '@Model.Id')">Mark as read</button>
+        <div class="divider-blank20"></div>
+        <div class="commentrow">
+            « در جواب نظر
+            <span class="value">
+                @if (Model.Parent.UserId.HasValue)
+                {
+                    @Model.Parent.User.ShowName()
+                }
+                else
+                {
+                    @Html.DisplayFor(m => m.Parent.Name)
+                }
+            </span>
+            نوشته شده در
+            <span class="value">
+                @Model.Parent.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+            </span>
+            »
+        </div>
     }
-    @if (Model.IsConfirmed)
-    {
-        <button type="button" class="btn btn-default btn-xs" style="display: none;" onclick="ConfirmComment(this, '@Model.Id')">Confirm</button>
-        <button type="button" class="btn btn-default btn-xs" onclick="UnconfirmComment(this, '@Model.Id')">Unconfirm</button>
-    }
-    else
-    {
-        <button type="button" class="btn btn-default btn-xs" onclick="ConfirmComment(this, '@Model.Id')">Confirm</button>
-        <button type="button" class="btn btn-default btn-xs" style="display: none;" onclick="UnconfirmComment(this, '@Model.Id')">Unconfirm</button>
-    }
-</div>
-<div class="comment-opt-edit" style="display: none">
-    @Html.Partial("Edit", new CommentEditModel { Body = Model.Body, Id = Model.Id })
-</div>
-<div class="comment-opt-remove" style="display: none">
-    @Html.Partial("Remove", new CommentRemoveModel { Id = Model.Id })
-</div>
-<div class="comment-opt-answer" style="display: none">
-    @Html.Partial("Answer", new CommentAddModel { ParentId = Model.Id, PostId = Model.PostId })
 </div>
