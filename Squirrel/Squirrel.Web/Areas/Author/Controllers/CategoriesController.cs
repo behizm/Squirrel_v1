@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
-using Squirrel.Utility.Async;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Filters;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Areas.Author.Controllers
 {
@@ -25,8 +25,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var tree = await CategoryService.FamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
+
+            ViewData.Model = new ErrorViewModel
+            {
+                Topic = "خطا",
+                Message = CategoryService.Result.Errors.FirstOrDefault(),
+            };
+            return PartialView("_HandledError");
         }
 
         public ActionResult Add()
@@ -59,85 +64,52 @@ namespace Squirrel.Web.Areas.Author.Controllers
             if (cat != null)
                 return PartialView(cat);
 
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
-        }
-
-        public async Task<ActionResult> Edit(Guid id)
-        {
-            var category = await CategoryService.FindByIdAsync(id);
-            if (category == null)
+            ViewData.Model = new ErrorViewModel
             {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new CategoryEditModel
-            {
-                Description = category.Description,
-                Id = category.Id,
-                Name = category.Name,
-                Parent = category.ParentId.HasValue ? category.Parent.Name : null,
+                Topic = "خطا",
+                Message = CategoryService.Result.Errors.FirstOrDefault(),
             };
-            return PartialView();
+            return PartialView("_HandledError");
         }
 
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
-        public async Task<ActionResult> Edit(CategoryEditModel model)
+        public async Task<JsonResult> Edit(CategoryEditModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
             await CategoryService.UpdateAsync(model);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت ویرایش شد.";
-                ViewBag.JsMethod = string.Format("EditCompleteReload('{0}');", model.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "گروه با موفقیت ویرایش شد.", id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
-        }
-
-        public async Task<ActionResult> Avatar(Guid id)
-        {
-            var category = await CategoryService.FindByIdAsync(id);
-            if (category == null)
-            {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new CategoryAvatarModel
-            {
-                Id = category.Id,
-            };
-            return PartialView();
+            return Json(new { result = false, message = CategoryService.Result.Errors.FirstOrDefault(), id = model.Id },
+                JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
-        public async Task<ActionResult> Avatar(CategoryAvatarModel model)
+        public async Task<JsonResult> Avatar(CategoryAvatarModel model)
         {
             if (!ModelState.IsValid || !model.FileId.HasValue)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
             await CategoryService.ChangeAvatarAsync(model.Id, model.FileId.Value);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت ویرایش شد.";
-                ViewBag.JsMethod = string.Format("EditCompleteReload('{0}');", model.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "آواتار گروه با موفقیت ویرایش شد.", id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = false, message = CategoryService.Result.Errors.FirstOrDefault(), id = model.Id },
+                JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> SimpleTree(string targetKeyName)
@@ -146,8 +118,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var tree = await CategoryService.SimpleFamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
+
+            ViewData.Model = new ErrorViewModel
+            {
+                Topic = "خطا",
+                Message = CategoryService.Result.Errors.FirstOrDefault(),
+            };
+            return PartialView("_HandledError");
         }
 
         public async Task<ActionResult> SimpleTreeByKey(string key)
@@ -156,8 +133,13 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var tree = await CategoryService.SimpleFamilyTreeAsync();
             if (tree != null)
                 return PartialView(tree);
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
+
+            ViewData.Model = new ErrorViewModel
+            {
+                Topic = "خطا",
+                Message = CategoryService.Result.Errors.FirstOrDefault(),
+            };
+            return PartialView("_HandledError");
         }
 
 

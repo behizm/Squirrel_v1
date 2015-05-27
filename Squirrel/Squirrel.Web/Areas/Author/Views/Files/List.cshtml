@@ -1,37 +1,46 @@
 ﻿@using Squirrel.Domain.ViewModels
 @model List<Squirrel.Domain.Enititis.File>
 
-<table class="table">
-    <tbody>
-        @foreach (var file in Model)
+<div class="flatbox">
+    @if (Model.Any())
+    {
+        <table class="table hover-row">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>نام فایل</th>
+                    <th>گروه</th>
+                    <th>دسترسی</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model)
+                {
+                    var item = file;
+                    <tr onclick="loadFileDetails('@item.Id')">
+                        <td>@Html.DisplayFor(m => item.Name)</td>
+                        <td style="direction: ltr;text-align: right;">
+                            @Html.DisplayFor(m => item.Filename)
+                        </td>
+                        <td>@Html.DisplayFor(m => item.Category)</td>
+                        <td>
+                            <span>
+                                @(item.IsPublic ? "عمومی" : "خصوصی")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        if (ViewBag.Paging != null)
         {
-            var item = file;
-            <tr>
-                <td>
-                    <span style="border-bottom: 1px solid;" onclick="LoadDetailsPure('@file.Id')">
-                        @Html.DisplayFor(m => item.Name)
-                    </span>
-                </td>
-                <td>@Html.DisplayFor(m => item.Filename)</td>
-                <td>@Html.DisplayFor(m => item.Category)</td>
-                <td>
-                    @if (item.IsPublic)
-                    {
-                        <span class="isnotadmin" style="display: none;" onclick="">Private</span>
-                        <span class="isadmin" onclick="">Public</span>
-                    }
-                    else
-                    {
-                        <span class="isnotadmin" onclick="">Private</span>
-                        <span class="isadmin" style="display: none;" onclick="">Public</span>
-                    }
-                </td>
-            </tr>
+            @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
         }
-    </tbody>
-</table>
-
-@if (ViewBag.Paging != null)
-{
-    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
-}
+    }
+    else
+    {
+        <div class="no-content">
+            موردی وجود ندارد.
+        </div>
+    }
+</div>

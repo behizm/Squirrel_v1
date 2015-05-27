@@ -18,7 +18,7 @@ namespace Squirrel.Domain.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         public bool? IsPublic { get; set; }
 
-        [Display(Name = @"دسته بندی")]
+        [Display(Name = @"گروه")]
         public string Category { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "FileAddModel_FileAddress_Required", ErrorMessage = null)]
@@ -75,11 +75,19 @@ namespace Squirrel.Domain.ViewModels
         public Guid? Id { get; set; }
         public DateTime? CreateDateFrom { get; set; }
         public DateTime? CreateDateTo { get; set; }
+
+        [Display(Name = @"نام")]
         public string Name { get; set; }
+
+        [Display(Name = @"نام فایل")]
         public string Filename { get; set; }
         public int? SizeFrom { get; set; }
         public int? SizeTo { get; set; }
+
+        [Display(Name = @"نوع")]
         public FileType? Type { get; set; }
+
+        [Display(Name = @"گروه")]
         public string Category { get; set; }
         public bool? IsPublic { get; set; }
         public string Username { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Filters;
@@ -12,78 +13,44 @@ namespace Squirrel.Web.Areas.Admin.Controllers
 {
     public class CategoriesController : BaseController
     {
-        public async Task<ActionResult> Remove(Guid id)
-        {
-            var category = await CategoryService.FindByIdAsync(id);
-            if (category == null)
-            {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new CategoryRemoveModel
-            {
-                Id = category.Id
-            };
-            return PartialView();
-        }
-
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Remove(CategoryRemoveModel model)
+        public async Task<JsonResult> Remove(CategoryRemoveModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
             await CategoryService.DeleteAsync(model.Id);
             if (CategoryService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت حذف شد.";
-                ViewBag.JsMethod = "RemoveCompleteReload();";
-                return PartialView("_Message");
-            }
-
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
-        }
-
-        public async Task<ActionResult> Replace(Guid id)
-        {
-            var category = await CategoryService.FindByIdAsync(id);
-            if (category == null)
-            {
-                ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new CategoryReplaceModel
-            {
-                Id = category.Id
-            };
-            return PartialView();
+                return Json(new { result = true, message = "گروه مورد نظر با موفقیت حذف شد.", id = model.Id },
+                    JsonRequestBehavior.AllowGet);
+            } 
+            
+            return Json(new { result = false, message = CategoryService.Result.Errors.FirstOrDefault(), id = model.Id },
+                 JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
-        public async Task<ActionResult> Replace(CategoryReplaceModel model)
+        public async Task<JsonResult> Replace(CategoryReplaceModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
             var cat= await CategoryService.ReplaceAsync(model);
             if (cat != null)
             {
-                ViewBag.SuccessMessage = "گروه با موفقیت جایگزین شد.";
-                ViewBag.JsMethod = string.Format("ReplaceCompleteReload('{0}');", cat.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "گروه مورد نظر با جایگزین حذف شد.", id = model.Id },
+                    JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = CategoryService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = false, message = CategoryService.Result.Errors.FirstOrDefault(), id = model.Id },
+                JsonRequestBehavior.AllowGet);
         }
     }
 }

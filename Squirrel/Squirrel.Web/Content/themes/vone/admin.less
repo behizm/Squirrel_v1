@@ -313,6 +313,82 @@ html {
             }
         }
     }
+
+    &.hover-row {
+        & > tbody {
+            & > tr {
+                cursor: pointer;
+                .Transition(background-color;linear;.1s);
+
+                &:hover {
+                    background-color: @hoverLightYellow;
+                }
+            }
+        }
+    }
+}
+
+.filebox {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    padding: 5px;
+    border: 1px solid @grayLight5;
+    border-radius: 3px;
+    background-color: @white;
+    cursor: pointer;
+
+    .chooser {
+        display: block;
+        float: right;
+        font-size: .6em;
+        line-height: 32px;
+        background-color: @grayLight6;
+        padding: 0 10px;
+        margin-left: 10px;
+        color: @grayDark6;
+        border-radius: 3px;
+    }
+
+    .val {
+        display: block;
+        font-size: .65em;
+        line-height: 32px;
+        height: 32px;
+        -ms-word-break: break-all;
+        word-break: break-all;
+        overflow: hidden;
+        color: @grayDark4;
+    }
+
+    input[type="file"] {
+        overflow: hidden;
+        height: 0;
+        width: 0;
+        border: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        opacity: 0;
+    }
+
+    &.small {
+        padding: 3px;
+
+        .chooser {
+            line-height: 24px;
+            height: 24px;
+        }
+
+        .val {
+            line-height: 24px;
+        }
+    }
+
+    &:focus {
+        outline: none;
+        border-color: @grayLight3;
+    }
 }
 
 .divider-blank10 {
@@ -646,6 +722,62 @@ html {
 
         .msg-text {
             color: @grayDark3;
+        }
+    }
+}
+
+.progressbar-con {
+    position: relative;
+    padding-left: 22px;
+    padding-top: 7px;
+
+    .glyphbox {
+        position: absolute;
+        cursor: pointer;
+        .absolutePostion(0,auto,auto,0);
+        font-size: 22px;
+        color: @grayDark6;
+
+        &.success {
+            font-size: 18px;
+            line-height: 22px;
+            cursor: default;
+            color: @mint1Color;
+            display: none;
+        }
+    }
+
+    .progressbar {
+        background-color: @white;
+        padding: 2px;
+        border-radius: 3px;
+        border: 1px solid @grayLight5;
+
+        .loader-con {
+            overflow: hidden;
+
+            .loader {
+                width: 0;
+                height: 3px;
+                background-color: @mint1Color;
+                .Transition(width;linear;.1s);
+            }
+        }
+    }
+
+    .percent {
+        font-size: .7em;
+        line-height: 20px;
+        text-align: left;
+    }
+
+    &.success {
+        .glyphbox {
+            display: none;
+
+            &.success {
+                display: block;
+            }
         }
     }
 }
@@ -1176,6 +1308,19 @@ ul.ui-menu {
 
             .childs {
                 padding-right: 20px;
+            }
+        }
+
+        .avatar-row {
+            text-align: center;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            border-radius: 52px;
+            border: 4px solid @white;
+
+            img {
+                height: 52px;
             }
         }
 

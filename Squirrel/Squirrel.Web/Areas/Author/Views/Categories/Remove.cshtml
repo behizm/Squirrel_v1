@@ -1,0 +1,15 @@
+﻿@model Squirrel.Domain.ViewModels.CategoryRemoveModel
+
+@using (Ajax.BeginForm("Remove", "Categories", new { Area = "Admin" },
+    new AjaxOptions { OnFailure = "onRemoveCategoryError", OnSuccess = "onRemoveCategorySuccess" }, 
+    new { id = "cat_remove_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#cat_remove_form");
+    })
+</script>

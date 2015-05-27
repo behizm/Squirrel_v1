@@ -45,8 +45,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var items = await itemsTask;
             if (items == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = FileService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var count = await countTask;
@@ -167,40 +171,42 @@ namespace Squirrel.Web.Areas.Author.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(FileAddModel model)
+        public async Task<JsonResult> Add(FileAddModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                 JsonRequestBehavior.AllowGet);
             }
 
             var filePath = System.Web.HttpContext.Current.Server.MapPath(model.FileAddress);
             if (!System.IO.File.Exists(filePath))
             {
-                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
-                return PartialView(model);
+                return Json(new { result = false, message = "فایل خود را مجددا آپلود کنید." },
+                 JsonRequestBehavior.AllowGet);
             }
             var fileInfo = new FileInfo(filePath);
             var fileType = FileService.GetFileTypeByFileName(fileInfo.Name);
             if (fileType == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView(model);
+                return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
             }
 
             var maxSize = FileService.GetFileTypeSize(fileType.Value);
             if (maxSize == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView(model);
+                return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
             }
             if (fileInfo.Length > maxSize)
             {
-                ViewBag.ErrorMessage =
+                var errorMessage =
                     string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
                         fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit());
-                return PartialView(model);
+
+                return Json(new { result = false, message = errorMessage },
+                 JsonRequestBehavior.AllowGet);
             }
 
             const string mainPath = "~/Content/Files";
@@ -208,15 +214,15 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var newDirPath = FileService.MoveFromTempToMain(filePath, physicalMainPath);
             if (newDirPath == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView(model);
+                return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
             }
             var newFilePath = string.Format("{0}/{1}", mainPath, newDirPath);
             var physicalNewFilePath = System.Web.HttpContext.Current.Server.MapPath(newFilePath);
             if (!System.IO.File.Exists(physicalNewFilePath))
             {
-                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
-                return PartialView(model);
+                return Json(new { result = false, message = "فایل خود را مجددا آپلود کنید." },
+                 JsonRequestBehavior.AllowGet);
             }
             var newFileInfo = new FileInfo(physicalNewFilePath);
 
@@ -228,13 +234,12 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await FileService.AddAsync(model);
             if (FileService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "فایل با موفقیت افزوده شد.";
-                ViewBag.JsMethod = "ReloadList()";
-                return PartialView("_Message");
+                return Json(new { result = true, message = "فایل با موفقیت افزوده شد." },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> Details(Guid id)

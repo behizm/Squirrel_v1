@@ -1,44 +1,105 @@
-﻿@using Squirrel.Utility.FarsiTools
-@model Squirrel.Domain.Enititis.Category
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@model Category
 
-<p>
-    @Html.DisplayNameFor(m => m.Name) :
-    <b>@Html.DisplayFor(m => m.Name)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Parent) :
-    @if (Model.ParentId.HasValue)
-    {
-        <b>@Html.DisplayFor(m => m.Parent.Name)</b>
-    }
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Description) :
-    <b>@Html.DisplayFor(m => m.Description)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Avatar) :
-    @if (Model.AvatarId.HasValue)
-    {
-        <b>@Html.DisplayFor(m => m.Avatar.Address)</b>
-    }
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.CreateDate) :
-    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
-</p>
-
-<div>
-    <button class="btn btn-default" onclick="LoadEditForm('@Model.Id')">Edit</button>
-    <button class="btn btn-default" onclick="LoadAvatar('@Model.Id')">Avatar</button>
-    @if (User.Identity.IsAdmin)
-    {
-        <button class="btn btn-default" onclick="LoadRemoveForm('@Model.Id')">Remove</button>
-        <button class="btn btn-default" onclick="LoadReplaceForm('@Model.Id')">Replace</button>
-    }
+<div class="topic-row">
+    جزئیات گروه
 </div>
-<br />
+@if (Model.AvatarId.HasValue)
+{
+    <div class="divider-blank15"></div>
+    <div class="avatar-row">
+        <img src="@Url.Content(Model.Avatar.Address)" />
+    </div>
+}
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">نام :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Name)
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">پدر :</span>
+    <span class="value">
+        @if (Model.ParentId.HasValue)
+        {
+            @Html.DisplayFor(m => m.Parent.Name)
+        }
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">توضیحات :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Description)
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">تاریخ ساخت :</span>
+    <span class="value">
+        @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div>
+    <button class="button small submit" onclick="loadEditCategory()">ویرایش</button>
+    <button class="button small submit" onclick="loadImagesPopup()">آواتار</button>
+</div>
+
+<div class="divider-blank50"></div>
+
+@if (User.Identity.IsAdmin)
+{
+    <div class="topic-row">
+        امکانات مدیر
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button class="button small alert" onclick="loadReplaceCategory()">جایگزینی</button>
+        <button class="button small error" onclick="loadRemoveCategory()">حذف</button>
+    </div>
+}
+
+<div id="edit_category_form_con" style="display: none;">
+    @Html.Partial("Edit", new CategoryEditModel
+    {
+        Id = Model.Id,
+        Description = Model.Description,
+        Name = Model.Name,
+        Parent = Model.ParentId.HasValue ? Model.Parent.Name : string.Empty,
+    })
+</div>
+
+<div id="avatar_category_form_con">
+    @Html.Partial("Avatar", new CategoryAvatarModel { Id = Model.Id, FileId = Model.AvatarId })
+</div>
+
+<div id="replace_category_form_con" style="display: none;">
+    @Html.Partial("Replace", new CategoryReplaceModel { Id = Model.Id, CategoryName = Model.Name })
+</div>
+
+<div id="remove_category_form_con" style="display: none;">
+    @Html.Partial("Remove", new CategoryRemoveModel { Id = Model.Id })
+</div>
+
+<script type="text/javascript">
+    var categoryAvatarImage = '@Guid.NewGuid()';
+    $(function () {
+        $(document).on('onFilePopupChoice', categoryAvatarChoiceHandler);
+    });
+
+    function loadImagesPopup() {
+        loadPopupFileChioce_FixedType(categoryAvatarImage, 'عکس مورد نظر خود را انتخاب کنید.', '@FileType.Image', 1);
+    }
+
+    function categoryAvatarChoiceHandler(e) {
+        if (categoryAvatarImage == e.popupId) {
+            $('#category_avatar_id').val(e.id);
+            $('#cat_avatar_form').submit();
+        }
+    }
+</script>

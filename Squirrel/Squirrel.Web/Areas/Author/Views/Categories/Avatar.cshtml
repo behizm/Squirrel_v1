@@ -1,30 +1,18 @@
 ﻿@model Squirrel.Domain.ViewModels.CategoryAvatarModel
-<h4>عکس گروه</h4>
 
-@Html.Partial("_Message")
-
-<div id="category_avatar_con">
-    
-</div>
-
-@using (Ajax.BeginForm("Avatar", "Categories", null, new AjaxOptions { UpdateTargetId = "option_con_2" }, new { id = "cat_details_form" }))
+@using (Ajax.BeginForm("Avatar", "Categories", null, 
+    new AjaxOptions { OnFailure = "onAvatarCategoryError", OnSuccess = "onAvatarCategorySuccess" }, 
+    new { id = "cat_avatar_form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)
     @Html.HiddenFor(m => m.FileId, new { id = "category_avatar_id" })
     @Html.ValidationMessageFor(m => m.FileId)
-    
-    <p>
-        <button type="submit" class="btn btn-default">ثبت</button>
-        <button type="button" class="btn btn-default" onclick="$('#option_con_2').html('');">انصراف</button>
-    </p>
 }
 
 <script type="text/javascript">
     $(function () {
-        $.validator.unobtrusive.parse("#cat_details_form");
-        $("#cat_details_form").data("validator").settings.ignore = "";
-
-        LoadRequestFile('category_avatar');
+        $.validator.unobtrusive.parse("#cat_avatar_form");
+        $("#cat_avatar_form").data("validator").settings.ignore = "";
     })
 </script>

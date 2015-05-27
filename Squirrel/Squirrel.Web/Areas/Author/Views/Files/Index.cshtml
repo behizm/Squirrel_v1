@@ -2,22 +2,39 @@
     ViewBag.Title = "مدیریت فایل";
 }
 
-<h2>فایل ها</h2>
-<hr />
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
 
-<div class="col-lg-6">
-    <div>
-        <button type="button" class="btn btn-default" onclick="LoadAddFile()">+</button>
-    </div>
-    <br />
+<div class="col-lg-12">
     @Html.Partial("SearchFilter")
-    <div id="list_con"></div>
 </div>
 
-<div class="col-lg-6">
-    <div id="option_con_1"></div>
-    <div id="option_con_2"></div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
 </div>
+
+<div class="col-lg-12">
+    <div id="searchresult_list_con"></div>
+</div>
+
+
+@*<h2>فایل ها</h2>
+    <hr />
+
+    <div class="col-lg-6">
+        <div>
+            <button type="button" class="btn btn-default" onclick="LoadAddFile()">+</button>
+        </div>
+        <br />
+        @Html.Partial("SearchFilter")
+        <div id="list_con"></div>
+    </div>
+
+    <div class="col-lg-6">
+        <div id="option_con_1"></div>
+        <div id="option_con_2"></div>
+    </div>*@
 
 @section scripts
 {
@@ -25,79 +42,112 @@
     @Styles.Render("~/Content/Autocomplete")
 
     <script type="text/javascript">
-    $(function () {
-        LoadList(1);
-    });
-
-    function ReloadList() {
-        $('#file_search_from').submit();
-    }
-
-    function LoadList(page) {
-        $('#searchPage').val(page);
-        $('#file_search_from').submit();
-    }
-
-    function LoadAddFile() {
-        $.ajax({
-            url: '@Url.Action("add")',
-            success: function (r) {
-                $('#option_con_2').html('');
-                $('#option_con_1').html(r);
-            }
+        $(function() {
+            searchingFile(1);
         });
-    }
 
-    function LoadUpload() {
-        $.ajax({
-            url: '@Url.Action("resetupload")',
-            success: function (r) {
-                $('#upload_file_con').html(r);
+        function reloadSearchingFile() {
+            $('#file_search_from').submit();
+        }
+
+        function searchingFile(page) {
+            $('#searchPage').val(page);
+            $('#file_search_from').submit();
+        }
+
+        function loadAddFile() {
+            $.ajax({
+                url: '@Url.Action("add")',
+                error: function() {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری فرم افزودن فایل خطا رخ داد.', 'error');
+                },
+                success: function(r) {
+                    fillSecondryContent(r);
+                    showSecondryContent();
+                }
+            });
+        }
+
+        function onAddFileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام افزودن فایل خطا رخ داد.', 'error');
+        }
+
+        function onAddFileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                searchingFile(1);
+                hideAndClearSecondryContent();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
-        });
-    }
+        }
 
-    function LoadDetailsPure(id) {
-        $.ajax({
-            url: '@Url.Action("Details", "Files")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_1').html(r);
-                $('#option_con_2').html('');
-            }
-        });
-    }
+        ///////////////
+        ///////////////
+        ///////////////
+        ///////////////
+        ///////////////
 
-    function LoadDetails(id) {
-        $.ajax({
-            url: '@Url.Action("Details", "Files")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_1').html(r);
-            }
-        });
-    }
+        function LoadAddFile() {
+            $.ajax({
+                url: '@Url.Action("add")',
+                success: function(r) {
+                    $('#option_con_2').html('');
+                    $('#option_con_1').html(r);
+                }
+            });
+        }
 
-    function LoadEdit(id) {
-        $.ajax({
-            url: '@Url.Action("Edit", "Files")',
-            data: { id: id },
-            success: function (r) {
-                $('#option_con_2').html(r);
-            }
-        });
-    }
+        function LoadUpload() {
+            $.ajax({
+                url: '@Url.Action("resetupload")',
+                success: function(r) {
+                    $('#upload_file_con').html(r);
+                }
+            });
+        }
 
-    function CompleteEdit(id) {
-        ReloadList();
-        LoadDetails(id);
-    }
-
-    function LoadDelete(id) {
-        $.ajax({
-            url: '@Url.Action("Delete", "Files")',
+        function LoadDetailsPure(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Files")',
                 data: { id: id },
-                success: function (r) {
+                success: function(r) {
+                    $('#option_con_1').html(r);
+                    $('#option_con_2').html('');
+                }
+            });
+        }
+
+        function LoadDetails(id) {
+            $.ajax({
+                url: '@Url.Action("Details", "Files")',
+                data: { id: id },
+                success: function(r) {
+                    $('#option_con_1').html(r);
+                }
+            });
+        }
+
+        function LoadEdit(id) {
+            $.ajax({
+                url: '@Url.Action("Edit", "Files")',
+                data: { id: id },
+                success: function(r) {
+                    $('#option_con_2').html(r);
+                }
+            });
+        }
+
+        function CompleteEdit(id) {
+            ReloadList();
+            LoadDetails(id);
+        }
+
+        function LoadDelete(id) {
+            $.ajax({
+                url: '@Url.Action("Delete", "Files")',
+                data: { id: id },
+                success: function(r) {
                     $('#option_con_2').html(r);
                 }
             });
@@ -112,7 +162,7 @@
             $.ajax({
                 url: '@Url.Action("Replace", "Files")',
                 data: { id: id },
-                success: function (r) {
+                success: function(r) {
                     $('#option_con_2').html(r);
                 }
             });

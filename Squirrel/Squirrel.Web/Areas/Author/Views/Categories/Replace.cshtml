@@ -1,0 +1,61 @@
+﻿@model Squirrel.Domain.ViewModels.CategoryReplaceModel
+
+<div class="topic-row">
+    جایگزینی گروه
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">گروه</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.CategoryName)
+    </span>
+    <span class="title">با گروه انتخابی زیر جایگزین شود.</span>
+</div>
+<div class="divider-blank15"></div>
+
+@using (Ajax.BeginForm("Replace", "Categories", new { Area = "Admin" },
+    new AjaxOptions { OnFailure = "onReplaceCategoryError", OnSuccess = "onReplaceCategorySuccess" },
+    new { id = "cat_replace_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-row">
+        @Html.LabelFor(m => m.ReplaceName)
+        @Html.TextBoxFor(m => m.ReplaceName, new { @id = "name_replace", @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.ReplaceName)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">ثبت</button>
+        <a class="button small" onclick="restoreSecondryContent()">انصراف</a>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#cat_replace_form");
+
+        $("#name_replace").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("NameJson", "Categories", new { area = "Author" })",
+                    dataType: "json",
+                    data: { id: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.Name,
+                                ID: item.Id
+                            };
+                        }));
+                    },
+                    error: function () { GlobalMessage(GetNowTimeFa(), 'خطا در یافتن گروه', 'error'); }
+                });
+            },
+            minLength: 2,
+        });
+    })
+</script>

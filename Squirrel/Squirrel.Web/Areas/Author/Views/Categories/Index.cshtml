@@ -20,14 +20,14 @@
     @Styles.Render("~/Content/Autocomplete")
 
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             reloadTree();
         });
 
         function reloadTree() {
             $.ajax({
                 url: '@Url.Action("Tree", "Categories")',
-                success: function (r) {
+                success: function(r) {
                     $('#tree_con').html(r);
                 },
             });
@@ -36,10 +36,10 @@
         function loadAddForm() {
             $.ajax({
                 url: '@Url.Action("Add", "Categories")',
-                error: function () {
+                error: function() {
                     GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری فرم افزودن گروه خطا رخ داد.', 'error');
                 },
-                success: function (r) {
+                success: function(r) {
                     fillSecondryContent(r);
                     showSecondryContent();
                 }
@@ -56,102 +56,89 @@
             }
         }
 
-        ///////////////////
-        ///////////////////
-        ///////////////////
-        ///////////////////
-        ///////////////////
-
-        function LoadDetails(id) {
+        function loadCategoryDetails(id) {
             $.ajax({
                 url: '@Url.Action("Details", "Categories")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_1').html(r);
-                }
-            });
-        }
-
-        function LoadDetailsFromList(id) {
-            $.ajax({
-                url: '@Url.Action("Details", "Categories")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_1').html(r);
-                    $('#option_con_2').html('');
-                }
-            });
-        }
-
-        function LoadEditForm(id) {
-            $.ajax({
-                url: '@Url.Action("Edit", "Categories")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
-        }
-
-        function EditCompleteReload(id) {
-            reloadTree();
-            LoadDetails(id);
-        }
-
-        function LoadRemoveForm(id) {
-            $.ajax({
-                url: '@Url.Action("Remove", "Categories", new {area = "admin"})',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
-        }
-
-        function RemoveCompleteReload() {
-            reloadTree();
-            $('#option_con_1').html('');
-        }
-
-        function LoadReplaceForm(id) {
-            $.ajax({
-                url: '@Url.Action("Replace", "Categories", new {area = "admin"})',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
-        }
-
-        function ReplaceCompleteReload(id) {
-            reloadTree();
-            LoadDetails(id);
-        }
-
-        function LoadAvatar(id) {
-            $.ajax({
-                url: '@Url.Action("Avatar", "Categories")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
-        }
-
-        function LoadRequestFile(target) {
-            $.ajax({
-                url: '@Url.Action("RequestFile", "Files")',
-                data: {
-                    Page: 1,
-                    TragetKey: 'category_avatar',
-                    Type: '@FileType.Image',
-                    IsFixedType: true,
+                error: function() {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام دریافت اطلاعات گروه خطا رخ داد.', 'error');
                 },
-                type: "POST",
-                success: function (r) {
-                    $('#' + target + '_con').html(r);
+                data: { id: id },
+                success: function(r) {
+                    fillSecondryContent(r);
+                    showSecondryContent();
                 }
             });
+        }
+
+        function loadEditCategory() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#edit_category_form_con').html());
+            showSecondryContent();
+        }
+
+        function onEditCategoryError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش اطلاعات گروه خطا رخ داد.', 'error');
+        }
+
+        function onEditCategorySuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadCategoryDetails(data.id);
+                reloadTree();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function onAvatarCategoryError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش آواتار گروه خطا رخ داد.', 'error');
+        }
+
+        function onAvatarCategorySuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadCategoryDetails(data.id);
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function loadReplaceCategory() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#replace_category_form_con').html());
+            showSecondryContent();
+        }
+
+        function onReplaceCategoryError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام جایگزینی گروه خطا رخ داد.', 'error');
+        }
+
+        function onReplaceCategorySuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                hideAndClearSecondryContent();
+                reloadTree();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function loadRemoveCategory() {
+            showPopupAlert('آیا مطمئن هستید که این گروه پاک شود؟', '$("#cat_remove_form").submit();', '');
+        }
+
+        function onRemoveCategoryError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام حذف گروه خطا رخ داد.', 'error');
+        }
+
+        function onRemoveCategorySuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                hideAndClearSecondryContent();
+                reloadTree();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
     </script>
 }

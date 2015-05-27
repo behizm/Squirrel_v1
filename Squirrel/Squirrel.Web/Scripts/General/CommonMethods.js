@@ -169,10 +169,44 @@ function cancelPopupBox() {
         $('.popup-con .dynamic-content').find('.content').html('');
     }, 200);
 }
+
+function loadPopupFileChioce(uniqueId, title, page) {
+    $.ajax({
+        url: '/Author/Files/Popup',
+        data: {
+            Page: page,
+        },
+        type: "POST",
+        success: function (r) {
+            showPopupBox(uniqueId, title, r);
+        }
+    });
+}
+
+function loadPopupFileChioce_FixedType(uniqueId, title, fileType, page) {
+    $.ajax({
+        url: '/Author/Files/Popup',
+        data: {
+            Page: page,
+            Type: fileType,
+            IsFixedType: true,
+        },
+        type: "POST",
+        success: function (r) {
+            showPopupBox(uniqueId, title, r);
+        }
+    });
+}
 // Popup <<< end.
 
-(function ($) {
+// File Box >>> start :
+function onfileBoxClick(e) {
+    var file = $(e).find('input[type="file"]')[0];
+    file.click();
+}
+// File Box <<< end.
 
+(function ($) {
     $(function () {
         // Material Textbox >>> start :
         $('.materialtext .textbox, .materialtext .textarea').each(function (i) {

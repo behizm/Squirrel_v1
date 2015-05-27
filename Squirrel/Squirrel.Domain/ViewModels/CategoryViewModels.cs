@@ -8,16 +8,16 @@ namespace Squirrel.Domain.ViewModels
 {
     public class CategoryAddModel
     {
-        [Display(Name = @"نام گروه")]
+        [Display(Name = @"نام")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
         public string Name { get; set; }
 
-        [Display(Name = @"نام پدر گروه")]
+        [Display(Name = @"نام پدر")]
         [StringLength(50, MinimumLength = 2, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLengthBound", ErrorMessage = null)]
         public string Parent { get; set; }
 
-        [Display(Name = @"توضیحات گروه")]
+        [Display(Name = @"توضیحات")]
         [StringLength(300, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
         public string Description { get; set; }
     }
@@ -35,6 +35,8 @@ namespace Squirrel.Domain.ViewModels
     public class CategoryReplaceModel
     {
         public Guid Id { get; set; }
+
+        public string CategoryName { get; set; }
 
         [Display(Name = @"گروه جایگزین")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]

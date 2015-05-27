@@ -2,41 +2,84 @@
 @using Squirrel.Utility.Helpers
 @model Squirrel.Domain.ViewModels.FileSearchModel
 
-@using (Ajax.BeginForm("Search", "Files", null, new AjaxOptions { UpdateTargetId = "list_con" }, new { id = "file_search_from" }))
-{
-    <div class="form-group">
-        @Html.AntiForgeryToken()
-        @Html.Hidden("searchPage", 1)
-
-        @Html.TextBoxFor(m => m.Name, new { placeholder = "نام" })
-        @Html.TextBoxFor(m => m.Filename, new { placeholder = "نام فایل" })
-        @Html.TextBoxFor(m => m.Category, new { placeholder = "دسته بندی", id = "category_search" })
-        @Html.DropDownListFor(m => m.Type, typeof(FileType).ToSelectList(true), new { placeholder = "نوع" })
-        <button type="submit" class="btn btn-default">جستجو</button>
+<div class="box-uptitle">
+    <div class="text">لیست فایلها</div>
+    <div class="links">
+        <span class="button small tile" onclick="loadAddFile()">
+            <span class="glyphbox">&#xe6b9</span>
+        </span>
     </div>
-}
+    <div class="clearbox"></div>
+</div>
 
-@section scripts
-{
-    <script type="text/javascript">
-        $(function () {
-            $("#category_search").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "@Url.Action("CategoryJson", "Files")",
-                        dataType: "json",
-                        data: { id: request.term },
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return {
-                                    label: item.Name,
-                                };
-                            }));
-                        },
-                    });
-                },
-                minLength: 2,
-            });
-        })
-    </script>
-}
+<div class="flatbox">
+    @using (Ajax.BeginForm("Search", "Files", null,
+        new AjaxOptions { UpdateTargetId = "searchresult_list_con" },
+        new { id = "file_search_from" }))
+    {
+        <div class="form-group">
+            @Html.AntiForgeryToken()
+            @Html.Hidden("searchPage", 1)
+
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Name)
+                    @Html.TextBoxFor(m => m.Name, new { @class = "textbox", @id = "searchFileForm_name" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Filename)
+                    @Html.TextBoxFor(m => m.Filename, new { @class = "textbox", @id = "searchFileForm_filename" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Category)
+                    @Html.TextBoxFor(m => m.Category, new { @class = "textbox", @id = "searchFileForm_category" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Type)
+                    @Html.DropDownListFor(m => m.Type, typeof(FileType).ToSelectList(true),
+                        new { @class = "select", @id = "searchFileForm_type" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#searchFileForm_name').on('input', function () {
+            searchingFile(1);
+        });
+        $('#searchFileForm_filename').on('input', function () {
+            searchingFile(1);
+        });
+        $('#searchFileForm_category').on('input', function () {
+            searchingFile(1);
+        });
+        $('#searchFileForm_type').on('change', function () {
+            searchingFile(1);
+        });
+
+        $("#searchFileForm_category").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("CategoryJson", "Files")",
+                    dataType: "json",
+                    data: { id: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.Name,
+                            };
+                        }));
+                    },
+                });
+            },
+            minLength: 2,
+        });
+    })
+</script>
+

@@ -1,13 +1,31 @@
 ﻿@*@Html.Hidden("FileAddress")*@
 
 <div>
-    <div id="upload_control">
-        <span>Select file(s) to upload :</span>
-        <input id="fileUpload" type="file" multiple="multiple" />
+    <div id="upload_control" class="form-row">
+        <label>فایل مورد نظر برای آپلود را مشخص کنید.</label>
+        <div class="filebox" onclick="onfileBoxClick(this)">
+            <span class="chooser">انتخاب کنید</span>
+            <span class="val">فایلی انتخاب نشده</span>
+            <input id="fileUpload" type="file" multiple="multiple" />
+        </div>
     </div>
-    <div id="upload_errormessage" style="color: orangered; display: none;">
-        <span></span>
+    <div class="form-row">
+        <div class="validation" id="upload_errormessage"></div>
     </div>
+
+    <div class="progressbar-con" id="upload_progressbar" style="display: none">
+        <div class="glyphbox cancel" onclick="cancelUpload()">&#xe680</div>
+        <div class="glyphbox success">&#xe66c</div>
+        <div class="progressbar">
+            <div class="loader-con">
+                <div class="loader"></div>
+            </div>
+        </div>
+        <div class="percent"></div>
+    </div>
+    @*<div id="upload_errormessage" style="color: orangered; display: none;">
+            <span></span>
+        </div>*@
     <div id="upload_successmessage" style="display: none;">
         <p></p>
         <span style="color: skyblue; "></span>
@@ -27,59 +45,65 @@
     var fileName;
 
     $(document).ready(function () {
-        var timeout;
+        //var timeout;
         $('#fileUpload').bind('change', function () {
             $('#FileAddress').val('');
             fileName = this.files[0].name;
             var extension = this.files[0].name.split('.').pop();
             var size = this.files[0].size;
+            $(this).parent().find('.val').text(fileName);
             ShowUploadMessage('', '');
-            timeout = setTimeout(function () {
-                CheckFileValidate(extension, size);
-            }, 1000);
+            checkFileValidate(extension, size);
         });
 
-        $('#stop_upload').click(function () {
-            $('#uploadProgress span').text('check stoped.');
-            $('#uploadProgress p').text('');
-            $('#fileUpload').val('');
-            clearTimeout(timeout);
-        });
-
-        $('#reset_upload').click(function () {
-            $('#uploadProgress span').text('upload stoped.');
-            $('#uploadProgress p').text('');
-            $('#fileUpload').val('');
-            ajaxupload.abort();
-        });
-    });
-
-    function CheckFileValidate(fileType, fileSize) {
-        $.ajax({
-            url: '@Url.Action("FileIsValid")',
-            data: {
-                ext: fileType,
-                size: fileSize
-            },
-            success: function (r) {
-                if (r.result == false) {
-                    ShowUploadMessage(r.message, '');
-                } else if (r.result == true) {
-                    $('#upload_control').hide();
-                    $('#uplaod_filename').text(fileName);
-                    $('#upload_percent span').text('0');
-                    $('#upload_progress').show();
-                    UploadFile();
+        function checkFileValidate(fileType, fileSize) {
+            $.ajax({
+                url: '@Url.Action("FileIsValid")',
+                data: {
+                    ext: fileType,
+                    size: fileSize
+                },
+                success: function (r) {
+                    if (r.result == false) {
+                        ShowUploadMessage(r.message, '');
+                    } else if (r.result == true) {
+                        $('#upload_progressbar').removeClass('success').show();
+                        //$('#upload_control').hide();
+                        //$('#uplaod_filename').text(fileName);
+                        //$('#upload_percent span').text('0');
+                        //$('#upload_progress').show();
+                        UploadFile();
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
+
+        ///////////////////////////////
+        ///////////////////////////////
+        ///////////////////////////////
+        ///////////////////////////////
+        ///////////////////////////////
+
+        //$('#stop_upload').click(function () {
+        //    $('#uploadProgress span').text('check stoped.');
+        //    $('#uploadProgress p').text('');
+        //    $('#fileUpload').val('');
+        //    clearTimeout(timeout);
+        //});
+
+        //$('#reset_upload').click(function () {
+        //    $('#uploadProgress span').text('upload stoped.');
+        //    $('#uploadProgress p').text('');
+        //    $('#fileUpload').val('');
+        //    ajaxupload.abort();
+        //});
+    });
 
     function UploadFile() {
         var file = document.getElementById('fileUpload').files[0];
         var formData = new FormData();
         formData.append("ufile", file);
-        $('#fileUpload').val('');
+        //$('#fileUpload').val('');
 
         ajaxupload = $.ajax({
             xhr: function () {
@@ -87,20 +111,21 @@
                 xhr.upload.addEventListener("progress", progressHandler, false);
                 return xhr;
             },
-            url: '@Url.Action("upload", "files", new {area = "author"})',
+            url: '@Url.Action("upload", "files", new { area = "author" })',
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
-            error: function() {
+            error: function () {
                 renewUpload();
             },
-            success: function(r) {
-                setTimeout(function() {
+            success: function (r) {
+                setTimeout(function () {
                     if (r.result == true) {
                         setAddressFile(r.path);
-                        ShowUploadMessage('', r.message);
-                        successUpload(fileName);
+                        $('#upload_progressbar').addClass('success');
+                        //ShowUploadMessage('', r.message);
+                        //successUpload(fileName);
                     } else if (r.result == false) {
                         renewUpload();
                         ShowUploadMessage(r.message, '');
@@ -112,19 +137,21 @@
 
     function progressHandler(evt) {
         var percent = (evt.loaded / evt.total) * 100;
-        $('#upload_percent span').text(percent);
+        //$('#upload_percent span').text(percent);
+        $('#upload_progressbar').find('.loader').css('width', percent + '%');
+        $('#upload_progressbar').find('.percent').text(Math.floor(percent) + '%');
     }
 
     function ShowUploadMessage(error, success) {
-        $('#upload_errormessage').hide();
-        $('#upload_successmessage').hide();
+        $('#upload_errormessage').text('');
+        $('#upload_successmessage').text('');
         if (error != '') {
-            $('#upload_errormessage span').text(error);
-            $('#upload_errormessage').show();
+            $('#upload_errormessage').text(error);
+            //$('#upload_errormessage').show();
         }
         if (success != '') {
             $('#upload_successmessage span').text(success);
-            $('#upload_successmessage').show();
+            //$('#upload_successmessage').show();
         }
     }
 
@@ -134,22 +161,28 @@
     }
 
     function renewUpload() {
-        $('#upload_errormessage').hide();
-        $('#upload_successmessage').hide();
-        $('#upload_progress').hide();
+        $('#upload_progressbar').find('.loader').css('width', '0');
+        $('#upload_progressbar').find('.percent').text('');
+        $('#upload_progressbar').hide();
         $('#fileUpload').val('');
-        setAddressFile('');
-        $('#upload_control').show();
+        $('#fileUpload').parent().find('.val').text('فایلی انتخاب نشده');
+        $('#FileAddress').val('');
+        //$('#upload_errormessage').hide();
+        //$('#upload_successmessage').hide();
+        //$('#upload_progress').hide();
+        //setAddressFile('');
+        //$('#upload_control').show();
     }
 
-    function successUpload(name) {
-        $('#upload_progress').hide();
-        $('#fileUpload').val('');
-        $('#upload_control').hide();
-        $('#upload_successmessage p').text(name);
-    }
+    //function successUpload(name) {
+    //    $('#upload_progress').hide();
+    //    $('#fileUpload').val('');
+    //    $('#upload_control').hide();
+    //    $('#upload_successmessage p').text(name);
+    //}
 
     function setAddressFile(addr) {
         $('#FileAddress').val(addr).trigger('change');
+
     }
 </script>

@@ -11,7 +11,7 @@
     <div class="divider-blank15"></div>
     <div class="form-row">
         @Html.LabelFor(m => m.Name)
-        @Html.TextBoxFor(m => m.Name, new { @class = "textbox" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "textbox small" })
         <div class="validation">
             @Html.ValidationMessageFor(m => m.Name)
         </div>
@@ -19,7 +19,7 @@
     <div class="divider-blank15"></div>
     <div class="form-row">
         @Html.LabelFor(m => m.Parent)
-        @Html.TextBoxFor(m => m.Parent, new { id = "parent_add", @class = "textbox" })
+        @Html.TextBoxFor(m => m.Parent, new { id = "parent_add", @class = "textbox small" })
         <div class="validation">
             @Html.ValidationMessageFor(m => m.Parent)
         </div>
@@ -27,7 +27,7 @@
     <div class="divider-blank15"></div>
     <div class="form-row">
         @Html.LabelFor(m => m.Description)
-        @Html.TextAreaFor(m => m.Description, new { @class = "textarea" })
+        @Html.TextAreaFor(m => m.Description, new { @class = "textarea small" })
         <div class="validation">
             @Html.ValidationMessageFor(m => m.Description)
         </div>
