@@ -1136,6 +1136,7 @@
     <Content Include="Areas\Author\Views\Categories\Tree_Item.cshtml" />
     <Content Include="Areas\Author\Views\Categories\Remove.cshtml" />
     <Content Include="Areas\Author\Views\Categories\Replace.cshtml" />
+    <Content Include="Areas\Author\Views\Profile\Edit.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="npmPlaceholder.txt" />
     <Content Include="Scripts\bootstrap.js" />

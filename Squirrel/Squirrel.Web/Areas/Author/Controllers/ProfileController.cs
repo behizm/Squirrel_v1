@@ -45,11 +45,6 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Avatar()
-        {
-            return PartialView();
-        }
-
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
         public async Task<JsonResult> Avatar(ProfileAvatarModel model)
         {

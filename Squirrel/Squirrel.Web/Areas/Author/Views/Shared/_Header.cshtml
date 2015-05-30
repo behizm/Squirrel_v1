@@ -23,17 +23,17 @@
 
 <div class="col-lg-3 col-xs-5">
     <div class="profile-data">
-        <a class="image" href="#">
-            @if (avatarAddress.IsNothing())
-            {
+        <a class="image" href="@Url.Action("Index", "Profile")">
+        @if (avatarAddress.IsNothing())
+        {
                 <span class="glyphbox">&#xe605</span>
-            }
-            else
-            {
+        }
+        else
+        {
                 <img alt="" src="@Url.Content(avatarAddress)" />
-            }
+        }
         </a>
-        <a class="name hidden-xs" href="#">@showname</a>
+        <a class="name hidden-xs" href="@Url.Action("Index", "Profile")">@showname</a>
         <a class="exit" href="@Url.Action("LogOff", "Account", new { Area = "" })">خروج</a>
         <div class="clearbox"></div>
     </div>

@@ -468,6 +468,30 @@ html {
         .topic {
             color: @grayLight2;
         }
+
+        .avatar {
+            font: @glyphFont;
+            text-align: center;
+            overflow: hidden;
+            width: 60px;
+            height: 60px;
+            border-radius: 100%;
+            background-color: @grayLight6;
+            color: @grayLight5;
+            cursor: pointer;
+
+            .glyphbox {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 50px;
+                height: 60px;
+                line-height: 60px;
+            }
+
+            img {
+                height: 60px;
+            }
+        }
     }
 
     .commentrow {

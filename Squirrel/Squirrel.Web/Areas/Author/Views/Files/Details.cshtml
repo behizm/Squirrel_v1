@@ -1,79 +1,136 @@
-﻿@using Squirrel.Utility.FarsiTools
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
 @using Squirrel.Utility.Helpers
 @model Squirrel.Domain.Enititis.File
 
-<p>
-    @Html.DisplayNameFor(m => m.Name) :
-    <b>@Html.DisplayFor(m => m.Name)</b>
-</p>
+<div class="detail-row">
+    <span class="title">نام :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Name)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">گروه :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Category)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">وضعیت :</span>
+    <span class="value">
+        @(Model.IsPublic ? "عمومی" : "خصوصی")
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div>
+    <button class="button small submit" onclick="loadEditFile()">ویرایش</button>
+</div>
 
+<div class="divider-blank50"></div>
 
-<p>
-    @Html.DisplayNameFor(m => m.Id) :
-    <b>@Html.DisplayFor(m => m.Id)</b>
-</p>
+<div class="topic-row">
+    اطلاعات فایل
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">نام فایل :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Filename)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">آیدی :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Id)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">نوع :</span>
+    <span class="value">
+        @Model.Type.Description()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">سایز :</span>
+    <span class="value">
+        @Model.Size.ToByteUnit().FaDigit()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">آدرس :</span>
+</div>
+<div class="detail-row" style="direction: ltr;">
+    <span class="value">
+        @Url.Content(Model.Address)
+    </span>
+</div>
+<div class="divider-blank15"></div>
+<div>
+    <button class="button small submit" onclick="loadReplaceFile()">جایگزینی فایل</button>
+</div>
 
-<p>
-    @Html.DisplayNameFor(m => m.Address) :
-    @if (Request.Url != null)
-    {
-        <b>@(Request.Url.Host + Model.Address.Substring(1))</b>
-    }
-    else
-    {
-        <b>@Html.DisplayFor(m => m.Address)</b>
-    }
-</p>
+<div class="divider-blank50"></div>
 
-<p>
-    @Html.DisplayNameFor(m => m.Category) :
-    <b>@Html.DisplayFor(m => m.Category)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.CreateDate) :
-    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
-</p>
-
+<div class="topic-row">
+    اطلاعات تکمیلی
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">تاریخ ساخت :</span>
+    <span class="value">
+        @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+    </span>
+</div>
 @if (Model.EditDate.HasValue)
 {
-    <p>
-        @Html.DisplayNameFor(m => m.EditDate) :
-        <b>@(((PersianDate)Model.EditDate).ToStringDateTime())</b>
-    </p>
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">تاریخ ویرایش :</span>
+        <span class="value">
+            @Model.EditDate.Value.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
 }
-
-<p>
-    @Html.DisplayNameFor(m => m.Filename) :
-    <b>@Html.DisplayFor(m => m.Filename)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.IsPublic) :
-    <b>@Html.DisplayFor(m => m.IsPublic)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Size) :
-    <b>@Html.DisplayFor(m => m.Size)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Type) :
-    <b>@Model.Type.Description()</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.User) :
-    <b>@Html.DisplayFor(m => m.User.Username)</b>
-</p>
-
-<div>
-    @if (User.Identity.IsAdmin || Model.UserId == User.Identity.UserId)
-    {
-        <button class="btn btn-default" onclick="LoadEdit('@Model.Id')">Edit</button>
-        <button class="btn btn-default" onclick="LoadDelete('@Model.Id')">Delete</button>
-        <button class="btn btn-default" onclick="LoadReplace('@Model.Id')">Replace File</button>
-    }
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">کاربر :</span>
+    <span class="value">
+        @Model.User.ShowName()
+    </span>
 </div>
-<br />
+<div class="divider-blank15"></div>
+<div>
+    <button class="button small error" onclick="loadDeleteFile()">حذف</button>
+</div>
+
+<div id="edit_file_form_con" style="display: none;">
+    @Html.Partial("Edit", new FileEditModel
+    {
+        Id = Model.Id,
+        Category = Model.Category,
+        IsPublic = Model.IsPublic,
+        Name = Model.Name,
+    })
+</div>
+
+<div id="replace_file_form_con" style="display: none;">
+    @Html.Partial("Replace", new FileReplaceModel
+    {
+        Id = Model.Id,
+    })
+</div>
+
+<div id="remove_file_form_con" style="display: none;">
+    @Html.Partial("Delete", new FileDeleteModel
+    {
+        Id = Model.Id,
+        FullFilePath = ViewBag.FullPathFileAddress
+    })
+</div>

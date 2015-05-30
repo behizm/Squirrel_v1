@@ -398,6 +398,27 @@ html a:focus {
 .flatbox .detailsrow .topic {
   color: #b7b7b7;
 }
+.flatbox .detailsrow .avatar {
+  font: 20px pe7;
+  text-align: center;
+  overflow: hidden;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  background-color: #eeeeee;
+  color: #e1e1e1;
+  cursor: pointer;
+}
+.flatbox .detailsrow .avatar .glyphbox {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 50px;
+  height: 60px;
+  line-height: 60px;
+}
+.flatbox .detailsrow .avatar img {
+  height: 60px;
+}
 .flatbox .commentrow {
   font-size: .6em;
   text-align: center;

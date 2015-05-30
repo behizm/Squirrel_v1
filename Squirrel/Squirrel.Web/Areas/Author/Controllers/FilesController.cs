@@ -60,7 +60,7 @@ namespace Squirrel.Web.Areas.Author.Controllers
                 {
                     CurrentPage = searchPage,
                     PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
-                    PagingMethod = "LoadList(#)"
+                    PagingMethod = "searchingFile(#)"
                 };
             }
             return PartialView("list", items);
@@ -247,197 +247,112 @@ namespace Squirrel.Web.Areas.Author.Controllers
             var item = await FileService.FindByIdAsync(id);
             if (item == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = FileService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             if (!item.IsPublic && User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
             {
-                ViewBag.ErrorMessage = "شما دسترسی مشاهده این فایل را ندارید.";
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = "شما دسترسی مشاهده این فایل را ندارید.",
+                };
+                return PartialView("_HandledError");
             }
 
+            var fullPath = await EncryptAsync(Server.MapPath(item.Address));
+            if (fullPath == null)
+            {
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = ServiceMessages.General_ErrorAccurred,
+                };
+                return PartialView("_HandledError");
+            }
+
+            ViewBag.FullPathFileAddress = fullPath;
             ViewData.Model = item;
             return PartialView();
         }
 
-        public async Task<ActionResult> Edit(Guid id)
-        {
-            var item = await FileService.FindByIdAsync(id);
-            if (item == null)
-            {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
-            {
-                ViewBag.ErrorMessage = "شما دسترسی ویرایش این فایل را ندارید.";
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new FileEditModel
-            {
-                Category = item.Category,
-                Id = item.Id,
-                IsPublic = item.IsPublic,
-                Name = item.Name,
-            };
-            return PartialView();
-        }
-
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(FileEditModel model)
+        public async Task<JsonResult> Edit(FileEditModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
             model.Username = User.Identity.Name;
             await FileService.EditAsync(model);
             if (FileService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "فایل با موفقیت ویرایش شد.";
-                ViewBag.JsMethod = string.Format("CompleteEdit('{0}');", model.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "فایل با موفقیت ویرایش شد.", id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
-        }
-
-        public async Task<ActionResult> Delete(Guid id)
-        {
-            var item = await FileService.FindByIdAsync(id);
-            if (item == null)
-            {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
-            {
-                ViewBag.ErrorMessage = "شما دسترسی حذف این فایل را ندارید.";
-                return PartialView("_Message");
-            }
-
-            var fullPath = await EncryptAsync(Server.MapPath(item.Address));
-            if (fullPath == null)
-            {
-                ViewBag.ErrorMessage = ServiceMessages.General_ErrorAccurred;
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new FileDeleteModel
-            {
-                Id = item.Id,
-                FullFilePath = fullPath,
-            };
-            return PartialView();
+            return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault(), id = model.Id },
+             JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(FileDeleteModel model)
+        public async Task<JsonResult> Replace(FileReplaceModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
-            }
-
-            var fullPath = await DecryptAsync(model.FullFilePath);
-            if (fullPath == null)
-            {
-                ViewBag.ErrorMessage = ServiceMessages.General_ErrorAccurred;
-                return PartialView("_Message");
-            }
-
-            model.Username = User.Identity.Name;
-            model.FullFilePath = fullPath;
-            await FileService.RemoveAsync(model);
-            if (FileService.Result.Succeeded)
-            {
-                ViewBag.SuccessMessage = "فایل با موفقیت حذف شد.";
-                ViewBag.JsMethod = "CompleteDelete();";
-                return PartialView("_Message");
-            }
-
-            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
-        }
-
-        public async Task<ActionResult> Replace(Guid id)
-        {
-            var item = await FileService.FindByIdAsync(id);
-            if (item == null)
-            {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            if (User.Identity.UserId != item.UserId && !User.Identity.IsAdmin)
-            {
-                ViewBag.ErrorMessage = "شما دسترسی ویرایش این فایل را ندارید.";
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new FileReplaceModel
-            {
-                Id = item.Id,
-            };
-            return PartialView();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Replace(FileReplaceModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
             var filePath = System.Web.HttpContext.Current.Server.MapPath(model.FileAddress);
             if (!System.IO.File.Exists(filePath))
             {
-                ViewBag.ErrorMessage = "فایل خود را مجددا آپلود کنید.";
-                return PartialView(model);
+                return Json(new { result = false, message = "فایل خود را مجددا آپلود کنید.", id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
             var fileInfo = new FileInfo(filePath);
             var fileType = FileService.GetFileTypeByFileName(fileInfo.Name);
             if (fileType == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView(model);
+                return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault(), id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
 
             var maxSize = FileService.GetFileTypeSize(fileType.Value);
             if (maxSize == null)
             {
-                ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-                return PartialView(model);
+                return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault(), id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
             if (fileInfo.Length > maxSize)
             {
-                ViewBag.ErrorMessage =
-                    string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
-                        fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit());
-                return PartialView(model);
+                var error = string.Format("برای فایلهای از دسته {0} آپلود بیش از {1}  مگا بایت امکان پذیر نیست.",
+                    fileType.Value.Description(), (maxSize.Value / (1024 * 1024)).FaDigit());
+
+                return Json(new { result = false, message = error, id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
 
             var file = await FileService.FindByIdAsync(model.Id);
             if (file == null)
             {
-                ViewBag.ErrorMessage = ServiceMessages.FileService_FileNotFount;
-                return PartialView(model);
+
+                return Json(new { result = false, message = ServiceMessages.FileService_FileNotFount, id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
 
             if (fileType != file.Type)
             {
-                ViewBag.ErrorMessage = "نوع فایل آپلود شده با فایل اصلی همخوانی ندارد.";
-                return PartialView(model);
+
+                return Json(new { result = false, message = "نوع فایل آپلود شده با فایل اصلی همخوانی ندارد.", id = model.Id },
+                  JsonRequestBehavior.AllowGet);
             }
 
             model.OldFilePath = Server.MapPath(file.Address);
@@ -446,13 +361,41 @@ namespace Squirrel.Web.Areas.Author.Controllers
             await FileService.ReplaceAsync(model);
             if (FileService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "فایل با موفقیت جایگذین شد.";
-                ViewBag.JsMethod = string.Format("LoadDetails('{0}')", model.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "فایل با موفقیت جایگذین شد.", id = model.Id },
+                     JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault(), id = model.Id },
+              JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<JsonResult> Delete(FileDeleteModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            var fullPath = await DecryptAsync(model.FullFilePath);
+            if (fullPath == null)
+            {
+                return Json(new { result = false, message = ServiceMessages.General_ErrorAccurred, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            model.Username = User.Identity.Name;
+            model.FullFilePath = fullPath;
+            await FileService.RemoveAsync(model);
+            if (FileService.Result.Succeeded)
+            {
+                return Json(new { result = true, message = "فایل با موفقیت حذف شد.", id = model.Id },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = false, message = FileService.Result.Errors.FirstOrDefault(), id = model.Id },
+                 JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -541,8 +484,6 @@ namespace Squirrel.Web.Areas.Author.Controllers
             ViewBag.RequestFileFilter = filterModel;
             return PartialView("ChoosePopup", items);
         }
-
-
 
         // Json
 

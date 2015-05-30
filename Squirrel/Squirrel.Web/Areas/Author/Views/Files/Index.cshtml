@@ -18,31 +18,13 @@
     <div id="searchresult_list_con"></div>
 </div>
 
-
-@*<h2>فایل ها</h2>
-    <hr />
-
-    <div class="col-lg-6">
-        <div>
-            <button type="button" class="btn btn-default" onclick="LoadAddFile()">+</button>
-        </div>
-        <br />
-        @Html.Partial("SearchFilter")
-        <div id="list_con"></div>
-    </div>
-
-    <div class="col-lg-6">
-        <div id="option_con_1"></div>
-        <div id="option_con_2"></div>
-    </div>*@
-
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/Autocomplete")
 
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             searchingFile(1);
         });
 
@@ -58,10 +40,10 @@
         function loadAddFile() {
             $.ajax({
                 url: '@Url.Action("add")',
-                error: function() {
+                error: function () {
                     GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری فرم افزودن فایل خطا رخ داد.', 'error');
                 },
-                success: function(r) {
+                success: function (r) {
                     fillSecondryContent(r);
                     showSecondryContent();
                 }
@@ -82,90 +64,76 @@
             }
         }
 
-        ///////////////
-        ///////////////
-        ///////////////
-        ///////////////
-        ///////////////
-
-        function LoadAddFile() {
-            $.ajax({
-                url: '@Url.Action("add")',
-                success: function(r) {
-                    $('#option_con_2').html('');
-                    $('#option_con_1').html(r);
-                }
-            });
-        }
-
-        function LoadUpload() {
-            $.ajax({
-                url: '@Url.Action("resetupload")',
-                success: function(r) {
-                    $('#upload_file_con').html(r);
-                }
-            });
-        }
-
-        function LoadDetailsPure(id) {
+        function loadFileDetails(id) {
             $.ajax({
                 url: '@Url.Action("Details", "Files")',
                 data: { id: id },
-                success: function(r) {
-                    $('#option_con_1').html(r);
-                    $('#option_con_2').html('');
+                error: function () {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام دریافت اطلاعات فایل خطا رخ داد.', 'error');
+                },
+                success: function (data) {
+                    fillSecondryContent(data);
+                    showSecondryContent();
                 }
             });
         }
 
-        function LoadDetails(id) {
-            $.ajax({
-                url: '@Url.Action("Details", "Files")',
-                data: { id: id },
-                success: function(r) {
-                    $('#option_con_1').html(r);
-                }
-            });
+        function loadEditFile() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#edit_file_form_con').html());
+            showSecondryContent();
         }
 
-        function LoadEdit(id) {
-            $.ajax({
-                url: '@Url.Action("Edit", "Files")',
-                data: { id: id },
-                success: function(r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function onEditFileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش فایل خطا رخ داد.', 'error');
         }
 
-        function CompleteEdit(id) {
-            ReloadList();
-            LoadDetails(id);
+        function onEditFileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                reloadSearchingFile();
+                loadFileDetails(data.id);
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
 
-        function LoadDelete(id) {
-            $.ajax({
-                url: '@Url.Action("Delete", "Files")',
-                data: { id: id },
-                success: function(r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function loadReplaceFile() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#replace_file_form_con').html());
+            showSecondryContent();
         }
 
-        function CompleteDelete() {
-            ReloadList();
-            $('#option_con_1').html('');
+        function onReplaceFileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام جایگزینی فایل خطا رخ داد.', 'error');
         }
 
-        function LoadReplace(id) {
-            $.ajax({
-                url: '@Url.Action("Replace", "Files")',
-                data: { id: id },
-                success: function(r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function onReplaceFileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                reloadSearchingFile();
+                loadFileDetails(data.id);
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function loadDeleteFile() {
+            showPopupAlert("آیا مطمئن هستید که این فایل پاک شود", '$("#delete_file_form").submit();', '');
+        }
+
+        function onDeleteFileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام حذف فایل خطا رخ داد.', 'error');
+        }
+
+        function onDeleteFileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                reloadSearchingFile();
+                hideAndClearSecondryContent();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
     </script>
 }

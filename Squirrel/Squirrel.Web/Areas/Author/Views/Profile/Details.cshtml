@@ -1,157 +1,98 @@
-﻿@using Squirrel.Utility.FarsiTools
-@model Squirrel.Domain.ViewModels.ProfileModelOverrided
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@model ProfileModelOverrided
 
 <div class="form-con">
     @if (!Model.IsNullProfile)
     {
-        <div class="form-row">
-            <p class="title">@Html.DisplayNameFor(model => model.CreateDate)</p>
-            <p class="control">@(((PersianDate)Model.CreateDate).ToStringDateTime())</p>
+        <div class="detailsrow">
+            <div class="avatar">
+                @if (Model.Avatar == null)
+                {
+                    <span class="glyphbox" onclick="loadImagesPopup()">&#xe605</span>
+                }
+                else
+                {
+                    <img src="@Url.Content(Model.Avatar.Address)" onclick="loadImagesPopup()" />
+                }
+            </div>
         </div>
-
+        <div class="divider-blank15"></div>
+        <div class="detailsrow">
+            <span class="topic">تاریخ ایجاد :</span>
+            @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+        </div>
         if (Model.EditDate.HasValue)
         {
-            <div class="form-row">
-                <p class="title">@Html.DisplayNameFor(model => model.EditDate)</p>
-                <p class="control">@(((PersianDate)Model.EditDate).ToStringDateTime())</p>
+            <div class="divider-blank15"></div>
+            <div class="detailsrow">
+                <span class="topic">تاریخ ویرایش :</span>
+                @Model.EditDate.Value.ToPersianDate().ToStringDateTime().FaDigit()
             </div>
         }
-
-        if (Model.Avatar == null)
-        {
-            <div class="form-row">
-                <p class="title">@Html.DisplayNameFor(model => model.Avatar)</p>
-                <p class="control">
-                    <button type="button" class="btn" onclick="loadChangeAvatar()">Add</button>
-                </p>
-            </div>
-        }
-        else
-        {
-            <div class="form-row">
-                <p class="title">@Html.DisplayNameFor(model => model.Avatar)</p>
-                <p class="control">
-                    <img src='@Url.Content(Model.Avatar.Address)' style="height: 35px;" />
-                    <button type="button" class="btn" onclick="loadChangeAvatar()">Change</button>
-                </p>
-            </div>
-        }
-
-        <div id="editable_info_diplay">
-            <div class="form-row" id="firstname_con">
-                <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
-                <p class="control">@Html.DisplayFor(model => model.Firstname)</p>
-            </div>
-
-            <div class="form-row" id="lastname_con">
-                <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
-                <p class="control">@Html.DisplayFor(model => model.Lastname)</p>
-            </div>
-
-            <div class="form-row">
-                <p class="title"></p>
-                <p class="control">
-                    <button type="button" class="btn btn-default" onclick=" LoadEdit(this) ">ویرایش</button>
-                </p>
+        <div class="divider-blank15"></div>
+        <div class="detailsrow">
+            <span class="topic">نام :</span>
+            @Html.DisplayFor(m => m.Firstname)
+        </div>
+        <div class="divider-blank15"></div>
+        <div class="detailsrow">
+            <span class="topic">نام خانوادگی :</span>
+            @Html.DisplayFor(m => m.Lastname)
+        </div>
+        <div id="profile_edit_button">
+            <div class="divider-blank15"></div>
+            <div>
+                <button type="button" class="button small submit" onclick="loadEditProfile()">ویرایش</button>
             </div>
         </div>
-
-        <div style="display: none;" id="editable_info_form">
-            @using (Ajax.BeginForm("Edit", "Profile", null, new AjaxOptions { OnSuccess = "onEditSuccess" }, new { id = "profile_details_form1" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-row" id="firstname_con">
-                    <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
-                    <p class="control">
-                        @Html.TextBoxFor(model => model.Firstname, new Dictionary<string, object> { { "def-val", Model.Firstname } })
-                        @Html.ValidationMessageFor(model => model.Firstname)
-                    </p>
-                </div>
-
-                <div class="form-row" id="lastname_con">
-                    <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
-                    <p class="control">
-                        @Html.TextBoxFor(model => model.Lastname, new Dictionary<string, object> { { "def-val", Model.Lastname } })
-                        @Html.ValidationMessageFor(model => model.Lastname)
-                    </p>
-                </div>
-
-                <div class="form-row">
-                    <p class="title"></p>
-                    <p class="control">
-                        <button type="submit" class="btn btn-default" onclick="">ثبت</button>
-                        <button type="button" class="btn btn-default" onclick=" CancelEdit() ">انصراف</button>
-                    </p>
-                </div>
-            }
-            <div id="internal_message"></div>
+        <div id="profile_edit_form_con" style="display: none;">
+            <div class="divider-blank30"></div>
+            <div class="full-line"></div>
+            <div class="input-con">
+                @Html.Partial("Edit", new ProfileEditModel { Firstname = Model.Firstname, Lastname = Model.Lastname })
+            </div>
         </div>
     }
     else
     {
-        <div id="editable_info_form">
-            @using (Ajax.BeginForm("Edit", "Profile", null, new AjaxOptions { OnSuccess = "onEditSuccess" }, new { id = "profile_details_form2" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-row" id="firstname_con">
-                    <p class="title">@Html.DisplayNameFor(model => model.Firstname)</p>
-                    <p class="control">
-                        @Html.TextBoxFor(model => model.Firstname)
-                        @Html.ValidationMessageFor(model => model.Firstname)
-                    </p>
-                </div>
-
-                <div class="form-row" id="lastname_con">
-                    <p class="title">@Html.DisplayNameFor(model => model.Lastname)</p>
-                    <p class="control">
-                        @Html.TextBoxFor(model => model.Lastname)
-                        @Html.ValidationMessageFor(model => model.Lastname)
-                    </p>
-                </div>
-
-                <div class="form-row">
-                    <p class="title"></p>
-                    <p class="control">
-                        <button type="submit" class="btn btn-default" onclick="">ثبت</button>
-                    </p>
-                </div>
-            }
-            <div id="internal_message"></div>
+        <div class="detailsrow">
+            <span class="topic">تاریخ ایجاد :</span>
+            @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+        </div>
+        <div id="profile_edit_button">
+            <div class="divider-blank15"></div>
+            <div>
+                <button type="button" class="button small submit" onclick="loadEditProfile()">ایجاد پروفایل</button>
+            </div>
+        </div>
+        <div id="profile_edit_form_con" style="display: none;">
+            <div class="divider-blank30"></div>
+            <div class="full-line"></div>
+            <div class="input-con">
+                @Html.Partial("Edit", new ProfileEditModel())
+            </div>
         </div>
     }
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $.validator.unobtrusive.parse("#profile_details_form1");
-        $.validator.unobtrusive.parse("#profile_details_form2");
-    });
-</script>
+@Html.Partial("Avatar", new ProfileAvatarModel())
 
-<style type="text/css">
-    .form-con {
+<script type="text/javascript">
+    var profileAvatarImage = '@Guid.NewGuid()';
+    $(function () {
+        $(document).on('onFilePopupChoice', profileAvatarChoiceHandler);
+    });
+
+    function loadImagesPopup() {
+        loadPopupFileChioce_FixedType(profileAvatarImage, 'عکس مورد نظر خود را انتخاب کنید.', '@FileType.Image', 1);
     }
 
-        .form-con .form-row {
-            line-height: 45px;
+    function profileAvatarChoiceHandler(e) {
+        if (profileAvatarImage == e.popupId) {
+            $('#AvatarId').val(e.id);
+            $('#profile_avatar_form').submit();
         }
-
-            .form-con .form-row .title {
-                display: inline-block;
-                font-weight: bold;
-                width: 100px;
-                text-align: right;
-                margin: 0 20px 0 0;
-            }
-
-            .form-con .form-row .control {
-                display: inline-block;
-                margin: 0;
-            }
-
-                .form-con .form-row .control input[type="text"] {
-                    line-height: 21px;
-                }
-</style>
+    }
+</script>

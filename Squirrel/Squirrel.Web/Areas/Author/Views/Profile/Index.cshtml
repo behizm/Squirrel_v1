@@ -1,29 +1,27 @@
 ﻿@{
-    ViewBag.Title = "مدیریت پروفایل";
+    ViewBag.Title = "مدیریت کاربری";
 }
 
 <div class="col-lg-12">
-    <h2>پروفایل</h2>
-    <hr />
+    <div class="divider-blank30"></div>
 </div>
 
-<div class="col-lg-6">
-    <div id="profile_details"></div>
-</div>
-
-<div class="col-lg-6">
-    <div id="option_con_1"></div>
-    <div id="option_con_2"></div>
+<div class="col-lg-12">
+    <div class="box-uptitle">
+        <div class="text">اطلاعات کاربری شما</div>
+        <div class="clearbox"></div>
+    </div>
+    <div class="flatbox" id="profile_details"></div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
         $(function() {
-            LoadDetails();
+            loadProfileDetails();
         });
 
-        function LoadDetails() {
+        function loadProfileDetails() {
             $.ajax({
                 url: '@Url.Action("Details", "Profile")',
                 success: function(r) {
@@ -31,6 +29,51 @@
                 },
             });
         }
+
+        function loadEditProfile() {
+            $('#profile_edit_form_con').show();
+            $('#profile_edit_button').hide();
+        }
+
+        function cancelEditProfile() {
+            $('#Firstname').val($('#Firstname').attr('data-checkpoint'));
+            $('#Lastname').val($('#Lastname').attr('data-checkpoint'));
+            $('#edit_profile_form').valid();
+            $('#profile_edit_button').show();
+            $('#profile_edit_form_con').hide();
+        }
+
+        function onEditProfileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش پروفایل خطا رخ داد.', 'error');
+        }
+
+        function onEditProfileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadProfileDetails();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function onAvatarProfileError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش آواتار خطا رخ داد.', 'error');
+        }
+
+        function onAvatarProfileSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadProfileDetails();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        /////////////////////////
+        /////////////////////////
+        /////////////////////////
+        /////////////////////////
+        /////////////////////////
 
         function LoadEdit() {
             $('#editable_info_diplay').hide();
@@ -51,7 +94,7 @@
 
         function onEditSuccess(data) {
             if (data.result == true) {
-                LoadDetails();
+                loadProfileDetails();
             } else {
                 $('#editable_info_form #internal_message').text(data.message);
             }
@@ -68,7 +111,7 @@
 
         function onChangeAvatarSuccess(data) {
             if (data.result == true) {
-                LoadDetails();
+                loadProfileDetails();
                 $('#option_con_1').text(data.message);
             } else {
                 $('#profile_avatar_error').text(data.message);

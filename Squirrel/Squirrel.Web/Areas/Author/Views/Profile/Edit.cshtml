@@ -1,0 +1,51 @@
+﻿@model Squirrel.Domain.ViewModels.ProfileEditModel
+
+@using (Ajax.BeginForm("Edit", "Profile", null,
+    new AjaxOptions { OnFailure = "onEditProfileError", OnSuccess = "onEditProfileSuccess" },
+    new { id = "edit_profile_form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-lg-4 col-md-5 form-row">
+                @Html.LabelFor(m => m.Firstname)
+                @Html.TextBoxFor(m => m.Firstname, new Dictionary<string, object>
+                {
+                    {"class","textbox"},
+                    {"data-checkpoint",Model.Firstname},
+                })
+                <div class="validation">
+                    @Html.ValidationMessageFor(m => m.Firstname)
+                </div>
+                <div class="divider-blank15"></div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-lg-4 col-md-5 form-row">
+                @Html.LabelFor(m => m.Lastname)
+                @Html.TextBoxFor(m => m.Lastname, new Dictionary<string, object>
+                {
+                    {"class","textbox"},
+                    {"data-checkpoint",Model.Lastname},
+                })
+                <div class="validation">
+                    @Html.ValidationMessageFor(m => m.Lastname)
+                </div>
+                <div class="divider-blank20"></div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-lg-4 col-md-5">
+                <button type="submit" class="button small submit">ثبت</button>
+                <a class="button small" onclick="cancelEditProfile()">انصراف</a>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $.validator.unobtrusive.parse("#edit_profile_form");
+    });
+</script>
