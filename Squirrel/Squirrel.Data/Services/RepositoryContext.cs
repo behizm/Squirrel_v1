@@ -34,6 +34,12 @@ namespace Squirrel.Data.Services
             await SaveChanges();
         }
 
+        public async Task BatchInsertAsync<TEntity>(IQueryable<TEntity> items) where TEntity : class
+        {
+            _context.Set<TEntity>().AddRange(items);
+            await SaveChanges();
+        }
+
         public async Task DeleteAsync<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Deleted;
@@ -46,6 +52,13 @@ namespace Squirrel.Data.Services
             await SaveChanges();
         }
 
+        public async Task BatchDeleteAsync<TEntity>(IQueryable<TEntity> items) where TEntity : class
+        {
+            _context.Set<TEntity>().RemoveRange(items);
+            //items.ForEach(e => _context.Entry(e).State = EntityState.Deleted);
+            await SaveChanges();
+        }
+
         public async Task UpdateAsync<TEntity>(TEntity item) where TEntity : class
         {
             _context.Entry(item).State = EntityState.Modified;
@@ -53,6 +66,12 @@ namespace Squirrel.Data.Services
         }
 
         public async Task UpdateAsync<TEntity>(TEntity[] items) where TEntity : class
+        {
+            items.ForEach(e => _context.Entry(e).State = EntityState.Modified);
+            await SaveChanges();
+        }
+
+        public async Task BatchUpdateAsync<TEntity>(IQueryable<TEntity> items) where TEntity : class
         {
             items.ForEach(e => _context.Entry(e).State = EntityState.Modified);
             await SaveChanges();

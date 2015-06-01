@@ -62,7 +62,7 @@
             <span class="text">وقایع</span>
         </a>
         
-        thisUrl = Url.Action("Index", "Logs", new { Area = "Admin" });
+        thisUrl = Url.Action("Index", "Configs", new { Area = "Admin" });
         className = currentUrl == thisUrl ? "active" : string.Empty;
         <a class="item @className" href="@thisUrl">
             <span class="glyphbox">&#xe666</span>

@@ -42,14 +42,18 @@ namespace Squirrel.Domain.ViewModels
 
     public class LogSearchModel
     {
+        [Display(Name = @"اِریا")]
         public string AreaProp { get; set; }
 
+        [Display(Name = @"کنترلر")]
         public string ControllerProp { get; set; }
 
+        [Display(Name = @"اکشن")]
         public string ActionProp { get; set; }
 
         public string ReferredHost { get; set; }
 
+        [Display(Name = @"ایجکس باشد؟")]
         public bool? IsAjax { get; set; }
 
         public string FullUrl { get; set; }
@@ -64,6 +68,7 @@ namespace Squirrel.Domain.ViewModels
 
         public bool? IsPostMethod { get; set; }
 
+        [Display(Name = @"ارور باشد؟")]
         public bool? IsErrorLog { get; set; }
 
         public string ErrorMessage { get; set; }
@@ -72,11 +77,13 @@ namespace Squirrel.Domain.ViewModels
 
         public Guid? UserId { get; set; }
 
+        [Display(Name = @"از تاریخ")]
         public DateTime? CreateDateFrom { get; set; }
 
         [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}")]
         public string CreatePersianDateFrom { get; set; }
 
+        [Display(Name = @"تا تاریخ")]
         public DateTime? CreateDateTo { get; set; }
 
         [RegularExpression(@"\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}")]

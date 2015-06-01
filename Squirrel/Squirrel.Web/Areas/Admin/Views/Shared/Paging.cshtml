@@ -1,74 +1,79 @@
-﻿@model Squirrel.Domain.ViewModels.PagingModel
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.ViewModels.PagingModel
 
-<div style="text-align: center;">
-    <nav>
-        <ul class="pagination">
-            @{
-                var totalPages = Model.PageCount;
-                var currentPage = Model.CurrentPage;
-                
-                var startPager = 1;
-                var endPager = totalPages;
+<div class="pager-row">
+    <div class="pager">
+        @{
+            var totalPages = Model.PageCount;
+            var currentPage = Model.CurrentPage;
 
-                if (totalPages > 5)
+            var startPager = 1;
+            var endPager = totalPages;
+
+            if (totalPages > 5)
+            {
+                if (currentPage > 3)
                 {
-                    if (currentPage > 3)
+                    if (currentPage + 2 > totalPages)
                     {
-                        if (currentPage + 2 > totalPages)
-                        {
-                            startPager = totalPages - 4;
-                        }
-                        else
-                        {
-                            startPager = currentPage - 2;
-                        }
+                        startPager = totalPages - 4;
                     }
-
-                    if (currentPage + 2 < totalPages)
+                    else
                     {
-                        if (currentPage < 3)
-                        {
-                            endPager = 5;
-                        }
-                        else
-                        {
-                            endPager = currentPage + 2;
-                        }
+                        startPager = currentPage - 2;
+                    }
+                }
+
+                if (currentPage + 2 < totalPages)
+                {
+                    if (currentPage < 3)
+                    {
+                        endPager = 5;
+                    }
+                    else
+                    {
+                        endPager = currentPage + 2;
                     }
                 }
             }
+        }
 
-            @if (startPager > 1)
+        @if (startPager > 1)
+        {
+            var onClickFunc = Model.PagingMethod.Replace("#", "1");
+            <div class="page" onclick="@onClickFunc">@(1.FaDigit())</div>
+        }
+        @if (currentPage > 1)
+        {
+            var onClickFunc = Model.PagingMethod.Replace("#", (currentPage - 1).ToString());
+            <div class="page" onclick="@onClickFunc"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></div>
+        }
+        @for (var i = startPager; i <= endPager; i++)
+        {
+            var additional = "";
+            if (currentPage == i)
             {
-                var onClickFunc = Model.PagingMethod.Replace("#", "1");
-                <li><a onclick="@onClickFunc">1</a></li>
+                additional = "current";
             }
-            @if (currentPage > 1)
-            {
-                var onClickFunc = Model.PagingMethod.Replace("#", (currentPage-1).ToString());
-                <li><a onclick="@onClickFunc"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
-            }
-            @for (var i = startPager; i <= endPager; i++)
-            {
-                var additional = "";
-                if (currentPage == i)
-                {
-                    additional = "active";
-                }
 
-                var onClickFunc = Model.PagingMethod.Replace("#", i.ToString());
-                <li class="@additional"><a onclick="@onClickFunc">@i</a></li>
-            }
-            @if (currentPage < totalPages)
-            {
-                var onClickFunc = Model.PagingMethod.Replace("#", (currentPage + 1).ToString());
-                <li><a onclick="@onClickFunc"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
-            }
-            @if (endPager < totalPages)
-            {
-                var onClickFunc = Model.PagingMethod.Replace("#", totalPages.ToString());
-                <li><a onclick="@onClickFunc">@totalPages</a></li>
-            }
-        </ul>
-    </nav>
+            var onClickFunc = Model.PagingMethod.Replace("#", i.ToString());
+            <div class="page @additional" onclick="@onClickFunc">@i.FaDigit()</div>
+        }
+        @if (currentPage < totalPages)
+        {
+            var onClickFunc = Model.PagingMethod.Replace("#", (currentPage + 1).ToString());
+            <div class="page" onclick="@onClickFunc"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></div>
+        }
+        @if (endPager < totalPages)
+        {
+            var onClickFunc = Model.PagingMethod.Replace("#", totalPages.ToString());
+            <div class="page" onclick="@onClickFunc">@totalPages.FaDigit()</div>
+        }
+    </div>
 </div>
+
+<script type="text/javascript">
+    function reloadCurrentPage() {
+        @Model.PagingMethod.Replace("#", Model.CurrentPage.ToString());
+    }
+</script>

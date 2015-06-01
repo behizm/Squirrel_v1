@@ -462,6 +462,32 @@ html {
     }
 }
 
+.popup-con {
+    position: fixed;
+    .absolutePostion(0,0,0,0);
+    background-color: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    &.showed {
+        display: flex;
+    }
+
+    .image-box {
+        text-align: center;
+        margin: 30px;
+        display: none;
+
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
 /* ------ */
 
 body {
@@ -1416,6 +1442,28 @@ body {
                 color: @grayLight2;
                 line-height: 20px;
                 padding-bottom: 10px;
+            }
+
+            .parent {
+                font-size: .7em;
+                font-style: italic;
+                background-color: @grayLight7;
+                color: @grayDark5;
+                padding: 10px 20px;
+                margin-bottom: 15px;
+                border-radius: 2px;
+                line-height: 22px;
+                max-height: 97px;
+                overflow: hidden;
+                position: relative;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    .absolutePostion(auto,0,0,0);
+                    height: 15px;
+                    .linearGradientVertical(transparent,@grayLight7);
+                }
             }
 
             .content {

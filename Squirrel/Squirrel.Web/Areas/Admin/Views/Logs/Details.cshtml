@@ -1,54 +1,104 @@
-﻿@model Squirrel.Domain.Enititis.Log
+﻿@using Squirrel.Utility.FarsiTools
+@model Squirrel.Domain.Enititis.Log
 
-<p>
-    @Html.DisplayNameFor(m => m.IsAjax) :
-    <b>@Html.DisplayFor(m => m.IsAjax)</b>
-</p>
+<div class="detail-row">
+    <span class="title">تاریخ :</span>
+    <span class="value">
+        @Model.CreateDate.ToPersianDate().ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS).FaDigit()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">آدرس :</span>
+</div>
+<div class="detail-row" style="direction: ltr;">
+    <span class="value">
+        @Html.DisplayFor(m => m.Info.FullUrl)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">ایجکس است؟</span>
+    <span class="value">
+        @Model.IsAjax.ToPersian()
+    </span>
+</div>
+@if (Model.UserId.HasValue)
+{
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">کاربر :</span>
+        <span class="value">
+            @Html.DisplayFor(m => m.User.Username)
+        </span>
+    </div>
+}
 
-<p>
-    @Html.DisplayNameFor(m => m.Info.FullUrl) :
-    <b>@Html.DisplayFor(m => m.Info.FullUrl)</b>
-</p>
+<div class="divider-blank50"></div>
 
-<p>
-    @Html.DisplayNameFor(m => m.Info.Ip) :
-    <b>@Html.DisplayFor(m => m.Info.Ip)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Info.Port) :
-    <b>@Html.DisplayFor(m => m.Info.Port)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Info.ReferredUrl) :
-    <b>@Html.DisplayFor(m => m.Info.ReferredUrl)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.Info.UserAgent) :
-    <b>@Html.DisplayFor(m => m.Info.UserAgent)</b>
-</p>
-
-<p>
-    @Html.DisplayNameFor(m => m.User.Username) :
-    <b>@Html.DisplayFor(m => m.User.Username)</b>
-</p>
+<div class="topic-row">
+    مراجعه
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">آی پی :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Info.Ip)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">پورت :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Info.Port)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">اطلاعات :</span>
+</div>
+<div class="detail-row" style="direction: ltr;">
+    <span class="value">
+        @Html.DisplayFor(m => m.Info.UserAgent)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">از :</span>
+</div>
+<div class="detail-row" style="direction: ltr;">
+    <span class="value">
+        @Html.DisplayFor(m => m.Info.ReferredUrl)
+    </span>
+</div>
 
 @if (Model.ErrorId.HasValue)
 {
-    <p>
-        @Html.DisplayNameFor(m => m.Error.IsPostMethod) :
-        <b>@Html.DisplayFor(m => m.Error.IsPostMethod)</b>
-    </p>
-
-    <p>
-        @Html.DisplayNameFor(m => m.Error.LineNumber) :
-        <b>@Html.DisplayFor(m => m.Error.LineNumber)</b>
-    </p>
-
-    <p>
-        @Html.DisplayNameFor(m => m.Error.Message) :
-        <b>@Html.DisplayFor(m => m.Error.Message)</b>
-    </p>
+    <div class="divider-blank50"></div>
+    <div class="topic-row">
+        خطا
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="detail-row">
+        <span class="title">پست متد است؟</span>
+        <span class="value">
+            @Model.Error.IsPostMethod.ToPersian()
+        </span>
+    </div>
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">خط :</span>
+        <span class="value">
+            @Html.DisplayFor(m => m.Error.LineNumber).FaDigit()
+        </span>
+    </div>
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">پیام :</span>
+    </div>
+    <div class="detail-row" style="direction: ltr;">
+        <span class="value">
+            @Html.DisplayFor(m => m.Error.Message)
+        </span>
+    </div>
 }

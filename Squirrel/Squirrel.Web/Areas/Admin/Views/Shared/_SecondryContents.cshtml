@@ -1,0 +1,19 @@
+﻿<div class="expander">
+    <span class="glyphbox docollapse" onclick="onSecondryExpanderClick()">&#xe686</span>
+    <span class="glyphbox doexpand" onclick="onSecondryExpanderClick()">&#xe684</span>
+    <span class="glyphbox pin" onclick="onSecondryPinClick()">&#xe69b</span>
+    <span class="clearbox"></span>
+</div>
+<div id="secondry_content"></div>
+<div class="previous"></div>
+
+<script type="text/javascript">
+    function onSecondryExpanderClick() {
+        $('.secondry-content').toggleClass('tie-secondry');
+
+        if ($('.mainpart-con').hasClass('pin-secondry')) {
+            $('.secondry-content').removeClass('pin-secondry');
+            $('.mainpart-con').removeClass('pin-secondry');
+        }
+    }
+</script>

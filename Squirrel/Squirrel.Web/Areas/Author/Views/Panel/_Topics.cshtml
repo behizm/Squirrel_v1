@@ -1,0 +1,40 @@
+﻿@using Squirrel.Domain.ExtensionMethods
+@using Squirrel.Utility.Helpers
+@model List<Squirrel.Domain.Enititis.Topic>
+
+<div class="box-uptitle">
+    <div class="text">آخرین عناوین</div>
+    <div class="links">
+        <a class="button small tile" href="@Url.Action("Index", "Publish")">
+            <span class="glyphbox">&#xe632</span>
+        </a>
+    </div>
+    <div class="clearbox"></div>
+</div>
+<div class="flatbox">
+    @for (var i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+
+        <div class="detailsrow">
+            <span class="topic">عنوان :</span>
+            @Html.DisplayFor(m => item.Title)
+        </div>
+
+        if (i == 0 && item.Abstarct().IsNotNothing())
+        {
+            <div class="divider-blank10"></div>
+            <div class="detailsrow">
+                <span class="topic">خلاصه :</span>
+                @item.Abstarct()
+            </div>
+        }
+
+        if (i < Model.Count - 1)
+        {
+            <div class="divider-blank30"></div>
+            <div class="full-line"></div>
+            <div class="divider-blank30"></div>
+        }
+    }
+</div>

@@ -1,0 +1,40 @@
+﻿@using Squirrel.Utility.Helpers
+@{
+    var showname = User.Identity.Name;
+    var avatarAddress = string.Empty;
+    if (User.Identity.Profile != null)
+    {
+        showname = User.Identity.Profile.Firstname + " " + User.Identity.Profile.Lastname;
+        if (User.Identity.Profile.AvatarId.HasValue)
+        {
+            avatarAddress = User.Identity.Profile.Avatar.Address;
+        }
+    }
+}
+
+<div class="col-lg-9 col-xs-7">
+    <div class="row global-messagebox error">
+        <div class="col-sm-2 date hidden-xs"></div>
+        <div class="col-sm-10 message">
+            <span></span>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-xs-5">
+    <div class="profile-data">
+        <a class="image" href="@Url.Action("Index", "Profile")">
+        @if (avatarAddress.IsNothing())
+        {
+                <span class="glyphbox">&#xe605</span>
+        }
+        else
+        {
+                <img alt="" src="@Url.Content(avatarAddress)" />
+        }
+        </a>
+        <a class="name hidden-xs" href="@Url.Action("Index", "Profile")">@showname</a>
+        <a class="exit" href="@Url.Action("LogOff", "Account", new { Area = "" })">خروج</a>
+        <div class="clearbox"></div>
+    </div>
+</div>

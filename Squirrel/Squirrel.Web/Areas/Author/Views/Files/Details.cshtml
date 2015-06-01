@@ -1,4 +1,5 @@
-﻿@using Squirrel.Domain.ExtensionMethods
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ExtensionMethods
 @using Squirrel.Domain.ViewModels
 @using Squirrel.Utility.FarsiTools
 @using Squirrel.Utility.Helpers
@@ -35,6 +36,13 @@
     اطلاعات فایل
 </div>
 <div class="divider-blank15"></div>
+@if (Model.Type == FileType.Image)
+{
+    <div class="image-row">
+        <img src="@Url.Content(Model.Address)" />
+    </div>
+    <div class="divider-blank10"></div>
+}
 <div class="detail-row">
     <span class="title">نام فایل :</span>
     <span class="value">

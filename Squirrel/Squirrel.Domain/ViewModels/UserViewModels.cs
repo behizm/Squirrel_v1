@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 
 namespace Squirrel.Domain.ViewModels
@@ -46,6 +47,31 @@ namespace Squirrel.Domain.ViewModels
         [StringLength(50, ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_StringLength", ErrorMessage = null)]
         [EmailAddress(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
         public string Email { get; set; }
+
+        [Display(Name = @"فعال است؟")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public bool IsActive { get; set; }
+
+        [Display(Name = @"قفل است؟")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public bool IsLock { get; set; }
+
+        [Display(Name = @"ادمین است؟")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public bool IsAdmin { get; set; }
+
+        public static implicit operator UserUpdateModel(User user)
+        {
+            return new UserUpdateModel
+            {
+                Email = user.Email,
+                Id = user.Id,
+                IsActive = user.IsActive,
+                IsAdmin = user.IsAdmin,
+                IsLock = user.IsLock,
+                Username = user.Username,
+            };
+        }
     }
 
     public class UserRemoveModel
@@ -66,7 +92,11 @@ namespace Squirrel.Domain.ViewModels
     public class UserSearchModel
     {
         public Guid? Id { get; set; }
+
+        [Display(Name = @"نام کاربری")]
         public string Username { get; set; }
+
+        [Display(Name = @"پست الکترونیکی")]
         public string Email { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreateDateFrom { get; set; }

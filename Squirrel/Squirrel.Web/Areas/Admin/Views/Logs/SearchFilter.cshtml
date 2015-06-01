@@ -1,32 +1,76 @@
-﻿@model Squirrel.Domain.ViewModels.LogSearchModel
+﻿@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.ViewModels.LogSearchModel
 
 @Styles.Render("~/Content/PersianDatatimePicker")
 @Scripts.Render("~/bundles/PersianDatatimePicker")
 
-@using (Ajax.BeginForm("Search", "Logs", null, new AjaxOptions { OnSuccess = "onSearchLogSuccess" }, new { id = "log_search_from" }))
-{
-    <div class="form-group">
-        @Html.AntiForgeryToken()
-        @Html.Hidden("searchPage", 1)
-
-        @Html.TextBoxFor(m => m.AreaProp, new { placeholder = "اریا" })
-        @Html.TextBoxFor(m => m.ControllerProp, new { placeholder = "کنترلر" })
-        @Html.TextBoxFor(m => m.ActionProp, new { placeholder = "اکشن" })
-        <br/>
-        @Html.LabelFor(m => m.IsAjax)
-        @Html.EditorFor(m => m.IsAjax)
-        @Html.LabelFor(m => m.IsErrorLog)
-        @Html.EditorFor(m => m.IsErrorLog)
-        <br/>
-        From:
-        @Html.TextBox("dateform_searchlog", null, new { @readonly = "readonly" })
-        @Html.HiddenFor(m => m.CreatePersianDateFrom)
-        To:
-        @Html.TextBox("dateto_searchlog", null, new { @readonly = "readonly" })
-        @Html.HiddenFor(m => m.CreatePersianDateTo)
-        <button type="button" class="btn btn-default" onclick="beginSearch(1)">جستجو</button>
+<div class="box-uptitle">
+    <div class="text">لیست لاگ ها</div>
+    <div class="links">
+        <span class="button small tile" onclick="loadCleanLogs()">
+            <span class="glyphbox">&#xe609</span>
+        </span>
     </div>
-}
+    <div class="clearbox"></div>
+</div>
+
+<div class="flatbox">
+    @using (Ajax.BeginForm("Search", "Logs", null, new AjaxOptions { OnSuccess = "onSearchLogSuccess" }, new { id = "log_search_from" }))
+    {
+        <div class="form-group">
+            @Html.AntiForgeryToken()
+            @Html.Hidden("searchPage", 1)
+            @Html.HiddenFor(m => m.CreatePersianDateFrom)
+            @Html.HiddenFor(m => m.CreatePersianDateTo)
+
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.AreaProp)
+                    @Html.TextBoxFor(m => m.AreaProp, new { @class = "textbox" })
+                    <div class="divider-blank15"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.ControllerProp)
+                    @Html.TextBoxFor(m => m.ControllerProp, new { @class = "textbox" })
+                    <div class="divider-blank15"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.ActionProp)
+                    @Html.TextBoxFor(m => m.ActionProp, new { @class = "textbox" })
+                    <div class="divider-blank15"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.IsAjax)
+                    @Html.DropDownListFor(m => m.IsAjax, SelectListExtensions.SelectListOfBool("بله", "خیر"), new { @class = "textbox" })
+                    <div class="divider-blank15"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.CreateDateFrom)
+                    @Html.TextBox("dateform_searchlog", null, new { @class = "textbox", @readonly = "readonly" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.CreateDateTo)
+                    @Html.TextBox("dateto_searchlog", null, new { @class = "textbox", @readonly = "readonly" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.IsErrorLog)
+                    @Html.DropDownListFor(m => m.IsErrorLog, SelectListExtensions.SelectListOfBool("بله", "خیر"), new { @class = "textbox" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    <div class="divider-blank30"></div>
+                    <button type="submit" class="button submit" style="width: 100%;">جستجو</button>
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 <script type="text/javascript">
     $('#dateform_searchlog').MdPersianDateTimePicker({

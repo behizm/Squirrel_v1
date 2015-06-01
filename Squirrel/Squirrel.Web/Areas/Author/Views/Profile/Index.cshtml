@@ -68,54 +68,5 @@
                 GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
         }
-
-        /////////////////////////
-        /////////////////////////
-        /////////////////////////
-        /////////////////////////
-        /////////////////////////
-
-        function LoadEdit() {
-            $('#editable_info_diplay').hide();
-            $('#editable_info_form').show();
-        }
-
-        function CancelEdit() {
-            $('#editable_info_diplay').show();
-            $('#editable_info_form').hide();
-            $('#editable_info_form #internal_message').text('');
-
-            var $firstName = $('#editable_info_form input[type="text"]#Firstname');
-            $firstName.val($firstName.attr('def-val'));
-
-            var $lastName = $('#editable_info_form input[type="text"]#Lastname');
-            $lastName.val($lastName.attr('def-val'));
-        }
-
-        function onEditSuccess(data) {
-            if (data.result == true) {
-                loadProfileDetails();
-            } else {
-                $('#editable_info_form #internal_message').text(data.message);
-            }
-        }
-
-        function loadChangeAvatar() {
-            $.ajax({
-                url: '@Url.Action("Avatar", "Profile")',
-                success: function (r) {
-                    $('#option_con_1').html(r);
-                },
-            });
-        }
-
-        function onChangeAvatarSuccess(data) {
-            if (data.result == true) {
-                loadProfileDetails();
-                $('#option_con_1').text(data.message);
-            } else {
-                $('#profile_avatar_error').text(data.message);
-            }
-        }
     </script>
 }

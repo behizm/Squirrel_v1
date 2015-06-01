@@ -41,22 +41,44 @@
                 {
                     if (item.UserId == item.Post.AuthorId)
                     {
-                        <span>نویسنده مطلب :</span>
+                        @("نویسنده مطلب : ")
                     }
                     <span>@item.User.ShowName()</span>
                 }
-                @Html.DisplayFor(m => item.Name)
+                else
+                {
+                    @Html.DisplayFor(m => item.Name)
+                }
             </div>
             <div class="date">
                 @(((PersianDate)item.CreateDate).ToStringDate().FaDigit())
                 ساعت
                 @(((PersianDate)item.CreateDate).ToStringTime().FaDigit())
             </div>
+            @if (item.ParentId.HasValue)
+            {
+                <div class="parent">
+                    @if (item.Parent.UserId.HasValue)
+                    {
+                        if (item.Parent.UserId == item.Post.AuthorId)
+                        {
+                            @("نویسنده مطلب : ")
+                        }
+                        @item.Parent.User.ShowName()
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => item.Parent.Name)
+                    }
+                    <br/>
+                    @Html.DisplayFor(m => item.Parent.Body)
+                </div>
+            }
             <div class="content">
                 @Html.DisplayFor(m => item.Body)
             </div>
         </div>
     </div>
 
-                counter++;
+            counter++;
 }

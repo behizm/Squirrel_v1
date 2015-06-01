@@ -2,35 +2,55 @@
 @using Squirrel.Utility.FarsiTools
 @model List<Squirrel.Domain.Enititis.Log>
 
-<table class="table">
-    <tbody>
-        @foreach (var log in Model)
+<div class="flatbox">
+    @if (Model.Any())
+    {
+        <table class="table hover-row">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>تاریخ</th>
+                    <th>آدرس</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model)
+                {
+                    var item = file;
+                    <tr onclick="loadLogDetails('@item.Id')">
+                        <td>
+                            @if (item.ErrorId.HasValue)
+                            {
+                                @("!")
+                            }
+                        </td>
+                        <td>
+                            @item.CreateDate.ToPersianDate().ToStringDateTime(timeFormat:PersianTimeFormat.HH_MM_SS).FaDigit()
+                        </td>
+                        <td>
+                            @string.Format("{0}/{1}/{2}", item.Area, item.Controller, item.Action)
+                        </td>
+                        <td>
+                            @if (item.IsAjax)
+                            {
+                                @("Ajax")
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        if (ViewBag.Paging != null)
         {
-            var item = log;
-            var style = string.Empty;
-            if (item.IsAjax)
-            {
-                style = "color: #bbb;";
-            }
-            <tr style="@style">
-                <td>
-                    <span style="border-bottom: 1px solid;" onclick="loadLogDetails('@log.Id')">
-                        @(((PersianDate)item.CreateDate).ToStringDateTime(timeFormat: PersianTimeFormat.HH_MM_SS))
-                    </span>
-                </td>
-                <td>@string.Format("{0}/{1}/{2}", item.Area, item.Controller, item.Action)</td>
-                <td>
-                    @if (item.ErrorId.HasValue)
-                    {
-                        <span>!</span>
-                    }
-                </td>
-            </tr>
+            <div class=divider-blank30></div>
+            @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
         }
-    </tbody>
-</table>
-
-@if (ViewBag.Paging != null)
-{
-    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
-}
+    }
+    else
+    {
+        <div class="no-content">
+            موردی وجود ندارد.
+        </div>
+    }
+</div>

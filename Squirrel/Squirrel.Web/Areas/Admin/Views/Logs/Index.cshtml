@@ -2,39 +2,36 @@
     ViewBag.Title = "سیستم لاگ";
 }
 
-<h2>لاگ ها</h2>
-<hr />
-
-<div class="col-lg-6">
-    @Html.Partial("SearchFilter")
-    <div id="list_con"></div>
-    <hr />
-    <div>
-        <div id="cleanlog_message"></div>
-        <div id="cleanlog_loader">
-            <button type="button" class="btn btn-default" onclick="loadCleanLogs()">Clean Logs</button>
-        </div>
-        <div id="cleanlog_result" style="display: none;">
-            @Html.Partial("Clean")
-        </div>
-    </div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
 </div>
 
-<div class="col-lg-6">
-    <div id="option_con_1"></div>
+<div class="col-lg-12">
+    @Html.Partial("SearchFilter")
+</div>
+
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-lg-12">
+    <div id="list_con"></div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
         $(function () {
-            beginSearch(1);
+            beginSearchLog(1);
         });
 
-        function beginSearch(p) {
+        function beginSearchLog(p) {
             $('#searchPage').val(p);
             $('#log_search_from').submit();
-            $('#list_con').text('waiting ...');
+        }
+
+        function reloadSearchLog() {
+            $('#log_search_from').submit();
         }
 
         function onSearchLogSuccess(data) {
@@ -45,32 +42,41 @@
             $.ajax({
                 url: '@Url.Action("Details", "Logs")',
                 data: { id: id },
-                success: function (r) {
-                    $('#option_con_1').html(r);
+                error: function () {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام نمایش جزئیات لاگ خطا رخ داد.', 'error');
+                },
+                success: function (data) {
+                    fillSecondryContent(data);
+                    showSecondryContent();
                 }
             });
         }
 
         function loadCleanLogs() {
-            $('#cleanlog_result').show();
-            $('#cleanlog_loader').hide();
+            $.ajax({
+                url: '@Url.Action("Clean", "Logs")',
+                error: function () {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری خطا رخ داد.', 'error');
+                },
+                success: function (data) {
+                    fillSecondryContent(data);
+                    showSecondryContent();
+                }
+            });
         }
 
-        function cancelCleanLogs() {
-            $('#CreatePersianDateFrom').val('');
-            $('#CreatePersianDateTo').val('');
-            $('#dateform_searchlog').val('');
-            $('#dateto_searchlog').val('');
-            $('#cleanlog_result').hide();
-            $('#cleanlog_loader').show();
+        function onCleanLogError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام پاک کردن لاگ ها خطا رخ داد.', 'error');
         }
 
         function onCleanLogSuccess(data) {
             if (data.result == true) {
-                cancelCleanLogs();
-                beginSearch(1);
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                beginSearchLog(1);
+                hideAndClearSecondryContent();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
             }
-            $('#cleanlog_message').text(data.message);
         }
     </script>
 }

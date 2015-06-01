@@ -1,13 +1,47 @@
 ﻿@model Squirrel.Domain.ViewModels.UserSearchModel
 
-@using (Ajax.BeginForm("Search", "Users", null, new AjaxOptions { UpdateTargetId = "list_result" }, new { id = "user_search_from" }))
-{
-    <div class="form-group">
-        @Html.AntiForgeryToken()
-        @Html.Hidden("searchPage", 1)
-        @Html.TextBoxFor(m => m.Username, new { placeholder = "نام کاربری" })
-        @Html.TextBoxFor(m => m.Email, new { placeholder = "پست الکترونیکی" })
-        <button type="submit" class="btn btn-default">جستجو</button>
+<div class="box-uptitle">
+    <div class="text">لیست کاربران</div>
+    <div class="links">
+        <span class="button small tile" onclick="loadAddUser()">
+            <span class="glyphbox">&#xe6b9</span>
+        </span>
     </div>
+    <div class="clearbox"></div>
+</div>
 
-}
+<div class="flatbox">
+    @using (Ajax.BeginForm("Search", "Users", null, new AjaxOptions { UpdateTargetId = "list_result" }, new { id = "user_search_from" }))
+    {
+        <div class="form-group">
+            @Html.AntiForgeryToken()
+            @Html.Hidden("searchPage", 1)
+
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Username)
+                    @Html.TextBoxFor(m => m.Username, new { @class = "textbox", @id = "search_user_username" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+                <div class="col-lg-3 col-sm-6 form-row">
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email, new { @class = "textbox", @id = "search_user_email" })
+                    <div class="divider-blank15 hidden-lg"></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#search_user_username').on('input', function () {
+            searchingUser(1);
+        });
+        $('#search_user_email').on('input', function () {
+            searchingUser(1);
+        });
+    })
+</script>

@@ -1,7 +1,44 @@
-﻿
+﻿@using Squirrel.Domain.Enititis
+@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "پنل نویسنده";
 }
 
-<h2>Author Panel</h2>
+<div class="col-lg-12">
+    <div class="divider-blank50"></div>
+</div>
 
+@*<div class="col-lg-12">
+    <div class="row">
+        @Html.Partial("_Tiles")
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="divider-blank50"></div>
+</div>*@
+
+<div class="col-lg-12">
+    <div class="row">
+        @Html.Partial("_Statistics")
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="divider-blank50"></div>
+</div>
+
+<div class="col-md-6">
+    @Html.Partial("_Topics", (List<Topic>)ViewBag.LastTopics)
+    <div class="col-lg-12">
+        <div class="divider-blank30"></div>
+    </div>
+</div>
+
+<div class="col-md-6">
+    @Html.Partial("_Comments", (List<Comment>)ViewBag.LastComments)
+    <div class="col-lg-12">
+        <div class="divider-blank30"></div>
+    </div>
+</div>

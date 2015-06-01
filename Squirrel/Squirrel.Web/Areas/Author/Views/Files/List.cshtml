@@ -34,6 +34,7 @@
         </table>
         if (ViewBag.Paging != null)
         {
+            <div class=divider-blank30></div>
             @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
         }
     }

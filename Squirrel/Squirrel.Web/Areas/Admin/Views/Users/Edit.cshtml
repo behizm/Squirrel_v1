@@ -1,36 +1,67 @@
-﻿@model Squirrel.Domain.ViewModels.UserUpdateModel
-    
-<h4>ویرایش کاربر</h4>
+﻿@using Squirrel.Utility.Helpers
+@model Squirrel.Domain.ViewModels.UserUpdateModel
 
-@Html.Partial("_Message")
+<div class="topic-row">
+    ویرایش کاربر
+</div>
+<div class="divider-blank15"></div>
 
-@using (Ajax.BeginForm("Edit", "Users", null, new AjaxOptions { UpdateTargetId = "option_con_2" }, new { id = "user_details_form" }))
+@using (Ajax.BeginForm("Edit", "Users", null,
+    new AjaxOptions { OnFailure = "onEditUserError", OnSuccess = "onEditUserSuccess" },
+    new { id = "user_edit_form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)
 
-    <p class="form-group">
+    <div class="form-row">
         @Html.LabelFor(m => m.Username)
-        <br />
-        @Html.TextBoxFor(m => m.Username)
-        @Html.ValidationMessageFor(m => m.Username)
-    </p>
-
-    <p class="form-group">
+        @Html.TextBoxFor(m => m.Username, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Username)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Email)
-        <br />
-        @Html.TextBoxFor(m => m.Email)
-        @Html.ValidationMessageFor(m => m.Email)
-    </p>
-
-    <p>
-        <button type="submit" class="btn btn-default">ویرایش</button>
-        <button type="button" class="btn btn-default" onclick="$('#option_con_2').html('');">انصراف</button>
-    </p>
+        @Html.TextBoxFor(m => m.Email, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
+        @Html.LabelFor(m => m.IsActive)
+        @Html.DropDownListFor(m => m.IsActive, SelectListExtensions.SelectListOfBool("بله", "خیر", false), new { @class = "select small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.IsActive)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
+        @Html.LabelFor(m => m.IsLock)
+        @Html.DropDownListFor(m => m.IsLock, SelectListExtensions.SelectListOfBool("بله", "خیر", false), new { @class = "select small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.IsLock)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
+        @Html.LabelFor(m => m.IsAdmin)
+        @Html.DropDownListFor(m => m.IsAdmin, SelectListExtensions.SelectListOfBool("بله", "خیر", false), new { @class = "select small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.IsAdmin)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">ثبت</button>
+        <a class="button small" onclick="restoreSecondryContent()">انصراف</a>
+    </div>
 }
 
 <script type="text/javascript">
     $(function () {
-        $.validator.unobtrusive.parse("#user_details_form");
+        $.validator.unobtrusive.parse("#user_edit_form");
+        $("#user_edit_form").data("validator").settings.ignore = "";
     })
 </script>

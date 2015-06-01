@@ -132,6 +132,29 @@ namespace Squirrel.Service.Services
             await UpdateAsync(user);
         }
 
+        public async Task UpdateAsync(UserUpdateModel model)
+        {
+            if (model.Username.IsNothing() || model.Email.IsNothing())
+            {
+                Result = OperationResult.Failed(ServiceMessages.General_LackOfInputData);
+                return;
+            }
+
+            var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == model.Id);
+            if (user == null)
+            {
+                Result = OperationResult.Failed(ServiceMessages.UserService_UserNotFound);
+                return;
+            }
+
+            user.Email = model.Email;
+            user.Username = model.Username;
+            user.IsActive = model.IsActive;
+            user.IsLock = model.IsLock;
+            user.IsAdmin = model.IsAdmin;
+            await UpdateAsync(user);
+        }
+
         public async Task RemoveAsync(Guid id)
         {
             var user = await RepositoryContext.RetrieveAsync<User>(x => x.Id == id);

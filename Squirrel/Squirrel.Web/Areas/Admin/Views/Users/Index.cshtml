@@ -2,185 +2,132 @@
     ViewBag.Title = "مدیریت کاربران";
 }
 
-<br />
-<div class="row">
-    <div class="col-lg-12">
-        <br />
-    </div>
-    <div class="col-lg-7">
-        <div class="panel panel-default">
-            <div class="panel-heading">لیست کاربران</div>
-            <div class="panel-body">
-                <div>
-                    <button type="button" class="btn btn-default" onclick="LoadAddUser()">+</button>
-                </div>
-                <br />
-                @Html.Partial("SearchFilter")
-            </div>
-            <div id="list_result" style="margin: 10px 30px;"></div>
-        </div>
-    </div>
-    <div class="col-lg-5">
-        <div id="option_con"></div>
-        <br />
-        <div id="option_con_2"></div>
-    </div>
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-lg-12">
+    @Html.Partial("SearchFilter")
+</div>
+
+<div class="col-lg-12">
+    <div class="divider-blank30"></div>
+</div>
+
+<div class="col-lg-12">
+    <div id="list_result"></div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
-            LoadList(1);
+        $(function() {
+            searchingUser(1);
         });
 
-        function ReloadList() {
-            $('#user_search_from').submit();
-        }
-
-        function LoadList(page) {
+        function searchingUser(page) {
             $('#searchPage').val(page);
             $('#user_search_from').submit();
         }
 
-        function LoadAddUser() {
+        function reloadSearchingUser() {
+            $('#user_search_from').submit();
+        }
+
+        function loadAddUser() {
             $.ajax({
                 url: '@Url.Action("Add", "Users")',
-                success: function (r) {
-                    $('#option_con').html(r);
-                    $('#option_con_2').html('');
+                error: function() {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری فرم افزودن کاربر خطا رخ داد.', 'error');
+                },
+                success: function(data) {
+                    fillSecondryContent(data);
+                    showSecondryContent();
                 }
             });
         }
 
-        function ActiveUser(e, id) {
-            $.ajax({
-                url: '@Url.Action("Active", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    if (r == "True") {
-                        $(e).next('span').show();
-                        $(e).hide();
-                    }
-                }
-            });
+        function onAddUserError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام افزودن کاربر خطا رخ داد.', 'error');
         }
 
-        function LockUser(e, id) {
-            $.ajax({
-                url: '@Url.Action("Lock", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    if (r == "True") {
-                        var $parent = $(e).parent();
-                        $parent.children('.lock-user').show();
-                        $(e).hide();
-                    }
-                }
-            });
+        function onAddUserSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                hideAndClearSecondryContent();
+                searchingUser(1);
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
 
-        function UnlockUser(e, id) {
-            $.ajax({
-                url: '@Url.Action("Unlock", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    if (r == "True") {
-                        var $parent = $(e).parent();
-                        $parent.children('.unlock-user').show();
-                        $(e).hide();
-                    }
-                }
-            });
-        }
-
-        function LoadDetails(id) {
+        function loadUserDetails(id) {
             $.ajax({
                 url: '@Url.Action("Details", "Users")',
                 data: { id: id },
-                success: function (r) {
-                    $('#option_con').html(r);
+                error: function () {
+                    GlobalMessage(GetNowTimeFa(), 'در هنگام بارگذاری اطلاعات کاربر خطا رخ داد.', 'error');
+                },
+                success: function (data) {
+                    fillSecondryContent(data);
+                    showSecondryContent();
                 }
             });
         }
 
-        function LoadDetailsFromList(id) {
-            $.ajax({
-                url: '@Url.Action("Details", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con').html(r);
-                    $('#option_con_2').html('');
-                }
-            });
+        function loadEditUser() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#edit_user_form_con').html());
         }
 
-        function AddAdmin(e, id) {
-            $.ajax({
-                url: '@Url.Action("AddAdmin", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    if (r == "True") {
-                        var $parent = $(e).parent();
-                        $parent.children('.isadmin').show();
-                        $(e).hide();
-                    }
-                }
-            });
+        function onEditUserError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ویرایش کاربر خطا رخ داد.', 'error');
         }
 
-        function RemoveAdmin(e, id) {
-            $.ajax({
-                url: '@Url.Action("RemoveAdmin", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    if (r == "True") {
-                        var $parent = $(e).parent();
-                        $parent.children('.isnotadmin').show();
-                        $(e).hide();
-                    }
-                }
-            });
+        function onEditUserSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadUserDetails(data.id);
+                reloadSearchingUser();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
 
-        function LoadEditUser(id) {
-            $.ajax({
-                url: '@Url.Action("Edit", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function loadResetPassUser() {
+            checkpointSecondryContent();
+            fillSecondryContent($('#chnagepass_user_form_con').html());
         }
 
-        function LoadRemoveUser(id) {
-            $.ajax({
-                url: '@Url.Action("Remove", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function onResetPassUserError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام تغییر پسورد کاربر خطا رخ داد.', 'error');
         }
 
-        function LoadResetPassword(id) {
-            $.ajax({
-                url: '@Url.Action("ResetPassword", "Users")',
-                data: { id: id },
-                success: function (r) {
-                    $('#option_con_2').html(r);
-                }
-            });
+        function onResetPassUserSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                loadUserDetails(data.id);
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
 
-        function EditCompleteReload(id) {
-            ReloadList();
-            LoadDetails(id);
+        function loadRemoveUser() {
+            showPopupAlert("آیا مطمئن هستید که این کاربر پاک شود؟", '$("#user_remove_form").submit();', '');
         }
 
-        function RemoveCompleteReload() {
-            ReloadList();
-            $('#option_con').html('');
+        function onRemoveUserError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام حذف کاربر خطا رخ داد.', 'error');
+        }
+
+        function onRemoveUserSuccess(data) {
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                reloadSearchingUser();
+                hideAndClearSecondryContent();
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
         }
     </script>
 }

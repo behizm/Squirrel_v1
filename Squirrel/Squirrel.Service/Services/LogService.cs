@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
@@ -196,7 +195,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            await RepositoryContext.DeleteAsync(items.ToArray());
+            await RepositoryContext.BatchDeleteAsync(items);
             if (!RepositoryContext.OperationResult.Succeeded)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);

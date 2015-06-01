@@ -1,70 +1,52 @@
 ﻿@using Squirrel.Domain.ViewModels
-@using Squirrel.Utility.FarsiTools
 @model List<Squirrel.Domain.Enititis.User>
 
-<table class="table">
-    <tbody>
-        @foreach (var user in Model)
+<div class="flatbox">
+    @if (Model.Any())
+    {
+        <table class="table hover-row">
+            <thead>
+                <tr>
+                    <th>نام کاربری</th>
+                    <th>پست الکترونیکی</th>
+                    <th>نوع کاربری</th>
+                    <th>وضعیت ها</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model)
+                {
+                    var item = file;
+                    <tr onclick="loadUserDetails('@item.Id')">
+                        <td>@Html.DisplayFor(m => item.Username)</td>
+                        <td style="direction: ltr;text-align: right;">
+                            @Html.DisplayFor(m => item.Email)
+                        </td>
+                        <td>
+                            @(item.IsAdmin ? "ادمین" : "عادی")
+                        </td>
+                        <td>
+                            <span>
+                                @(item.IsActive ? "فعال" : "غیرفعال")
+                            </span>
+                            <span>
+                                @(item.IsLock ? " - قفل" : "")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        if (ViewBag.Paging != null)
         {
-            var item = user;
-            <tr>
-                <td>
-                    <span style="border-bottom: 1px solid;" onclick="LoadDetailsFromList('@item.Id')">
-                        @Html.DisplayFor(m => item.Username)
-                    </span>
-                </td>
-                <td>@Html.DisplayFor(m => item.Email)</td>
-                <td>
-                    @if (item.IsActive)
-                    {
-                        <span>Active</span>
-                    }
-                    else
-                    {
-                        <span style="color: gainsboro" onclick="ActiveUser(this,'@item.Id')">Active</span>
-                        <span style="display: none;">Active</span>
-                    }
-                </td>
-                <td>
-                    @if (item.IsLock)
-                    {
-                        <span class="lock-user" style="color: orangered" onclick="UnlockUser(this,'@item.Id')">Lock</span>
-                        <span class="unlock-user" style="color: gainsboro; display: none;" onclick="LockUser(this,'@item.Id')">Lock</span>
-                    }
-                    else
-                    {
-                        if (item.LockDate.HasValue && item.LockDate.Value > DateTime.Now)
-                        {
-                            PersianDate pDate = item.LockDate.Value;
-                            <span style="color: orangered" onclick="UnlockUser(this,'@item.Id')">@pDate.ToStringTime()</span>
-                            <span class="lock-user" style="color: orangered; display: none;" onclick="UnlockUser(this,'@item.Id')">Lock</span>
-                            <span class="unlock-user" style="color: gainsboro; display: none;" onclick="LockUser(this,'@item.Id')">Lock</span>
-                        }
-                        else
-                        {
-                            <span class="lock-user" style="color: orangered; display: none;" onclick="UnlockUser(this,'@item.Id')">Lock</span>
-                            <span class="unlock-user" style="color: gainsboro;" onclick="LockUser(this,'@item.Id')">Lock</span>
-                        }
-                    }
-                </td>
-                <td>
-                    @if (item.IsAdmin)
-                    {
-                        <span class="isnotadmin" style="color: gainsboro;display: none;" onclick="AddAdmin(this,'@item.Id')">Admin</span>
-                        <span class="isadmin" onclick="RemoveAdmin(this,'@item.Id')">Admin</span>
-                    }
-                    else
-                    {
-                        <span class="isnotadmin" style="color: gainsboro" onclick="AddAdmin(this,'@item.Id')">Admin</span>
-                        <span class="isadmin" style="display: none;" onclick="RemoveAdmin(this,'@item.Id')">Admin</span>
-                    }
-                </td>
-            </tr>
+            <div class=divider-blank30></div>
+            @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
         }
-    </tbody>
-</table>
-
-@if (ViewBag.Paging != null)
-{
-    @Html.Partial("Paging", (PagingModel)ViewBag.Paging)
-}
+    }
+    else
+    {
+        <div class="no-content">
+            موردی وجود ندارد.
+        </div>
+    }
+</div>

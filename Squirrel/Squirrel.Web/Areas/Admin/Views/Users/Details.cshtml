@@ -1,66 +1,110 @@
-﻿@using Squirrel.Utility.FarsiTools
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@using Squirrel.Utility.Helpers
 @model Squirrel.Domain.Enititis.User
 
-<p>
-    @Html.DisplayNameFor(m => m.Username) :
-    <b>@Html.DisplayFor(m => m.Username)</b>
-</p>
-<p>
-    @Html.DisplayNameFor(m => m.Email) :
-    <b>@Html.DisplayFor(m => m.Email)</b>
-</p>
-<p>
-    @Html.DisplayNameFor(m => m.CreateDate) :
-    <b>@(((PersianDate)Model.CreateDate).ToStringDateTime())</b>
-</p>
-@if (Model.AccessFailed > 0)
-{
-    <p>
-        @Html.DisplayNameFor(m => m.AccessFailed) :
-        <b>@Html.DisplayFor(m => m.AccessFailed)</b>
-    </p>
-}
+<div class="detail-row">
+    <span class="title">نام کاربری :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Username)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">پست الکترونیکی :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.Email)
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">فعال است؟</span>
+    <span class="value">
+        @Model.IsActive.ToPersian()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">قفل است؟</span>
+    <span class="value">
+        @Model.IsLock.ToPersian()
+    </span>
+</div>
+<div class="divider-blank10"></div>
+<div class="detail-row">
+    <span class="title">ادمین است؟</span>
+    <span class="value">
+        @Model.IsAdmin.ToPersian()
+    </span>
+</div>
 @if (Model.EditeDate.HasValue)
 {
-    PersianDate pEditDate = Model.EditeDate.Value;
-    <p>
-        @Html.DisplayNameFor(m => m.EditeDate) :
-        <b>@pEditDate.ToStringDateTime()</b>
-    </p>
+    <div class="divider-blank10"></div>
+    <div class="detail-row">
+        <span class="title">تاریخ ویرایش :</span>
+        <span class="value">
+            @Model.EditeDate.Value.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
 }
-<p>
-    @Html.DisplayNameFor(m => m.IsActive) :
-    @Html.DisplayFor(m => m.IsActive)
-</p>
-<p>
-    @Html.DisplayNameFor(m => m.IsAdmin) :
-    @Html.DisplayFor(m => m.IsAdmin)
-</p>
-<p>
-    @Html.DisplayNameFor(m => m.IsLock) :
-    @Html.DisplayFor(m => m.IsLock)
-</p>
+<div class="divider-blank15"></div>
+<div>
+    <button class="button small submit" onclick="loadEditUser()">ویرایش</button>
+</div>
+
+<div class="divider-blank50"></div>
+
+<div class="topic-row">
+    اطلاعات تکمیلی
+</div>
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">تاریخ ایجاد :</span>
+    <span class="value">
+        @Model.CreateDate.ToPersianDate().ToStringDateTime().FaDigit()
+    </span>
+</div>
 @if (Model.LastLogin.HasValue)
 {
-    PersianDate pLastLogin = Model.LastLogin.Value;
-    <p>
-        @Html.DisplayNameFor(m => m.LastLogin) :
-        <b>@pLastLogin.ToStringDateTime()</b>
-    </p>
+    <div class="divider-blank15"></div>
+    <div class="detail-row">
+        <span class="title">آخرین ورود :</span>
+        <span class="value">
+            @Model.LastLogin.Value.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
 }
 @if (Model.LockDate.HasValue)
 {
-    PersianDate pLockDate = Model.LockDate.Value;
-    <p>
-        @Html.DisplayNameFor(m => m.LockDate) :
-        <b>@pLockDate.ToStringDateTime()</b>
-    </p>
+    <div class="divider-blank15"></div>
+    <div class="detail-row">
+        <span class="title">آخرین قفل شدن :</span>
+        <span class="value">
+            @Model.LockDate.Value.ToPersianDate().ToStringDateTime().FaDigit()
+        </span>
+    </div>
 }
-
+<div class="divider-blank15"></div>
+<div class="detail-row">
+    <span class="title">تعداد ورود ناموفق :</span>
+    <span class="value">
+        @Html.DisplayFor(m => m.AccessFailed).FaDigit()
+    </span>
+</div>
+<div class="divider-blank15"></div>
 <div>
-    <button class="btn btn-default" onclick="LoadEditUser('@Model.Id')">Edit User</button>
-    <button class="btn btn-default" onclick="LoadRemoveUser('@Model.Id')">Remove User</button>
-    <button class="btn btn-default" onclick="LoadResetPassword('@Model.Id')">Reset Password</button>
+    <button class="button small submit" onclick="loadResetPassUser()">تغییر پسورد</button>
+    <button class="button small error" onclick="loadRemoveUser()">حذف</button>
 </div>
 
+<div id="edit_user_form_con" style="display: none;">
+    @Html.Partial("Edit", (UserUpdateModel)Model)
+</div>
 
+<div id="remove_user_form_con">
+    @Html.Partial("Remove", new UserRemoveModel { Id = Model.Id })
+</div>
+
+<div id="chnagepass_user_form_con" style="display: none;">
+    @Html.Partial("ResetPassword", new UserResetPasswordModel { Id = Model.Id })
+</div>

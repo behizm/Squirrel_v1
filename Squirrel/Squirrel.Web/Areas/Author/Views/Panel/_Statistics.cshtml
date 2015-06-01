@@ -1,0 +1,23 @@
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+<div class="col-sm-4">
+    <div class="stats-box important">
+        <div class="value">@(((int)ViewBag.TopicsCount).FaDigit())</div>
+        <div class="title">تعداد عناوین</div>
+    </div>
+    <div class="divider-blank20"></div>
+</div>
+<div class="col-sm-4">
+    <div class="stats-box important">
+        <div class="value">@(((CommentStatisticsResultModel)ViewBag.CommentsCount).Unread.FaDigit())</div>
+        <div class="title">نظرات خوانده نشده</div>
+    </div>
+    <div class="divider-blank20"></div>
+</div>
+<div class="col-sm-4">
+    <div class="stats-box important">
+        <div class="value">@(((int)ViewBag.FilesCount).FaDigit())</div>
+        <div class="title">تعداد فایلها</div>
+    </div>
+    <div class="divider-blank20"></div>
+</div>

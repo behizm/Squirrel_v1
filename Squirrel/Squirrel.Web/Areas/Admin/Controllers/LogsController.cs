@@ -10,6 +10,7 @@ using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.FarsiTools;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Controllers;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Areas.Admin.Controllers
 {
@@ -51,8 +52,12 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             var items = await itemsTask;
             if (items == null)
             {
-                ViewBag.ErrorMessage = LogService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = LogService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var count = await countTask;
@@ -62,7 +67,7 @@ namespace Squirrel.Web.Areas.Admin.Controllers
                 {
                     CurrentPage = searchPage,
                     PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
-                    PagingMethod = "beginSearch(#)"
+                    PagingMethod = "beginSearchLog(#)"
                 };
             }
             return PartialView("List", items);
@@ -72,8 +77,18 @@ namespace Squirrel.Web.Areas.Admin.Controllers
         {
             var item = await LogService.FindByIdAsync(id);
             if (item != null) return PartialView(item);
-            ViewBag.ErrorMessage = FileService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
+
+            ViewData.Model = new ErrorViewModel
+            {
+                Topic = "خطا",
+                Message = LogService.Result.Errors.FirstOrDefault(),
+            };
+            return PartialView("_HandledError");
+        }
+
+        public ActionResult Clean()
+        {
+            return PartialView();
         }
 
         [HttpPost, ValidateAntiForgeryToken]

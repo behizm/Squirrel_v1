@@ -1,46 +1,56 @@
 ﻿@model Squirrel.Domain.ViewModels.UserCreateModel
 
-@Html.Partial("_Message")
+<div class="topic-row">
+    افزودن کاربر
+</div>
+<div class="divider-blank15"></div>
 
-@using (Ajax.BeginForm("Add", "Users", null, new AjaxOptions { UpdateTargetId = "option_con" }, new { id = "user_ops_form" }))
+@using (Ajax.BeginForm("Add", "Users", null,
+    new AjaxOptions { OnFailure = "onAddUserError", OnSuccess = "onAddUserSuccess" },
+    new { id = "user_add_form" }))
 {
     @Html.AntiForgeryToken()
-
-    <p class="form-group">
+    
+    <div class="form-row">
         @Html.LabelFor(m => m.Username)
-        <br />
-        @Html.TextBoxFor(m => m.Username)
-        @Html.ValidationMessageFor(m => m.Username)
-    </p>
-
-    <p class="form-group">
+        @Html.TextBoxFor(m => m.Username, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Username)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Email)
-        <br />
-        @Html.TextBoxFor(m => m.Email)
-        @Html.ValidationMessageFor(m => m.Email)
-    </p>
-
-    <p class="form-group">
+        @Html.TextBoxFor(m => m.Email, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.Password)
-        <br />
-        @Html.PasswordFor(m => m.Password)
-        @Html.ValidationMessageFor(m => m.Password)
-    </p>
-
-    <p class="form-group">
+        @Html.PasswordFor(m => m.Password, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div class="form-row">
         @Html.LabelFor(m => m.ConfirmPassword)
-        <br />
-        @Html.PasswordFor(m => m.ConfirmPassword)
-        @Html.ValidationMessageFor(m => m.ConfirmPassword)
-    </p>
-
-    <p>
-        <button type="submit" class="btn btn-default">افزودن</button>
-    </p>
+        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "textbox small" })
+        <div class="validation">
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        </div>
+    </div>
+    <div class="divider-blank15"></div>
+    <div>
+        <button type="submit" class="button small submit">افزودن</button>
+        <a class="button small" onclick="hideAndClearSecondryContent()">انصراف</a>
+    </div>
 }
 
 <script type="text/javascript">
     $(function () {
-        $.validator.unobtrusive.parse("#user_ops_form");
+        $.validator.unobtrusive.parse("#user_add_form");
     })
 </script>

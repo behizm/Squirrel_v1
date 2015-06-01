@@ -487,6 +487,23 @@ html a:focus {
 .stats-box.error .value {
   color: #fc6e51;
 }
+.squarebox {
+  height: 0;
+  padding-bottom: 100%;
+  width: 100%;
+  position: relative;
+}
+.squarebox .content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+}
 .pager-row {
   display: block;
   text-align: center;
@@ -1153,6 +1170,12 @@ ul.ui-menu li.ui-menu-item.ui-state-focus {
 .secondry-content #secondry_content .avatar-row img {
   height: 52px;
 }
+.secondry-content #secondry_content .image-row {
+  text-align: center;
+}
+.secondry-content #secondry_content .image-row img {
+  max-width: 100%;
+}
 .secondry-content #secondry_content #publishdate_edit_con {
   display: none;
   border: 1px solid #cccccc;
@@ -1395,6 +1418,31 @@ ul.ui-menu li.ui-menu-item.ui-state-focus {
   padding-right: 15px;
   border-right: 2px solid #e1e1e1;
 }
+.mainpart .panel-tile {
+  background-color: #7accc8;
+  border-radius: 3px;
+  box-shadow: 0 3px 2px -1px rgba(0, 0, 0, 0.1);
+}
+.mainpart .panel-tile .content .image {
+  text-align: center;
+  color: #ffffff;
+  line-height: 0;
+}
+.mainpart .panel-tile .content .image .glyphbox {
+  font-size: 40px;
+  line-height: 40px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.mainpart .panel-tile .content .divider {
+  height: 10%;
+}
+.mainpart .panel-tile .content .text {
+  text-align: center;
+  color: #ffffff;
+  font-weight: 200;
+  font-size: .8em;
+}
 @media (min-width: 960px) and (max-width: 1200px) {
   .mainpart-con.pin-secondry {
     padding-left: 330px;
@@ -1425,6 +1473,9 @@ ul.ui-menu li.ui-menu-item.ui-state-focus {
     padding-left: 50px;
   }
   .secondry-content {
+    display: none;
+  }
+  .mainpart .panel-tile {
     display: none;
   }
 }

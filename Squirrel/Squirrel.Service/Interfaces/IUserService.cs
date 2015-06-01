@@ -14,6 +14,7 @@ namespace Squirrel.Service
 
         Task CreateAsync(string username, string email, string password);
         Task UpdateAsync(Guid id, string username, string email);
+        Task UpdateAsync(UserUpdateModel model);
         Task RemoveAsync(Guid id);
         Task<User> FindByIdAsync(Guid userId);
         Task<User> FindByUsernameAsync(string username);

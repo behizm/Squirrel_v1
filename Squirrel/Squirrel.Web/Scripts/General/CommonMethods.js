@@ -35,7 +35,19 @@ function toEnglishDigits(text) {
 
 function GetNowTimeFa() {
     var now = new Date();
-    var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+    var hour = now.getHours().toString();
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+    var minute = now.getMinutes().toString();
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    var second = now.getSeconds().toString();
+    if (second < 10) {
+        second = "0" + second;
+    }
+    var time = hour + ':' + minute + ':' + second;
     return toPersianDigits(time);
 }
 
@@ -226,6 +238,24 @@ function onfileBoxClick(e) {
             $(this).parent().removeClass('focus');
         });
         // Material Textbox <<< end.
+
+        // Blog's post image full size >>> start :
+        $('.issuepage-posts .post .content img').click(function () {
+            $('.popup-con .image-box img').attr('src', $(this).attr('src'));
+            $('.popup-con ').addClass('showed imgbox');
+            $('.popup-con .image-box').fadeIn(200);
+        });
+
+        $('.popup-con').click(function () {
+            if ($(this).hasClass('imgbox')) {
+                console.log('close');
+                $(this).children('.image-box').fadeOut(200);
+                setTimeout(function () {
+                    $('.popup-con ').removeClass('showed imgbox');
+                }, 200);
+            }
+        });
+        // Blog's post image full size <<< end.
     });
 
 

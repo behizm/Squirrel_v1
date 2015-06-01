@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Squirrel.Domain.Enititis;
+using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Web.Controllers;
 using Squirrel.Web.Filters;
+using Squirrel.Web.Models;
 
 namespace Squirrel.Web.Areas.Admin.Controllers
 {
@@ -16,32 +16,6 @@ namespace Squirrel.Web.Areas.Admin.Controllers
         public ActionResult Index()
         {
             return View();
-        }
-
-        public ActionResult Add()
-        {
-            return PartialView();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(UserCreateModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
-            }
-
-            await UserService.CreateAsync(model.Username, model.Email, model.Password);
-            if (UserService.Result.Succeeded)
-            {
-                ViewBag.SuccessMessage = "کاربر با موفقیت افزوده شد.";
-                ViewBag.JsMethod = "ReloadList()";
-                return PartialView("_Message");
-            }
-
-            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -61,8 +35,12 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             var users = await usersTask;
             if (users == null)
             {
-                ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                ViewData.Model = new ErrorViewModel
+                {
+                    Topic = "خطا",
+                    Message = UserService.Result.Errors.FirstOrDefault(),
+                };
+                return PartialView("_HandledError");
             }
 
             var count = await countTask;
@@ -72,34 +50,35 @@ namespace Squirrel.Web.Areas.Admin.Controllers
                 {
                     CurrentPage = searchPage,
                     PageCount = count.Value % 10 == 0 ? count.Value / 10 : (count.Value / 10) + 1,
-                    PagingMethod = "LoadList(#)"
+                    PagingMethod = "searchingUser(#)"
                 };
             }
             return PartialView("list", users);
         }
 
-        public async Task<bool> Active(Guid id)
+        public ActionResult Add()
         {
-            await UserService.ActiveAsync(id);
-            if (UserService.Result.Succeeded)
-                return true;
-            return false;
+            return PartialView();
         }
 
-        public async Task<bool> Lock(Guid id)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<JsonResult> Add(UserCreateModel model)
         {
-            await UserService.LockAsync(id);
-            if (UserService.Result.Succeeded)
-                return true;
-            return false;
-        }
+            if (!ModelState.IsValid)
+            {
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                 JsonRequestBehavior.AllowGet);
+            }
 
-        public async Task<bool> Unlock(Guid id)
-        {
-            await UserService.UnlockAsync(id);
+            await UserService.CreateAsync(model.Username, model.Email, model.Password);
             if (UserService.Result.Succeeded)
-                return true;
-            return false;
+            {
+                return Json(new { result = true, message = "کاربر با موفقیت افزوده شد." },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = false, message = UserService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> Details(Guid id)
@@ -108,79 +87,53 @@ namespace Squirrel.Web.Areas.Admin.Controllers
             if (user != null)
                 return PartialView(user);
 
-            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-            return PartialView("_Message");
-        }
 
-        public async Task<bool> AddAdmin(Guid id)
-        {
-            await UserService.ChangeAdminAsync(id, true);
-            if (UserService.Result.Succeeded)
-                return true;
-            return false;
-        }
-
-        public async Task<bool> RemoveAdmin(Guid id)
-        {
-            await UserService.ChangeAdminAsync(id, false);
-            if (UserService.Result.Succeeded)
-                return true;
-            return false;
-        }
-
-        public async Task<ActionResult> Edit(Guid id)
-        {
-            var user = await UserService.FindByIdAsync(id);
-            if (user == null)
+            ViewData.Model = new ErrorViewModel
             {
-                ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new UserUpdateModel
-            {
-                Email = user.Email,
-                Id = user.Id,
-                Username = user.Username,
+                Topic = "خطا",
+                Message = UserService.Result.Errors.FirstOrDefault(),
             };
-            return PartialView();
+            return PartialView("_HandledError");
         }
 
         [HttpPost, ValidateAntiForgeryToken, UpdateCachedDataFilter]
-        public async Task<ActionResult> Edit(UserUpdateModel model)
+        public async Task<JsonResult> Edit(UserUpdateModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            await UserService.UpdateAsync(model.Id, model.Username, model.Email);
+            await UserService.UpdateAsync(model);
             if (UserService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "کاربر با موفقیت ویرایش شد.";
-                ViewBag.JsMethod = string.Format("EditCompleteReload('{0}');", model.Id);
-                return PartialView("_Message");
+                return Json(new { result = true, message = "کاربر با موفقیت ویرایش شد.", id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = true, message = UserService.Result.Errors.FirstOrDefault(), id = model.Id },
+                 JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> Remove(Guid id)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<JsonResult> ResetPassword(UserResetPasswordModel model)
         {
-            var user = await UserService.FindByIdAsync(id);
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData, id = model.Id },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            ViewData.Model = new UserRemoveModel
+            await UserService.ResetPasswordAsync(model.Id, model.Password);
+            if (UserService.Result.Succeeded)
             {
-                Id = user.Id
-            };
-            return PartialView();
+                return Json(new { result = true, message = "پسورد کاربر با موفقیت تغییر کرد.", id = model.Id },
+                 JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = true, message = UserService.Result.Errors.FirstOrDefault(), id = model.Id },
+                 JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -188,57 +141,19 @@ namespace Squirrel.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
+                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                 JsonRequestBehavior.AllowGet);
             }
 
             await UserService.RemoveAsync(model.Id);
             if (UserService.Result.Succeeded)
             {
-                ViewBag.SuccessMessage = "کاربر با موفقیت حذف شد.";
-                ViewBag.JsMethod = "RemoveCompleteReload();";
-                return PartialView("_Message");
+                return Json(new { result = true, message = "پسورد کاربر با موفقیت حذف شد." },
+                 JsonRequestBehavior.AllowGet);
             }
 
-            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
-        }
-
-        public async Task<ActionResult> ResetPassword(Guid id)
-        {
-            var user = await UserService.FindByIdAsync(id);
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-                return PartialView("_Message");
-            }
-
-            ViewData.Model = new UserResetPasswordModel
-            {
-                Id = user.Id
-            };
-            return PartialView();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(UserResetPasswordModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = "اطلاعات وارد شده قابل قبول نیست.";
-                return PartialView(model);
-            }
-
-            await UserService.ResetPasswordAsync(model.Id, model.Password);
-            if (UserService.Result.Succeeded)
-            {
-                ViewBag.SuccessMessage = "پسورد کاربر با موفقیت تغییر کرد.";
-                ViewBag.JsMethod = string.Format("LoadDetails('{0}');", model.Id);
-                return PartialView("_Message");
-            }
-
-            ViewBag.ErrorMessage = UserService.Result.Errors.FirstOrDefault();
-            return PartialView(model);
+            return Json(new { result = true, message = UserService.Result.Errors.FirstOrDefault() },
+                 JsonRequestBehavior.AllowGet);
         }
 
     }

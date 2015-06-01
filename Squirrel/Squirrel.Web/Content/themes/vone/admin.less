@@ -586,6 +586,22 @@ html {
     }
 }
 
+.squarebox {
+    height: 0;
+    padding-bottom: 100%;
+    width: 100%;
+    position: relative;
+
+    .content {
+        position: absolute;
+        .absolutePostion(0,0,0,0);
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
 .pager-row {
     display: block;
     text-align: center;
@@ -1348,6 +1364,14 @@ ul.ui-menu {
             }
         }
 
+        .image-row {
+            text-align: center;
+
+            img {
+                max-width: 100%;
+            }
+        }
+
         #publishdate_edit_con {
             display: none;
             border: 1px solid @grayLight3;
@@ -1629,6 +1653,38 @@ ul.ui-menu {
             }
         }
     }
+
+    .panel-tile {
+        background-color: @mintDirtyColor;
+        border-radius: 3px;
+        box-shadow: 0 3px 2px -1px rgba(0,0,0,.1);
+
+        .content {
+            .image {
+                text-align: center;
+                color: @white;
+                line-height: 0;
+
+                .glyphbox {
+                    font-size: 40px;
+                    line-height: 40px;
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+            }
+
+            .divider {
+                height: 10%;
+            }
+
+            .text {
+                text-align: center;
+                color: @white;
+                font-weight: 200;
+                font-size: .8em;
+            }
+        }
+    }
 }
 
 @media (min-width:960px) and (max-width: 1200px) {
@@ -1678,5 +1734,11 @@ ul.ui-menu {
 
     .secondry-content {
         display: none;
+    }
+
+    .mainpart {
+        .panel-tile {
+            display: none;
+        }
     }
 }
