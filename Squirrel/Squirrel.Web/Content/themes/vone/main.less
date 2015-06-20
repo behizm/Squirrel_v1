@@ -279,12 +279,21 @@ html {
     border-radius: 2px;
     background-color: @primaryColor;
     color: @grayLight7;
-    .Transitions(background-color,border-color;linear,linear;.2s);
+    .Transition(all;linear;.2s);
 
     .glyphbox, .siteglyphbox {
-        font-size: 24px;
+        font-size: 26px;
         line-height: 44px;
         vertical-align: middle;
+    }
+    
+    .siteglyphbox {
+        font-size: 24px;
+    }
+
+    img {
+        vertical-align: middle;
+        max-height: 24px;
     }
 
     &:hover {

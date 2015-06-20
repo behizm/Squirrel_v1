@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Squirrel.Service;
+using Squirrel.Service.Interfaces;
 using Squirrel.Utility.Async;
 using Squirrel.Web.Models;
 
@@ -130,6 +131,19 @@ namespace Squirrel.Web.Controllers
         protected ITagService TagService2
         {
             get { return _tagService2 ?? (_tagService2 = ServiceIOC.Get<ITagService>()); }
+        }
+
+        //
+        private IEmailService _emailService;
+        protected IEmailService EmailService
+        {
+            get { return _emailService ?? (_emailService = ServiceIOC.Get<IEmailService>()); }
+        }
+
+        private IEmailService _emailService2;
+        protected IEmailService EmailService2
+        {
+            get { return _emailService2 ?? (_emailService2 = ServiceIOC.Get<IEmailService>()); }
         }
 
         // Methods

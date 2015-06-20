@@ -1,0 +1,156 @@
+﻿@using BotDetect.Web
+@using BotDetect.Web.UI.Mvc
+@using Squirrel.Web.Models
+@model Squirrel.Domain.ViewModels.ContactUsViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "تماس با ما";
+}
+
+<link href="@CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+
+<div class="col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-10 col-sm-push-1">
+    <div class="col-xs-12">
+        <div id="countactus_error" style="display: none;">
+            <div class="divider-blank50"></div>
+            <div class="message-box error">
+                <span class="msg-close glyphbox" onclick="$('#countactus_error').hide()">&#xe680</span>
+                <div class="msg-topic">خطا !</div>
+                <div class="msg-text"></div>
+            </div>
+        </div>
+
+        <div id="countactus_success" style="display: none;">
+            <div class="divider-blank50"></div>
+            <div class="message-box success">
+                <span class="msg-close glyphbox" onclick="$('#countactus_success').hide()">&#xe680</span>
+                <div class="msg-topic">پیام شما با موفقیت ارسال شد.</div>
+                <div class="msg-text">از شما به خاطر ارسال این پیام تشکر می کنیم.</div>
+            </div>
+        </div>
+
+        <div class="login-con flatbox-shadow" id="contactus_formcon">
+            <div class="topic">تماس با ما</div>
+
+            @using (Ajax.BeginForm("Contactus", "Home", null,
+                new AjaxOptions { OnBegin = "onContactusBegin", OnFailure = "onContactusError", OnSuccess = "onContactusSuccess" },
+                new { id = "contactus_form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div>
+                    <div class="materialtext">
+                        <div class="title">آدرس ایمیل خود را وارد کنید.</div>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "textbox", @tabindex = "1" })
+                    </div>
+                    <div class="material-validation">
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+
+                <div class="divider-blank30"></div>
+
+                <div>
+                    <div class="materialtext">
+                        <div class="title">نام خود را بنویسید. (اختیاری)</div>
+                        @Html.TextBoxFor(m => m.Name, new { @class = "textbox", @tabindex = "2" })
+                    </div>
+                    <div class="material-validation">
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+
+                <div class="divider-blank30"></div>
+
+                <div>
+                    <div class="materialtext">
+                        <div class="title">عنوان پیامتان را ذکر کنید. (اختیاری)</div>
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "textbox", @tabindex = "3" })
+                    </div>
+                    <div class="material-validation">
+                        @Html.ValidationMessageFor(m => m.Subject)
+                    </div>
+                </div>
+
+                <div class="divider-blank30"></div>
+
+                <div>
+                    <div class="materialtext">
+                        <div class="title">پیامتان را بنویسید.</div>
+                        @Html.TextAreaFor(m => m.Body, new { @class = "textarea", @tabindex = "4" })
+                    </div>
+                    <div class="material-validation">
+                        @Html.ValidationMessageFor(m => m.Body)
+                    </div>
+                </div>
+
+                var captcha = CaptchaHelper.GetCaptcha();
+                if (!captcha.IsSolved)
+                {
+                    <div class="divider-blank30"></div>
+
+                    <div>
+                        <div class="materialtext hascaptcha">
+                            <div class="title">عبارت امنیتی را به درستی وارد کنید.</div>
+                            @Html.TextBoxFor(m => m.CaptchaText, new { @class = "textbox", @tabindex = "5", @id = "contactus_field_captcha" })
+                            <div class="captcha-con">
+                                @Html.Captcha(captcha)
+                            </div>
+                        </div>
+                        <div class="material-validation">
+                            @Html.ValidationMessageFor(m => m.CaptchaText)
+                        </div>
+                    </div>
+                }
+
+                <div class="divider-blank50"></div>
+
+                <div class="contactus-submit-con">
+                    <button class="button" type="submit" tabindex="6" style="width: 144px;">ارسال پیام</button>
+                </div>
+
+                if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="divider-blank30"></div>
+                    <div class="material-validation">
+                        @ViewBag.ErrorMessage
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        function onContactusBegin() {
+            $('.contactus-submit-con button').loadMode('@Url.Content("~/Content/themes/vone/images/submit_loader.GIF")');
+        }
+
+        function onContactusError() {
+            $('#countactus_error .msg-text').text('لطفا کمی دیرتر مجددا اقدام کنید');
+            $('#countactus_error').show();
+            CaptchaId.ReloadImage();
+            $('#contactus_field_captcha').val('');
+            $('.contactus-submit-con button').loadMode();
+        }
+
+        function onContactusSuccess(data) {
+            if (data.result === false) {
+                $('#countactus_error .msg-text').text(data.message);
+                $('#countactus_error').show();
+                var errorArray = {};
+                errorArray["CaptchaText"] = data.captchaError;
+                $('#contactus_form').validate().showErrors(errorArray);
+                CaptchaId.ReloadImage();
+                $('#contactus_field_captcha').val('');
+                $('.contactus-submit-con button').loadMode();
+            } else {
+                $('#countactus_error').hide();
+                $('#contactus_formcon').hide();
+                $('#countactus_success').show();
+                $('.contactus-submit-con button').loadMode();
+            }
+        }
+    </script>
+}

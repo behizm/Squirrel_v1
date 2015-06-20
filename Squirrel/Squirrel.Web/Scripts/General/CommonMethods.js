@@ -258,7 +258,6 @@ function onfileBoxClick(e) {
         // Blog's post image full size <<< end.
     });
 
-
     //DropDownList
     $.fn.CustomizeDropDownList = function (className) {
         this.wrap('<div class="dropdownlist ' + className + '"></div>');
@@ -276,6 +275,25 @@ function onfileBoxClick(e) {
                 ddl.children('ul').append('<li>' + thisText + '</li>');
             }
         });
+    };
+
+    $.fn.loadMode = function (imageAddress) {
+        if (this.hasClass("loading")) {
+            var oldContent = this.attr("off-content");
+            this.html(oldContent);
+            this.removeAttr("off-content");
+            this.removeAttr("disabled");
+            this.removeClass("loading");
+        } else {
+            var content = this.html();
+            var $img = $("<img />");
+            $img.attr("src", imageAddress);
+            this.html("");
+            this.append($img);
+            this.attr("off-content", content);
+            this.attr("disabled", "disabled");
+            this.addClass("loading");
+        }
     };
 
 })($)

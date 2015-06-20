@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EmailSmtpModels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EmailSmtpModel>
+    <FromAddress>behizm@gmail.com</FromAddress>
+    <Username>behizm</Username>
+    <Password>Dreamer@1362</Password>
+    <UseDefaultCredentials>false</UseDefaultCredentials>
+    <DeliveryMethod>Network</DeliveryMethod>
+    <EnableSsl>true</EnableSsl>
+    <Host>smtp.gmail.com</Host>
+    <Port>25</Port>
+    <Timeout>20000</Timeout>
+    <IsDefault>true</IsDefault>
+  </EmailSmtpModel>
+</EmailSmtpModels>

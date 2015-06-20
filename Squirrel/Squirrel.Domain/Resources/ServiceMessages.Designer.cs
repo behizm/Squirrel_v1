@@ -151,6 +151,24 @@ namespace Squirrel.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to هیچ تنظیماتی برای آدرس ارسال کننده مورد نظر وجود ندارد..
+        /// </summary>
+        public static string EmailService_NoSmtpSetting {
+            get {
+                return ResourceManager.GetString("EmailService_NoSmtpSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در هنگام ارسال ایمیل خطا رخ داد..
+        /// </summary>
+        public static string EmailService_SendingFailed {
+            get {
+                return ResourceManager.GetString("EmailService_SendingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فایل مورد نظر یافت نشد..
         /// </summary>
         public static string FileService_FileNotFount {

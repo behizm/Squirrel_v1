@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
+using Squirrel.Service.Interfaces;
 using Squirrel.Service.Services;
 
 namespace Squirrel.Service
@@ -37,6 +38,7 @@ namespace Squirrel.Service
             _core.RegisterType<IConfigService, ConfigService>();
             _core.RegisterType<ICommentService, CommentService>();
             _core.RegisterType<ILogService, LogService>();
+            _core.RegisterType<IEmailService, EmailService>();
         }
     }
 }

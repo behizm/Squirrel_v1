@@ -1,8 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
+using BotDetect.Web;
+using BotDetect.Web.UI.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ExtensionMethods;
+using Squirrel.Domain.Resources;
+using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Filters;
 using Squirrel.Web.Models;
@@ -50,6 +57,45 @@ namespace Squirrel.Web.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult Contactus()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [CaptchaValidation("CaptchaText", "CaptchaId", "عبارت امنیتی را اشتباه وارد کردید.")]
+        public async Task<JsonResult> Contactus(ContactUsViewModel model)
+        {
+            MvcCaptcha.ResetCaptcha("CaptchaId");
+            if (!ModelState.IsValid)
+            {
+                var captchaError = "";
+                if (ModelState["CaptchaText"].Errors.Any())
+                {
+                    captchaError = "عبارت امنیتی را اشتباه وارد کردید.";
+                }
+
+                return Json(new { result = false, captchaError , message = "اطلاعات ورودی ناقص یا نادرست است." },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            await EmailService.SendAsync(new EmailSendModel
+            {
+                Body = model.Body,
+                Subject = "Squirrel : " + model.Subject,
+                ToAddress = "behnam.zeighami@gmail.com",
+            });
+
+            if (EmailService.Result.Succeeded)
+            {
+                return Json(new { result = true },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = false, message = EmailService.Result.Errors.LastOrDefault() },
+                    JsonRequestBehavior.AllowGet);
         }
     }
 }

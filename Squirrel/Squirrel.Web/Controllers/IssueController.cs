@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BotDetect.Web.UI.Mvc;
@@ -10,7 +12,6 @@ using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Models;
-using WebGrease.Css.Extensions;
 
 namespace Squirrel.Web.Controllers
 {
@@ -128,18 +129,22 @@ namespace Squirrel.Web.Controllers
             return View();
         }
 
-        [CaptchaValidation("Captcha", "SampleCaptcha", "کد امنیتی اشتباه است.")]
+        [HttpPost, ValidateAntiForgeryToken]
+        [CaptchaValidation("CaptchaText", "CaptchaId", "عبارت امنیتی را اشتباه وارد کردید.")]
         public async Task<JsonResult> AddComment(CommentAddPublicModel model)
         {
-            if (ModelState["Captcha"].Errors.Any())
-            {
-                return Json(new { result = false, message = "عبارت امنیتی را به درستی وارد کنید." },
-                    JsonRequestBehavior.AllowGet);
-            }
+            Thread.Sleep(5000);
 
+            MvcCaptcha.ResetCaptcha("CaptchaId");
             if (!ModelState.IsValid)
             {
-                return Json(new { result = false, message = ServiceMessages.General_LackOfInputData },
+                var captchaError = "";
+                if (ModelState["CaptchaText"].Errors.Any())
+                {
+                    captchaError = "عبارت امنیتی را اشتباه وارد کردید.";
+                }
+
+                return Json(new { result = false, captchaError, message = ServiceMessages.General_LackOfInputData },
                     JsonRequestBehavior.AllowGet);
             }
 
@@ -226,7 +231,7 @@ namespace Squirrel.Web.Controllers
             }
 
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, file.Filename);
+            return File(fileBytes, MediaTypeNames.Application.Octet, file.Filename);
         }
     }
 }

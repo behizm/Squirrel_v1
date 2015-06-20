@@ -106,6 +106,7 @@
     <Compile Include="ViewModels\CategoryViewModels.cs" />
     <Compile Include="ViewModels\CommentViewModels.cs" />
     <Compile Include="ViewModels\ConfigViewModels.cs" />
+    <Compile Include="ViewModels\EmailModels.cs" />
     <Compile Include="ViewModels\GeneralModels.cs" />
     <Compile Include="ViewModels\LogViewModels.cs" />
     <Compile Include="ViewModels\PagingModel.cs" />

@@ -60,6 +60,7 @@
     <Compile Include="Interfaces\ICategoryService.cs" />
     <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\IConfigService.cs" />
+    <Compile Include="Interfaces\IEmailService.cs" />
     <Compile Include="Interfaces\IFileService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\IPostService.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\PostService.cs" />

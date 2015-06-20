@@ -45,7 +45,7 @@ namespace Squirrel.Domain.ViewModels
 
         [Display(Name = @"عبارت امنیتی")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
-        public string Captcha { get; set; }
+        public string CaptchaText { get; set; }
     }
 
     public class CommentEditModel

@@ -147,6 +147,12 @@
   <data name="ConfigService_InvalidParent" xml:space="preserve">
     <value>این پدر برای این گروه قابل انتخاب نیست.</value>
   </data>
+  <data name="EmailService_NoSmtpSetting" xml:space="preserve">
+    <value>هیچ تنظیماتی برای آدرس ارسال کننده مورد نظر وجود ندارد.</value>
+  </data>
+  <data name="EmailService_SendingFailed" xml:space="preserve">
+    <value>در هنگام ارسال ایمیل خطا رخ داد.</value>
+  </data>
   <data name="FileService_FileNotFount" xml:space="preserve">
     <value>فایل مورد نظر یافت نشد.</value>
   </data>

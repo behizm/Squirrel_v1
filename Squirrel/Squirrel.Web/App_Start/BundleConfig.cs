@@ -62,6 +62,7 @@ namespace Squirrel.Web
             bundles.Add(new ScriptBundle("~/bundles/PostPage").Include(
                 "~/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"));
 
+            // todo: change to true for publish
             BundleTable.EnableOptimizations = false;
         }
     }
