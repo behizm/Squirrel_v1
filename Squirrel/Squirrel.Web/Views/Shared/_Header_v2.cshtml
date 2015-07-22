@@ -1,0 +1,52 @@
+﻿@using Squirrel.Web.Models
+
+<div class="logo-con">
+    <a class="title" href="@Url.Action("Index", "Home")">وبلاگ</a>
+    <a class="logo" href="@Url.Action("Index", "Home")">
+        <div class="siteglyphbox">&#xe600</div>
+    </a>
+    <a class="name" href="@Url.Action("Index", "Home")">سنجاب</a>
+</div>
+<div class="menuv2">
+    <a class="item glyphbox" href="@Url.Action("Index", "Home")">&#xe648</a>
+    @foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount))
+    {
+        var item = cat;
+        <a class="item hidden-xs" href="@Url.Action("Category", "Issues", new {id = item.Name})">
+            @Html.DisplayFor(m => item.Name)
+        </a>
+    }
+    <a class="item glyphbox hidden-lg hidden-md hidden-sm" onclick="xsMenuToggle()">&#xe636</a>
+    <a class="item glyphbox" href="#">&#xe618</a>
+</div>
+<div class="menu-bubble-mode">
+    @foreach (var cat in CachedAppData.PublishedMainCategories.Items.OrderByDescending(x => x.ChildTopicCount + x.TopicCount))
+    {
+        var item = cat;
+        <a class="item" href="@Url.Action("Category", "Issues", new {id = item.Name})">
+            @Html.DisplayFor(m => item.Name)
+        </a>
+    }
+</div>
+
+<div class="glyphbox gototop hidden-sm hidden-xs">&#xe682</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.gototop').click(function () {
+            $("html,body").stop().animate({
+                scrollTop: 0
+            }, '500', 'swing', function () { });
+        });
+    });
+
+    function xsMenuToggle() {
+        if ($(".menu-bubble-mode").hasClass('active')) {
+            $(".menu-bubble-mode").slideUp(200);
+            $(".menu-bubble-mode").removeClass("active");
+        } else {
+            $(".menu-bubble-mode").slideDown(200);
+            $(".menu-bubble-mode").addClass("active");
+        }
+    }
+</script>

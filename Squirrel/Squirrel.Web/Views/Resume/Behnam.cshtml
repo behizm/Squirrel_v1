@@ -1,0 +1,200 @@
+﻿@using Squirrel.Domain.ViewModels
+@using Squirrel.Utility.FarsiTools
+@{
+    ViewBag.Title = "بهنام ضیغمی";
+    Layout = "~/Views/Shared/_Layout_Resume.cshtml";
+
+    var skills = new List<ResumeSkillViewModel>
+    {
+        new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
+        new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
+        new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
+        new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
+    };
+
+    var pictures = new List<ResumePictureViewModel>
+    {
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_demo.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_demo_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_home.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_home_t.jpg")
+        },
+    };
+}
+
+<div class="col-md-12">
+    <div class="resume-con">
+        <div class="divider-blank30"></div>
+
+        <div class="flatbox-shadow">
+            <div class="row">
+                <div class="col-md-2 col-sm-3 col-xs-5">
+                    <div class="avatar" style="background-image: url('@Url.Content("~/Content/themes/vone/images/resume/behnam_pic.jpg")')"></div>
+                </div>
+                <div class="col-md-10 col-sm-9 col-xs-12">
+                    <div class="maininf">
+                        <p class="imp">
+                            بهنام ضیغمی
+                        </p>
+                        <p>
+                            متولد
+                            @(1362.FaDigit())
+                            در تهران
+                        </p>
+                        <p>
+                            برنامه نویس وب و طراح سایت
+                            <a class="glyphbox" href="mailto:behnam@behnam.com">&#xe63b</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-blank30"></div>
+
+        <div class="flatbox-shadow">
+            <div class="topic">
+                <span class="glyphbox">&#xe6b3</span>
+                مهارت ها
+            </div>
+            <div class="skillbox">
+                <div class="row">
+                    @{
+                        const int skillStep = 4;
+                    }
+                    @for (var i = 0; i < skills.Count; )
+                    {
+                        <div class="col-md-4 col-sm-6">
+                            @for (var j = 0; j < skillStep && i < skills.Count; j++)
+                            {
+                                <div class="item" rate-data="@skills[j].Rate" text-data="@skills[j].Skill"></div>
+                                i++;
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-blank30"></div>
+
+        <div class="flatbox-shadow">
+            <div class="topic">
+                <span class="glyphbox">&#xe622</span>
+                تجربیات
+            </div>
+            <ul class="dotlist">
+                <li>تجربه 1</li>
+                <li>تجربه 2</li>
+                <li>تجربه 3</li>
+                <li>تجربه 4</li>
+            </ul>
+        </div>
+
+        <div class="divider-blank30"></div>
+
+        <div class="flatbox-shadow">
+            <div class="topic">
+                <span class="glyphbox">&#xe6bf</span>
+                تصاویر
+            </div>
+            <div style="padding: 15px 18px 0 0; margin-bottom: -30px;">
+                <div class="row">
+                    @foreach (var pic in pictures)
+                    {
+                        <div class="col-md-3 col-sm-4">
+                            <div class="respobox presentimage" data-image="@pic.Address">
+                                <div class="content" style="background-image: url('@pic.Thumbnail')"></div>
+                            </div>
+                            <div class="divider-blank30"></div>
+                        </div>
+                    }
+                    @*<div class="col-md-3 col-sm-4">
+                            <div class="respobox">
+                                <div class="content"></div>
+                            </div>
+                            <div class="divider-blank30"></div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="respobox"></div>
+                            <div class="divider-blank30"></div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="respobox"></div>
+                            <div class="divider-blank30"></div>
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <div class="respobox"></div>
+                            <div class="divider-blank30"></div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-blank30"></div>
+
+        @*<div class="flatbox-shadow">
+                <div class="topic">
+                    <span class="glyphbox">&#xe669</span>
+                    سرگرمی
+                </div>
+            </div>
+
+            <div class="divider-blank30"></div>*@
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".resume-con .skillbox .item").each(function () {
+                var rate = $(this).attr("rate-data");
+                var $rate = $("<div class='rate'></div>");
+                $rate.attr("title", rate);
+                for (var i = 1; i < 6; i++) {
+                    if (i <= rate) {
+                        $rate.append("<span class='active'></span>");
+                    } else {
+                        $rate.append("<span></span>");
+                    }
+                }
+                $(this).append($rate);
+                var $text = $("<div class='text'></div>");
+                $text.text($(this).attr("text-data"));
+                $(this).append($text);
+            });
+
+            $(".presentimage").click(function () {
+                $(".popup-con .image-box img").attr("src", $(this).attr("data-image"));
+                $(".popup-con ").addClass("showed imgbox");
+                $(".popup-con .image-box").fadeIn(200);
+                $("body").css("overflow", "hidden");
+                $(".popup-con ").css("overflow", "auto").css("direction", "ltr");
+            });
+
+            $(".popup-con").click(function () {
+                if ($(this).hasClass("imgbox")) {
+                    $(this).children(".image-box").fadeOut(200);
+                    setTimeout(function () {
+                        $(".popup-con ").removeClass("showed imgbox");
+                        $("body").css("overflow", "initial");
+                        $(".popup-con ").css("direction", "rtl");
+                    }, 200);
+                }
+            });
+        });
+    </script>
+}

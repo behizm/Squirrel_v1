@@ -95,6 +95,20 @@ html {
     }
 }
 
+.respobox {
+    background-color: @grayLight6;
+    color: @grayDark3;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    text-align: center;
+
+    .content {
+        position: absolute;
+        .absolutePostion(0,0,0,0);
+    }
+}
+
 .divider-blank30 {
     display: block;
     width: 100%;
@@ -286,7 +300,7 @@ html {
         line-height: 44px;
         vertical-align: middle;
     }
-    
+
     .siteglyphbox {
         font-size: 24px;
     }
@@ -503,7 +517,6 @@ body {
     & > .container,
     & > .overheader > .container {
         min-height: 100%;
-        padding-top: 60px;
         padding-bottom: 60px;
         position: relative;
         background-color: @grayLight7;
@@ -612,6 +625,124 @@ body {
                     &.search-vis {
                         display: block;
                     }
+                }
+            }
+        }
+
+        .header-container_v2 {
+            margin: 0 10px 0 10px;
+            padding: 0;
+            text-align: center;
+            overflow: hidden;
+
+            .logo-con {
+                line-height: 0;
+                padding: 30px 0 60px;
+
+                & > a {
+                    display: inline-block;
+                    vertical-align: middle;
+                    line-height: 80px;
+
+                    &.title {
+                        color: @grayLight3;
+                        font-size: 1.4em;
+                        width: 100px;
+                        text-align: left;
+                    }
+
+                    &.logo {
+                        height: 80px;
+                        width: 80px;
+                        border: 1px solid @primaryLightColor;
+                        border-radius: 100%;
+                        margin: 0 5px;
+                        background-color: @white;
+                        box-shadow: 0 2px 4px 0 rgba(0,0,0,.07);
+
+                        .siteglyphbox {
+                            margin: 5px;
+                            border-radius: 100%;
+                            background-color: @primaryLightColor;
+                            font-size: 58px;
+                            line-height: 68px;
+                            color: @white;
+                            text-align: left;
+                        }
+                    }
+
+                    &.name {
+                        color: @primaryColor;
+                        font-size: 1.4em;
+                        width: 100px;
+                        text-align: right;
+                    }
+                }
+            }
+
+            .menuv2 {
+                line-height: 0;
+                padding-bottom: 10px;
+
+                .item {
+                    display: inline-block;
+                    font-size: .75em;
+                    line-height: 32px;
+                    vertical-align: middle;
+                    font-weight: 300;
+                    color: @grayDark2;
+                    margin: 0 8px;
+                    border-bottom: 1px solid transparent;
+
+                    &.glyphbox {
+                        font-size: 25px;
+                        line-height: 32px;
+                    }
+
+                    &:hover {
+                        border-bottom-color: @grayDark2;
+                    }
+                }
+            }
+
+            .menu-bubble-mode {
+                position: relative;
+                background-color: @grayLight7;
+                margin: 2px 20px 20px 20px;
+                padding: 10px;
+                font-size: .85em;
+                font-weight: 300;
+                line-height: 30px;
+                display: none;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    .absolutePostion(-12px,0,auto,0);
+                    width: 0;
+                    height: 0;
+                    margin: auto;
+                    border-bottom: 12px solid @grayLight7;
+                    border-left: 12px solid transparent;
+                    border-right: 12px solid transparent;
+                }
+
+                .item{
+                    color: @grayDark2;
+                    margin: 0 5px;
+                }
+            }
+
+            .gototop {
+                position: fixed;
+                .absolutePostion(auto,10px,10px,auto);
+                background-color: rgba(255,255,255,0.7);
+                font-size: 36px;
+                cursor: pointer;
+                display: none;
+
+                &.active {
+                    display: block;
                 }
             }
         }
@@ -819,11 +950,10 @@ body {
             overflow: hidden;
             position: relative;
             z-index: 1;
-
-            img {
-                width: 100%;
-                height: auto;
-            }
+            background-color: @grayLight5;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         &.center {
@@ -1599,7 +1729,7 @@ body {
 }
 
 .issues-con {
-    padding: 0 30px;
+    padding: 0 25px;
 
     .content-title {
         font-size: .8em;
@@ -1695,6 +1825,182 @@ body {
 
         &:before {
             right: 97px;
+        }
+    }
+}
+
+.resume-con {
+    padding: 0 15px;
+
+    .avatar {
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 100%;
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .maininf {
+        padding-top: 20px;
+
+        p {
+            font-size: .75em;
+            margin: 10px 0;
+            line-height: 30px;
+
+            a {
+                color: @primaryLightColor;
+                vertical-align: middle;
+                margin-right: 5px;
+            }
+
+            &.imp {
+                font-size: 1.2em;
+                font-weight: bold;
+                margin-bottom: 15px;
+                color: @primaryColor;
+            }
+        }
+    }
+
+    .topic {
+        font-size: 1em;
+        color: @grayLight2;
+        margin-bottom: 15px;
+
+        .glyphbox {
+            font-size: 36px;
+            vertical-align: middle;
+            color: @primaryLightColor;
+            margin-left: 2px;
+        }
+    }
+
+    .skillbox {
+        margin-right: 14px;
+
+        .item {
+            font-size: .85em;
+            font-weight: 300;
+            line-height: 30px;
+            overflow: hidden;
+
+            .rate {
+                float: right;
+                padding: 8px 0 10px 0;
+                margin-left: 10px;
+                min-width: 80px;
+
+                span {
+                    display: block;
+                    float: left;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 100%;
+                    background-color: @grayLight4;
+                    margin-right: 4px;
+
+                    &.active {
+                        background-color: @secondary1Color;
+                    }
+                }
+            }
+
+            .text {
+                float: right;
+                direction: ltr;
+                text-align: right;
+            }
+        }
+    }
+
+    ul.dotlist {
+        margin: 0;
+        padding: 5px 0;
+        list-style: none;
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            .absolutePostion(0,17px,0,auto);
+            width: 2px;
+            background-color: @grayLight5;
+        }
+
+        li {
+            font-size: .8em;
+            font-weight: 300;
+            line-height: 30px;
+            position: relative;
+            padding: 8px 46px 8px 0;
+
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 10;
+                .absolutePostion(16px,11px,0,auto);
+                width: 14px;
+                height: 14px;
+                border-radius: 100%;
+                border: 3px solid @white;
+                background-color: @secondary1Color;
+            }
+
+            &.en {
+                direction: ltr;
+                text-align: right;
+            }
+        }
+    }
+
+    .respobox {
+        cursor: pointer;
+
+        .content {
+            background-size: cover;
+            background-position: center center;
+            z-index: 1;
+            .absolutePostion(5px,5px,5px,5px);
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            .absolutePostion(0,0,0,0);
+            background-color: rgba(0,0,0,.3);
+            z-index: 2;
+            width: 0;
+            height: 0;
+            border-radius: 100%;
+            margin: auto;
+            .Transitions(width,height,border-radius;linear,linear,linear;.3s,.3s,.3s);
+        }
+
+        &:after {
+            content: "\e618";
+            font: @glyphFont;
+            font-size: 40px;
+            color: transparent;
+            position: absolute;
+            .absolutePostion(0,0,0,0);
+            height: 40px;
+            margin: auto;
+            z-index: 3;
+            .Transitions(color;linear;.3s);
+        }
+
+
+        &:hover {
+            &:before {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+
+            &:after {
+                color: @white;
+            }
         }
     }
 }

@@ -18,18 +18,21 @@
 <body>
     @Html.Partial("_FloatHeader")
     <div class="container">
-        <div class="header-container" id="header_fix">
+        @*<div class="header-container" id="header_fix">
             @Html.Partial("_Header")
+        </div>*@
+        <div class="header-container_v2 flatbox-shadow">
+            @Html.Partial("_Header_v2")
         </div>
         <div class="bubble-menu hidden-lg hidden-md">
             @Html.Partial("_BubbleMenu")
         </div>
-        <div class="row">
+        @*<div class="row">
             <div class="sitename-con">
                 <div class="name">سنجاب</div>
                 <div class="desc">وبــلاگ شــخـصی</div>
             </div>
-        </div>
+        </div>*@
         <div class="row">
             @RenderBody()
         </div>

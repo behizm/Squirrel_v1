@@ -240,18 +240,19 @@ function onfileBoxClick(e) {
         // Material Textbox <<< end.
 
         // Blog's post image full size >>> start :
-        $('.issuepage-posts .post .content img').click(function () {
-            $('.popup-con .image-box img').attr('src', $(this).attr('src'));
-            $('.popup-con ').addClass('showed imgbox');
-            $('.popup-con .image-box').fadeIn(200);
+        $(".issuepage-posts .post .content img").click(function () {
+            $(".popup-con .image-box img").attr("src", $(this).attr("src"));
+            $(".popup-con ").addClass("showed imgbox");
+            $(".popup-con .image-box").fadeIn(200);
+            $("body").css("overflow", "hidden");
         });
 
-        $('.popup-con').click(function () {
-            if ($(this).hasClass('imgbox')) {
-                console.log('close');
-                $(this).children('.image-box').fadeOut(200);
+        $(".popup-con").click(function () {
+            if ($(this).hasClass("imgbox")) {
+                $(this).children(".image-box").fadeOut(200);
                 setTimeout(function () {
-                    $('.popup-con ').removeClass('showed imgbox');
+                    $(".popup-con ").removeClass("showed imgbox");
+                    $("body").css("overflow", "initial");
                 }, 200);
             }
         });

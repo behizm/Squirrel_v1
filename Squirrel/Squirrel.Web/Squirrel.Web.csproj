@@ -172,6 +172,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\IssuesController.cs" />
+    <Compile Include="Controllers\ResumeController.cs" />
     <Compile Include="Controllers\RssController.cs" />
     <Compile Include="Filters\AreaAuthorizationFilter.cs" />
     <Compile Include="Filters\CachedDataFilter.cs" />
@@ -886,6 +887,11 @@
     <Content Include="Content\themes\vone\images\favicon.png" />
     <Content Include="Content\themes\vone\images\generalavatar.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
+    <Content Include="Content\themes\vone\images\resume\behnam_pic.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demo.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demo_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_home.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_home_t.jpg" />
     <Content Include="Content\themes\vone\images\submit_loader.GIF" />
     <Content Include="Content\themes\vone\loading.css">
       <DependentUpon>loading.less</DependentUpon>
@@ -1239,6 +1245,9 @@
     <Content Include="Views\Issue\Preview.cshtml" />
     <Content Include="Views\Home\Contactus.cshtml" />
     <Content Include="Views\Shared\Sidebar\_Contact.cshtml" />
+    <Content Include="Views\Resume\Behnam.cshtml" />
+    <Content Include="Views\Shared\_Layout_Resume.cshtml" />
+    <Content Include="Views\Shared\_Header_v2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Squirrel.Domain\Squirrel.Domain.csproj">
