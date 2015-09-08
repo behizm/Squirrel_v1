@@ -1,10 +1,9 @@
 ﻿using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Squirrel.Utility.Cryptography;
 
-namespace Squirrel.Service.Share
+namespace Squirrel.Utility.Cryptography
 {
-    class HashSystem
+    public class SquirrelHashSystem
     {
         public static async Task<string> EncryptAsync(string code)
         {

@@ -48,6 +48,12 @@ namespace Squirrel.Web
                 defaults: new { controller = "Issues", action = "Author" }
             );
 
+            //routes.MapRoute(
+            //    name: "Admin",
+            //    url: "Admin",
+            //    defaults: new { area = "Author", controller = "Panel", action = "Index" }
+            //);
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

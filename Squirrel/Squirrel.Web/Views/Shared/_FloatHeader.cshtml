@@ -77,11 +77,4 @@
         $('.header-container#header_float .searchbox').removeClass('search-vis');
         $('.header-container#header_fix .searchbox').removeClass('search-vis');
     }
-
-    function SearchWithKeyword(k) {
-        k = k.trim();
-        if (k != '') {
-            window.location.href = '@Url.Action("Search", "Issues", new { id = "" })' + "/" + k;
-        }
-    }
 </script>

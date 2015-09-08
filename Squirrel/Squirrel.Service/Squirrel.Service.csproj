@@ -84,7 +84,6 @@
     <Compile Include="Services\TopicService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\VoteService.cs" />
-    <Compile Include="Share\HashSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

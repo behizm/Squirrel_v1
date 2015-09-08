@@ -10,7 +10,7 @@ using Squirrel.Domain.Enititis;
 using Squirrel.Domain.Resources;
 using Squirrel.Domain.ResultModels;
 using Squirrel.Domain.ViewModels;
-using Squirrel.Service.Share;
+using Squirrel.Utility.Cryptography;
 using Squirrel.Utility.Helpers;
 
 namespace Squirrel.Service.Services
@@ -72,7 +72,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var passwordHash = await HashSystem.EncryptAsync(password);
+            var passwordHash = await SquirrelHashSystem.EncryptAsync(password);
             if (string.IsNullOrEmpty(passwordHash))
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -302,7 +302,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var password = await HashSystem.DecryptAsync(user.PasswordHash);
+            var password = await SquirrelHashSystem.DecryptAsync(user.PasswordHash);
             if (password == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -315,7 +315,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var passwordHash = await HashSystem.EncryptAsync(newPassword);
+            var passwordHash = await SquirrelHashSystem.EncryptAsync(newPassword);
             if (passwordHash == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -349,7 +349,7 @@ namespace Squirrel.Service.Services
                 return;
             }
 
-            var passwordHash = await HashSystem.EncryptAsync(newPassword);
+            var passwordHash = await SquirrelHashSystem.EncryptAsync(newPassword);
             if (passwordHash == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -367,7 +367,7 @@ namespace Squirrel.Service.Services
                 return false;
             }
 
-            var passwordHash = await HashSystem.EncryptAsync(password);
+            var passwordHash = await SquirrelHashSystem.EncryptAsync(password);
             if (passwordHash == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);
@@ -422,7 +422,7 @@ namespace Squirrel.Service.Services
                 return null;
             }
 
-            var passwordHash = await HashSystem.EncryptAsync(password);
+            var passwordHash = await SquirrelHashSystem.EncryptAsync(password);
             if (passwordHash == null)
             {
                 Result = OperationResult.Failed(ServiceMessages.General_ErrorAccurred);

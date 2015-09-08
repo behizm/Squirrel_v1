@@ -3,7 +3,7 @@ namespace Squirrel.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class recreate : DbMigration
+    public partial class initial : DbMigration
     {
         public override void Up()
         {
@@ -53,6 +53,7 @@ namespace Squirrel.Data.Migrations
                         Body = c.String(nullable: false),
                         EditDate = c.DateTime(),
                         IsPublic = c.Boolean(nullable: false),
+                        PublishDate = c.DateTime(),
                         TopicId = c.Guid(nullable: false),
                         AuthorId = c.Guid(nullable: false),
                         HeaderImageId = c.Guid(),
@@ -110,8 +111,9 @@ namespace Squirrel.Data.Migrations
                         Body = c.String(nullable: false),
                         Name = c.String(maxLength: 50),
                         Email = c.String(maxLength: 50),
-                        IsConfirmed = c.Boolean(nullable: false),
                         EditeDate = c.DateTime(),
+                        IsConfirmed = c.Boolean(nullable: false),
+                        IsReaded = c.Boolean(nullable: false),
                         PostId = c.Guid(nullable: false),
                         ParentId = c.Guid(),
                         UserId = c.Guid(),
@@ -145,6 +147,8 @@ namespace Squirrel.Data.Migrations
                         PostsOrdering = c.Int(nullable: false),
                         View = c.Int(nullable: false),
                         IsPublished = c.Boolean(nullable: false),
+                        PublishDate = c.DateTime(),
+                        IssueId = c.String(nullable: false, maxLength: 15),
                         CategoryId = c.Guid(nullable: false),
                         OwnerId = c.Guid(nullable: false),
                         CreateDate = c.DateTime(nullable: false),
@@ -152,6 +156,7 @@ namespace Squirrel.Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("Blog.Categories", t => t.CategoryId)
                 .ForeignKey("Membership.Users", t => t.OwnerId)
+                .Index(t => t.IssueId, unique: true)
                 .Index(t => t.CategoryId)
                 .Index(t => t.OwnerId);
             
@@ -190,6 +195,7 @@ namespace Squirrel.Data.Migrations
                         Id = c.Guid(nullable: false),
                         IsPostMethod = c.Boolean(nullable: false),
                         Message = c.String(),
+                        LineNumber = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -215,9 +221,10 @@ namespace Squirrel.Data.Migrations
                         Controller = c.String(nullable: false, maxLength: 50),
                         Action = c.String(nullable: false, maxLength: 50),
                         ReferredHost = c.String(maxLength: 50),
+                        IsAjax = c.Boolean(nullable: false),
                         InfoId = c.Guid(nullable: false),
-                        UserId = c.Guid(),
                         ErrorId = c.Guid(),
+                        UserId = c.Guid(),
                         CreateDate = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
@@ -225,8 +232,8 @@ namespace Squirrel.Data.Migrations
                 .ForeignKey("Site.LogsInfo", t => t.InfoId)
                 .ForeignKey("Membership.Users", t => t.UserId)
                 .Index(t => t.InfoId)
-                .Index(t => t.UserId)
-                .Index(t => t.ErrorId);
+                .Index(t => t.ErrorId)
+                .Index(t => t.UserId);
             
             CreateTable(
                 "Blog.TagPosts",
@@ -284,13 +291,14 @@ namespace Squirrel.Data.Migrations
             DropIndex("Blog.FilePosts", new[] { "File_Id" });
             DropIndex("Blog.TagPosts", new[] { "Post_Id" });
             DropIndex("Blog.TagPosts", new[] { "Tag_Id" });
-            DropIndex("Site.Logs", new[] { "ErrorId" });
             DropIndex("Site.Logs", new[] { "UserId" });
+            DropIndex("Site.Logs", new[] { "ErrorId" });
             DropIndex("Site.Logs", new[] { "InfoId" });
             DropIndex("Blog.Votes", new[] { "UserId" });
             DropIndex("Blog.Votes", new[] { "PostId" });
             DropIndex("Blog.Topics", new[] { "OwnerId" });
             DropIndex("Blog.Topics", new[] { "CategoryId" });
+            DropIndex("Blog.Topics", new[] { "IssueId" });
             DropIndex("Blog.Comments", new[] { "UserId" });
             DropIndex("Blog.Comments", new[] { "ParentId" });
             DropIndex("Blog.Comments", new[] { "PostId" });

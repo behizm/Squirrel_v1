@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using Squirrel.Data.Tools;
 using Squirrel.Domain.Enititis;
 
 namespace Squirrel.Data
@@ -9,6 +10,7 @@ namespace Squirrel.Data
         public SquirrelContext()
             : base("name=SquirrelContext")
         {
+            Database.SetInitializer(new SquirrelContextInitializer());
             Configuration.LazyLoadingEnabled = true;
         }
 

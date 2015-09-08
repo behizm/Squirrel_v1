@@ -73,6 +73,7 @@
     <Compile Include="Cryptography\Hashing.cs" />
     <Compile Include="Cryptography\Rsa.cs" />
     <Compile Include="Cryptography\RsaKeyModel.cs" />
+    <Compile Include="Cryptography\SquirrelHashSystem.cs" />
     <Compile Include="Cryptography\Symmetric.cs" />
     <Compile Include="FarsiTools\PersianBoolean.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />

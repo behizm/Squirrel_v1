@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Resources\ServiceMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ServiceMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ValidationErrors.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

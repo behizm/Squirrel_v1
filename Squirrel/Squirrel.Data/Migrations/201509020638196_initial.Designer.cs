@@ -7,13 +7,13 @@ namespace Squirrel.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class editcomment : IMigrationMetadata
+    public sealed partial class initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(editcomment));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201502250614538_edit-comment"; }
+            get { return "201509020638196_initial"; }
         }
         
         string IMigrationMetadata.Source

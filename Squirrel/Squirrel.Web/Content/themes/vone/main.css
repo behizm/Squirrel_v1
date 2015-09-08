@@ -208,16 +208,6 @@ html a:focus {
 .materialtext .textarea {
   line-height: 33px;
 }
-.materialtext.focus:after {
-  width: 100%;
-}
-.materialtext.focus .textarea {
-  height: 100px;
-}
-.materialtext.value .title {
-  font-size: .5em;
-  line-height: 15px;
-}
 .materialtext.hasbtn {
   padding-left: 45px;
 }
@@ -234,6 +224,40 @@ html a:focus {
 .materialtext.hasbtn .button.glyphbox {
   font-size: 26px;
 }
+.materialtext.haspretext {
+  padding-right: 40px;
+}
+.materialtext.haspretext .pretext {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  height: 33px;
+  line-height: 33px;
+  width: 40px;
+  display: none;
+}
+.materialtext.haspretext .pretext.glyphbox {
+  font-size: 33px;
+}
+.materialtext.hasnexttext {
+  padding-left: 40px;
+}
+.materialtext.hasnexttext .nexttext {
+  position: absolute;
+  top: 15px;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  height: 33px;
+  line-height: 33px;
+  width: 40px;
+  display: none;
+}
+.materialtext.hasnexttext .nexttext.glyphbox {
+  font-size: 33px;
+}
 .materialtext.hascaptcha {
   padding-left: 140px;
 }
@@ -244,6 +268,22 @@ html a:focus {
   overflow: hidden;
   height: 47px;
   width: 130px;
+}
+.materialtext.focus:after {
+  width: 100%;
+}
+.materialtext.focus .textarea {
+  height: 100px;
+}
+.materialtext.focus.haspretext .pretext {
+  display: block;
+}
+.materialtext.focus.hasnexttext .nexttext {
+  display: block;
+}
+.materialtext.value .title {
+  font-size: .5em;
+  line-height: 15px;
 }
 .material-validation {
   font-size: .6em;
@@ -601,21 +641,21 @@ body > .overheader > .container .header-container_v2 .logo-con {
   line-height: 0;
   padding: 30px 0 60px;
 }
-body > .container .header-container_v2 .logo-con > a,
-body > .overheader > .container .header-container_v2 .logo-con > a {
+body > .container .header-container_v2 .logo-con a,
+body > .overheader > .container .header-container_v2 .logo-con a {
   display: inline-block;
   vertical-align: middle;
   line-height: 80px;
 }
-body > .container .header-container_v2 .logo-con > a.title,
-body > .overheader > .container .header-container_v2 .logo-con > a.title {
+body > .container .header-container_v2 .logo-con a.title,
+body > .overheader > .container .header-container_v2 .logo-con a.title {
   color: #cccccc;
   font-size: 1.4em;
   width: 100px;
   text-align: left;
 }
-body > .container .header-container_v2 .logo-con > a.logo,
-body > .overheader > .container .header-container_v2 .logo-con > a.logo {
+body > .container .header-container_v2 .logo-con a.logo,
+body > .overheader > .container .header-container_v2 .logo-con a.logo {
   height: 80px;
   width: 80px;
   border: 1px solid #79a38c;
@@ -624,8 +664,8 @@ body > .overheader > .container .header-container_v2 .logo-con > a.logo {
   background-color: #ffffff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
 }
-body > .container .header-container_v2 .logo-con > a.logo .siteglyphbox,
-body > .overheader > .container .header-container_v2 .logo-con > a.logo .siteglyphbox {
+body > .container .header-container_v2 .logo-con a.logo .siteglyphbox,
+body > .overheader > .container .header-container_v2 .logo-con a.logo .siteglyphbox {
   margin: 5px;
   border-radius: 100%;
   background-color: #79a38c;
@@ -634,17 +674,40 @@ body > .overheader > .container .header-container_v2 .logo-con > a.logo .sitegly
   color: #ffffff;
   text-align: left;
 }
-body > .container .header-container_v2 .logo-con > a.name,
-body > .overheader > .container .header-container_v2 .logo-con > a.name {
+body > .container .header-container_v2 .logo-con a.name,
+body > .overheader > .container .header-container_v2 .logo-con a.name {
   color: #538167;
   font-size: 1.4em;
   width: 100px;
   text-align: right;
 }
+body > .container .header-container_v2 .logo-con a.title-name,
+body > .overheader > .container .header-container_v2 .logo-con a.title-name {
+  color: #538167;
+  font-size: 1.3em;
+  width: 100px;
+  text-align: right;
+  width: 100%;
+  text-align: center;
+  display: none;
+}
+@media (max-width: 380px) {
+  body > .container .header-container_v2 .logo-con a.title,
+  body > .overheader > .container .header-container_v2 .logo-con a.title {
+    display: none;
+  }
+  body > .container .header-container_v2 .logo-con a.name,
+  body > .overheader > .container .header-container_v2 .logo-con a.name {
+    display: none;
+  }
+  body > .container .header-container_v2 .logo-con a.title-name,
+  body > .overheader > .container .header-container_v2 .logo-con a.title-name {
+    display: block;
+  }
+}
 body > .container .header-container_v2 .menuv2,
 body > .overheader > .container .header-container_v2 .menuv2 {
   line-height: 0;
-  padding-bottom: 10px;
 }
 body > .container .header-container_v2 .menuv2 .item,
 body > .overheader > .container .header-container_v2 .menuv2 .item {
@@ -654,8 +717,9 @@ body > .overheader > .container .header-container_v2 .menuv2 .item {
   vertical-align: middle;
   font-weight: 300;
   color: #464646;
-  margin: 0 8px;
+  margin: 0 8px 10px 8px;
   border-bottom: 1px solid transparent;
+  cursor: pointer;
 }
 body > .container .header-container_v2 .menuv2 .item.glyphbox,
 body > .overheader > .container .header-container_v2 .menuv2 .item.glyphbox {
@@ -696,6 +760,20 @@ body > .container .header-container_v2 .menu-bubble-mode .item,
 body > .overheader > .container .header-container_v2 .menu-bubble-mode .item {
   color: #464646;
   margin: 0 5px;
+}
+body > .container .header-container_v2 .search-frommenu,
+body > .overheader > .container .header-container_v2 .search-frommenu {
+  margin: -5px 0 10px 0;
+  height: 0;
+  overflow: hidden;
+  -moz-transition: height linear 0.15s;
+  -o-transition: height linear 0.15s;
+  -webkit-transition: height linear 0.15s;
+  transition: height linear 0.15s;
+}
+body > .container .header-container_v2 .search-frommenu.active,
+body > .overheader > .container .header-container_v2 .search-frommenu.active {
+  height: 50px;
 }
 body > .container .header-container_v2 .gototop,
 body > .overheader > .container .header-container_v2 .gototop {
@@ -1675,7 +1753,7 @@ body .overheader .container .header-container .header-search .siteglyphbox {
   }
 }
 .resume-con {
-  padding: 0 15px;
+  padding: 0 10px;
 }
 .resume-con .avatar {
   width: 100%;
@@ -2152,4 +2230,3 @@ body .overheader .container .header-container .header-search .siteglyphbox {
     opacity: 0;
   }
 }
-/*# sourceMappingURL=main.css.map */

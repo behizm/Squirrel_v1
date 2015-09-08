@@ -225,23 +225,6 @@ html {
         line-height: 33px;
     }
 
-    &.focus {
-        &:after {
-            width: 100%;
-        }
-
-        .textarea {
-            height: 100px;
-        }
-    }
-
-    &.value {
-        .title {
-            font-size: .5em;
-            line-height: 15px;
-        }
-    }
-
     &.hasbtn {
         padding-left: 45px;
 
@@ -258,6 +241,40 @@ html {
         }
     }
 
+    &.haspretext {
+        padding-right: 40px;
+
+        .pretext {
+            position: absolute;
+            .absolutePostion(15px,0,auto,auto);
+            height: 33px;
+            line-height: 33px;
+            width: 40px;
+            display: none;
+
+            &.glyphbox {
+                font-size: 33px;
+            }
+        }
+    }
+
+    &.hasnexttext {
+        padding-left: 40px;
+
+        .nexttext {
+            position: absolute;
+            .absolutePostion(15px,auto,auto,0);
+            height: 33px;
+            line-height: 33px;
+            width: 40px;
+            display: none;
+
+            &.glyphbox {
+                font-size: 33px;
+            }
+        }
+    }
+
     &.hascaptcha {
         padding-left: 140px;
 
@@ -268,6 +285,35 @@ html {
             overflow: hidden;
             height: 47px;
             width: 130px;
+        }
+    }
+
+    &.focus {
+        &:after {
+            width: 100%;
+        }
+
+        .textarea {
+            height: 100px;
+        }
+
+        &.haspretext {
+            .pretext {
+                display: block;
+            }
+        }
+
+        &.hasnexttext {
+            .nexttext {
+                display: block;
+            }
+        }
+    }
+
+    &.value {
+        .title {
+            font-size: .5em;
+            line-height: 15px;
         }
     }
 }
@@ -639,7 +685,7 @@ body {
                 line-height: 0;
                 padding: 30px 0 60px;
 
-                & > a {
+                & a {
                     display: inline-block;
                     vertical-align: middle;
                     line-height: 80px;
@@ -677,12 +723,35 @@ body {
                         width: 100px;
                         text-align: right;
                     }
+
+                    &.title-name {
+                        color: @primaryColor;
+                        font-size: 1.3em;
+                        width: 100px;
+                        text-align: right;
+                        width: 100%;
+                        text-align: center;
+                        display: none;
+                    }
+
+                    @media(max-width:380px){
+                        &.title{
+                            display: none;
+                        }
+
+                        &.name{
+                            display: none;
+                        }
+
+                        &.title-name {
+                        display: block;
+                    }
+                    }
                 }
             }
 
             .menuv2 {
                 line-height: 0;
-                padding-bottom: 10px;
 
                 .item {
                     display: inline-block;
@@ -691,8 +760,9 @@ body {
                     vertical-align: middle;
                     font-weight: 300;
                     color: @grayDark2;
-                    margin: 0 8px;
+                    margin: 0 8px 10px 8px;
                     border-bottom: 1px solid transparent;
+                    cursor: pointer;
 
                     &.glyphbox {
                         font-size: 25px;
@@ -727,9 +797,20 @@ body {
                     border-right: 12px solid transparent;
                 }
 
-                .item{
+                .item {
                     color: @grayDark2;
                     margin: 0 5px;
+                }
+            }
+
+            .search-frommenu {
+                margin: -5px 0 10px 0;
+                height: 0;
+                overflow: hidden;
+                .Transition(height;linear;.15s);
+
+                &.active {
+                    height: 50px;
                 }
             }
 
@@ -1830,7 +1911,7 @@ body {
 }
 
 .resume-con {
-    padding: 0 15px;
+    padding: 0 10px;
 
     .avatar {
         width: 100%;

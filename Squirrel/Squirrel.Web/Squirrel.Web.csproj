@@ -22,6 +22,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <NuGetPackageImportStamp>fda10073</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -168,6 +169,7 @@
     <Compile Include="Areas\Author\Controllers\PublishController.cs" />
     <Compile Include="Areas\Author\Controllers\TopicsController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
@@ -191,10 +193,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\BlogDbs.mdf" />
-    <Content Include="App_Data\BlogDbs_log.ldf">
-      <DependentUpon>BlogDbs.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\EmailSmtpModels.xml" />
     <Content Include="ckeditor\adapters\jquery.js" />
     <Content Include="ckeditor\build-config.js" />
@@ -880,6 +878,9 @@
     <Content Include="Content\themes\vone\fonts\SquirrelFont\ie7\ie7.js" />
     <Content Include="Content\themes\vone\fonts\SquirrelFont\Read Me.txt" />
     <Content Include="Content\themes\vone\fonts\SquirrelFont\style.css" />
+    <Content Include="Content\themes\vone\functions.css">
+      <DependentUpon>functions.less</DependentUpon>
+    </Content>
     <Content Include="Content\themes\vone\images\back-wall-01.jpg" />
     <Content Include="Content\themes\vone\images\back-wall-02.jpg" />
     <Content Include="Content\themes\vone\images\back-wall-03.jpg" />
@@ -1009,9 +1010,6 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\themes\vone\main.less" />
-    <Content Include="Content\themes\vone\main.css.map">
-      <DependentUpon>main.css</DependentUpon>
-    </Content>
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.eot" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.svgz" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.ttf" />
@@ -1156,6 +1154,10 @@
     <Content Include="Areas\Author\Views\Panel\_Statistics.cshtml" />
     <Content Include="Areas\Author\Views\Panel\_Topics.cshtml" />
     <Content Include="Areas\Author\Views\Panel\_Comments.cshtml" />
+    <None Include="compilerconfig.json" />
+    <Content Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="npmPlaceholder.txt" />
     <Content Include="Scripts\bootstrap.js" />
