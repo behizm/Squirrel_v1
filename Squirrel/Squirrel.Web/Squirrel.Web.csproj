@@ -160,6 +160,7 @@
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Author\AuthorAreaRegistration.cs" />
     <Compile Include="Areas\Author\Controllers\CommentsController.cs" />
+    <Compile Include="Areas\Author\Controllers\EmailController.cs" />
     <Compile Include="Areas\Author\Controllers\FileApiController.cs" />
     <Compile Include="Areas\Author\Controllers\CategoriesController.cs" />
     <Compile Include="Areas\Author\Controllers\FilesController.cs" />
@@ -839,15 +840,10 @@
       <DependentUpon>admin.css</DependentUpon>
     </Content>
     <Content Include="Content\themes\vone\fonts.css" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRAN Sans.html" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\style.css" />
+    <Content Include="Content\themes\vone\fonts.min.css">
+      <DependentUpon>fonts.css</DependentUpon>
+    </Content>
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.svg" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.svg" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.svg" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.css" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.svg" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekanbold.svg" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekansl.svg" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\docs\style.css" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\fonts\Pe-icon-7-stroke.svg" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\images\background-paralax.jpg" />
@@ -888,11 +884,43 @@
     <Content Include="Content\themes\vone\images\favicon.png" />
     <Content Include="Content\themes\vone\images\generalavatar.png" />
     <Content Include="Content\themes\vone\images\Logo.svg" />
+    <Content Include="Content\themes\vone\images\resume\asset_edu.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_edu_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_funds.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_funds_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_home.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_home_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_worldfunds.jpg" />
+    <Content Include="Content\themes\vone\images\resume\asset_worldfunds_t.jpg" />
     <Content Include="Content\themes\vone\images\resume\behnam_pic.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_home1.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_home1_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_home2.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_home2_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_liveboard.jpg" />
+    <Content Include="Content\themes\vone\images\resume\emofid_liveboard_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_badge.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_badge_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_contest.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_contest_t.jpg" />
     <Content Include="Content\themes\vone\images\resume\pellekan_demo.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demoent.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demoent_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demonews.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_demonews_t.jpg" />
     <Content Include="Content\themes\vone\images\resume\pellekan_demo_t.jpg" />
     <Content Include="Content\themes\vone\images\resume\pellekan_home.jpg" />
     <Content Include="Content\themes\vone\images\resume\pellekan_home_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_lottery.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_lottery_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_message.jpg" />
+    <Content Include="Content\themes\vone\images\resume\pellekan_message_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_form1.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_form1_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_form2.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_form2_t.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_home.jpg" />
+    <Content Include="Content\themes\vone\images\resume\reg_home_t.jpg" />
     <Content Include="Content\themes\vone\images\submit_loader.GIF" />
     <Content Include="Content\themes\vone\loading.css">
       <DependentUpon>loading.less</DependentUpon>
@@ -1014,16 +1042,6 @@
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.svgz" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.ttf" />
     <Content Include="Content\themes\vone\fonts\IranSansZ\iransansz-webfont.woff" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.eot" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekan.woff" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekanbold.eot" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekanbold.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekanbold.woff" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekansl.eot" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekansl.otf" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekansl.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRYekan\iryekansl.woff" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeui.eot" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeui.ttf" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeui.woff" />
@@ -1033,14 +1051,6 @@
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.eot" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.ttf" />
     <Content Include="Content\themes\vone\fonts\SegoeUI\segoeuisl.woff" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.eot" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.woff" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninbold.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.eot" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.woff" />
-    <Content Include="Content\themes\vone\fonts\IRNazanin\irnazaninregular.woff2" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\fonts\Pe-icon-7-stroke.eot" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\fonts\Pe-icon-7-stroke.ttf" />
     <Content Include="Content\themes\vone\fonts\Pe7stroke\assets\fonts\Pe-icon-7-stroke.woff" />
@@ -1053,39 +1063,6 @@
     <Content Include="Content\bootstrap-rtl\bootstrap-rtl.css.map" />
     <Content Include="Content\themes\vone\palette.less" />
     <Content Include="Content\themes\vone\functions.less" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Black.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Bold.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light-Expanded.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-Light.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans-UltraLight.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSans.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.eot" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.woff" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans %28Webfonts%29\IRANSANSExpanded.woff2" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans black\IRAN Sans Black.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans black\IRAN-Sans-Black.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Bold\IRAN Sans Bold.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Bold\IRAN-Sans-Bold.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN Sans Light Expanded.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN Sans Light.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Light\IRAN-Sans-Light.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Ultra Light\IRAN Sans Ultra Light.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans Ultra Light\IRAN-Sans-Ultra-Light.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN Sans Expanded.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN Sans.ttf" />
-    <Content Include="Content\themes\vone\fonts\IRAN-SANS-Family-Typeface\IRAN Sans\IRAN-Sans.ttf" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansLE.woff2" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansLE.woff" />
     <Content Include="Content\themes\vone\fonts\IRSans\IRANSansLE.eot" />
@@ -1154,6 +1131,8 @@
     <Content Include="Areas\Author\Views\Panel\_Statistics.cshtml" />
     <Content Include="Areas\Author\Views\Panel\_Topics.cshtml" />
     <Content Include="Areas\Author\Views\Panel\_Comments.cshtml" />
+    <Content Include="Areas\Author\Views\Email\Index.cshtml" />
+    <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1276,6 +1255,7 @@
     <Folder Include="Content\Files\temp\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Rss\" />
+    <Folder Include="Views\Shared\EmailTemplate\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

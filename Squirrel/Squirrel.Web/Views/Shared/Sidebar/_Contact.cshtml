@@ -1,11 +1,12 @@
-﻿<div style="text-align: center;">
+﻿@using System.Configuration
+<div style="text-align: center;">
     <a class="button tile" href="@Url.Action("Index", "Rss")">
         <span class="siteglyphbox">&#xe601</span>
     </a>
     <a class="button tile" href="@Url.Action("Contactus", "Home")">
         <span class="glyphbox">&#xe670</span>
     </a>
-    <a class="button tile" href="mailto:test@test.com">
+    <a class="button tile" href="mailto:@ConfigurationManager.AppSettings.Get("ContactEmailAddress")">
         <span class="glyphbox">&#xe63a</span>
     </a>
 </div>

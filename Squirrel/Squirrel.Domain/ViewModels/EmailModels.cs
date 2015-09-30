@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Squirrel.Domain.Resources;
 
@@ -77,5 +72,21 @@ namespace Squirrel.Domain.ViewModels
         [Display(Name = @"عبارت امنیتی")]
         [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
         public string CaptchaText { get; set; }
+    }
+
+    public class AdminEmailViewModel
+    {
+        [Display(Name = @"آدرس ایمیل")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_RegularExperssion", ErrorMessage = null)]
+        public string Email { get; set; }
+
+        [Display(Name = @"عنوان پیام")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public string Subject { get; set; }
+
+        [Display(Name = @"متن پیام")]
+        [Required(ErrorMessageResourceType = typeof(ValidationErrors), ErrorMessageResourceName = "General_Required", ErrorMessage = null)]
+        public string Body { get; set; }
     }
 }

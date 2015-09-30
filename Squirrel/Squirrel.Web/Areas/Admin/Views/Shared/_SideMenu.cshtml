@@ -15,7 +15,7 @@
         var className = currentUrl == thisUrl ? "active" : string.Empty;
     }
     <a class="item @className" href="@thisUrl">
-        <span class="glyphbox">&#xe691</span>
+        <span class="glyphbox">&#xe65d</span>
         <span class="text">انتشار</span>
     </a>
 
@@ -33,7 +33,7 @@
         className = currentUrl == thisUrl ? "active" : string.Empty;
     }
     <a class="item @className" href="@thisUrl">
-        <span class="glyphbox">&#xe67d</span>
+        <span class="glyphbox">&#xe69e</span>
         <span class="text">گروهها</span>
     </a>
 
@@ -42,8 +42,17 @@
         className = currentUrl == thisUrl ? "active" : string.Empty;
     }
     <a class="item @className" href="@thisUrl">
-        <span class="glyphbox">&#xe65b</span>
+        <span class="glyphbox">&#xe69c</span>
         <span class="text">فایلها</span>
+    </a>
+
+    @{
+        thisUrl = Url.Action("Index", "Email", new { Area = "Author" });
+        className = currentUrl == thisUrl ? "active" : string.Empty;
+    }
+    <a class="item @className" href="@thisUrl">
+        <span class="glyphbox">&#xe639</span>
+        <span class="text">ایمیل</span>
     </a>
 
     @if (User.Identity.IsAdmin)
@@ -58,14 +67,14 @@
         thisUrl = Url.Action("Index", "Logs", new { Area = "Admin" });
         className = currentUrl == thisUrl ? "active" : string.Empty;
         <a class="item @className" href="@thisUrl">
-            <span class="glyphbox">&#xe69d</span>
+            <span class="glyphbox">&#xe603</span>
             <span class="text">وقایع</span>
         </a>
-        
+
         thisUrl = Url.Action("Index", "Configs", new { Area = "Admin" });
         className = currentUrl == thisUrl ? "active" : string.Empty;
         <a class="item @className" href="@thisUrl">
-            <span class="glyphbox">&#xe666</span>
+            <span class="glyphbox">&#xe659</span>
             <span class="text">تنظیمات</span>
         </a>
     }
@@ -76,6 +85,5 @@
     function onSiteMenuExpanderClick() {
         $('.sidemenu').toggleClass('tie-menu');
         $('.header-con').toggleClass('tie-menu');
-        //$('.mainpart-con').toggleClass('tie-menu');
     }
 </script>

@@ -38,14 +38,12 @@ namespace Squirrel.Web
                       "~/Content/bootstrap-rtl/bootstrap-rtl.css"));
 
             bundles.Add(new StyleBundle("~/Content/vone").Include(
-                      "~/Content/themes/vone/main.css",
-                      "~/Content/themes/vone/fonts.css",
-                      "~/Content/themes/vone/loading.css"));
+                      "~/Content/themes/vone/fonts.min.css",
+                      "~/Content/themes/vone/main.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/admin").Include(
-                      "~/Content/themes/vone/admin.css",
-                      "~/Content/themes/vone/fonts.css",
-                      "~/Content/themes/vone/loading.css"));
+                      "~/Content/themes/vone/fonts.min.css",
+                      "~/Content/themes/vone/admin.min.css"));
 
             // Persian DateTimePicker
             bundles.Add(new StyleBundle("~/Content/PersianDatatimePicker").Include(

@@ -6,18 +6,16 @@
 
     var skills = new List<ResumeSkillViewModel>
     {
+        new ResumeSkillViewModel { Rate = 4, Skill = "c#.net"},
+        new ResumeSkillViewModel { Rate = 2, Skill = "vb.net"},
         new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
-        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "asp.net web api"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "html - html5"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "css3 - less"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "javascript - ajax"},
+        new ResumeSkillViewModel { Rate = 3, Skill = "bootstrap"},
+        new ResumeSkillViewModel { Rate = 4, Skill = "entity framework"},
         new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
-        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
-        new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
-        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
-        new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
-        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
-        new ResumeSkillViewModel { Rate = 4, Skill = "asp.net mvc"},
-        new ResumeSkillViewModel { Rate = 3, Skill = "c#"},
-        new ResumeSkillViewModel { Rate = 2, Skill = "sql server"},
-        new ResumeSkillViewModel { Rate = 4, Skill = "ado.net"},
     };
 
     var pictures = new List<ResumePictureViewModel>
@@ -29,8 +27,88 @@
         },
         new ResumePictureViewModel
         {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_demoent.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_demoent_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_demonews.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_demonews_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
             Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_home.jpg"),
             Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_home_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_badge.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_badge_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_contest.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_contest_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_lottery.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_lottery_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/pellekan_message.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/pellekan_message_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/emofid_home1.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/emofid_home1_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/emofid_home2.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/emofid_home2_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/emofid_liveboard.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/emofid_liveboard_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/reg_home.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/reg_home_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/reg_form1.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/reg_form1_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/reg_form2.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/reg_form2_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/asset_home.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/asset_home_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/asset_funds.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/asset_funds_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/asset_edu.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/asset_edu_t.jpg")
+        },
+        new ResumePictureViewModel
+        {
+            Address = Url.Content("~/Content/themes/vone/images/resume/asset_worldfunds.jpg"),
+            Thumbnail = Url.Content("~/Content/themes/vone/images/resume/asset_worldfunds_t.jpg")
         },
     };
 }
@@ -55,7 +133,7 @@
                             در تهران
                         </p>
                         <p>
-                            برنامه نویس وب و طراح سایت
+                            برنامه نویس و توسعه دهنده وب - طراح سایت
                             <a class="glyphbox" href="mailto:behnam@behnam.com">&#xe63b</a>
                         </p>
                     </div>
@@ -75,12 +153,12 @@
                     @{
                         const int skillStep = 4;
                     }
-                    @for (var i = 0; i < skills.Count; )
+                    @for (var i = 0; i < skills.Count;)
                     {
                         <div class="col-md-4 col-sm-6">
                             @for (var j = 0; j < skillStep && i < skills.Count; j++)
                             {
-                                <div class="item" rate-data="@skills[j].Rate" text-data="@skills[j].Skill"></div>
+                                <div class="item" rate-data="@skills[i].Rate" text-data="@skills[i].Skill"></div>
                                 i++;
                             }
                         </div>
@@ -97,10 +175,58 @@
                 تجربیات
             </div>
             <ul class="dotlist">
-                <li>تجربه 1</li>
-                <li>تجربه 2</li>
-                <li>تجربه 3</li>
-                <li>تجربه 4</li>
+                <li>
+                    @("1390".FaDigit()) :
+                    پیاده سازی برنامه تحت وب ارسال ایمیل و اس ام اس
+                </li>
+                <li>
+                    @("1390".FaDigit()) :
+                    سایت ثبت نام غیرحضوری برای مشتریان کارگزاری مفید
+                </li>
+                <li>
+                    @("1391".FaDigit()) :
+                    سایت اصلی شرکت کارگزاری مفید
+                </li>
+                <li>
+                    @("1391".FaDigit()) :
+                    پرتال داخلی برای محاسبه کارمزد معامله گران بورس
+                </li>
+                <li>
+                    @("1391".FaDigit()) :
+                    سایت مدیریت حساب های کاربری و sso برای مجموعه سایت های کارگزاری مفید
+                </li>
+                <li>
+                    @("1392".FaDigit()) :
+                    طراحی، پیاده سازی و توسعه نسخه اول سایت پلکان (باشگاه مشتریان) کارگزاری مفید
+                </li>
+                <li>
+                    @("1392".FaDigit()) :
+                    پیاده سازی سایت پنل ادمین جامع کارگزاری مفید
+                </li>
+                <li>
+                    @("1393".FaDigit()) :
+                    نسخه دوم سایت ثبت نام غیرحضوری برای مشتریان کارگزاری مفید
+                </li>
+                <li>
+                    @("1393".FaDigit()) :
+                    طراحی، پیاده سازی و توسعه نسخه دوم سایت پلکان (باشگاه مشتریان) کارگزاری مفید
+                </li>
+                <li>
+                    @("1393".FaDigit()) :
+                    پیاده سازی api ارسال ایمیل و اس ام اس و همچنین ثبت log و آمار بازدید
+                </li>
+                <li>
+                    @("1393".FaDigit()) :
+                    پیاده سازی سایت مدیریت حساب کاربری براساس ASP.NET Identity
+                </li>
+                <li>
+                    @("1394".FaDigit()) :
+                    طراحی و پیاده سازی سایت مدیریت دارایی کارگزاری مفید
+                </li>
+                <li>
+                    @("1394".FaDigit()) :
+                    طراحی و پیاده سازی سایت سنجاب
+                </li>
             </ul>
         </div>
 

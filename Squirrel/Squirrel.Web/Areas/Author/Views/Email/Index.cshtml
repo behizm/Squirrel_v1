@@ -1,0 +1,81 @@
+﻿@model Squirrel.Domain.ViewModels.AdminEmailViewModel
+@{
+    ViewBag.Title = "ایمیل";
+}
+
+<div class="divider-blank30"></div>
+<div class="col-lg-8 col-lg-push-2 col-md-12">
+    <div class="box-uptitle">
+        <div class="text">ارسال ایمیل</div>
+        <div class="clearbox"></div>
+    </div>
+
+    <div class="flatbox">
+        <div class="row">
+            @using (Ajax.BeginForm("Send", "Email", new AjaxOptions { OnBegin = "onSendEmailBegin", OnFailure = "onSendEmailError", OnSuccess = "onSendEmailSuccess" }, new { id = "send_email_form" }))
+            {
+                <div class="col-md-6">
+                    <div class="form-row">
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email, new { @class = "textbox", @id="user_email_addr" })
+                        <div class="validation">
+                            @Html.ValidationMessageFor(m => m.Email)
+                        </div>
+                    </div>
+                    <div class="divider-blank30"></div>
+                    <div class="form-row">
+                        @Html.LabelFor(m => m.Subject)
+                        @Html.TextBoxFor(m => m.Subject, new { @class = "textbox" })
+                        <div class="validation">
+                            @Html.ValidationMessageFor(m => m.Subject)
+                        </div>
+                    </div>
+                    <div class="divider-blank30"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        @Html.LabelFor(m => m.Body)
+                        @Html.TextAreaFor(m => m.Body, new { @class = "textarea" })
+                        <div class="validation">
+                            @Html.ValidationMessageFor(m => m.Body)
+                        </div>
+                    </div>
+                    <div class="divider-blank30"></div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="button submit">ارسال</button>
+                    <button type="button" class="button" onclick="cleanSendEmailForm()">پاک کردن</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function onSendEmailBegin() {
+            $(".flatbox").addClass("loading-mode");
+        }
+
+        function onSendEmailError() {
+            GlobalMessage(GetNowTimeFa(), 'در هنگام ارسال ایمیل خطا رخ داد.', 'error');
+            $(".flatbox").removeClass("loading-mode");
+        }
+
+        function onSendEmailSuccess(data) {
+            $(".flatbox").removeClass("loading-mode");
+            if (data.result) {
+                GlobalMessage(GetNowTimeFa(), data.message, 'success');
+                $("#user_email_addr").val("");
+            } else {
+                GlobalMessage(GetNowTimeFa(), data.message, 'error');
+            }
+        }
+
+        function cleanSendEmailForm() {
+            $('#send_email_form input[type="text"]').val("");
+            $('#send_email_form textarea').val("");
+        }
+    </script>
+}

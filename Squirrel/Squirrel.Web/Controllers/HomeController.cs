@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.UI;
-using BotDetect.Web;
 using BotDetect.Web.UI.Mvc;
 using Squirrel.Domain.Enititis;
 using Squirrel.Domain.ExtensionMethods;
-using Squirrel.Domain.Resources;
 using Squirrel.Domain.ViewModels;
 using Squirrel.Utility.Helpers;
 using Squirrel.Web.Filters;
@@ -84,13 +81,13 @@ namespace Squirrel.Web.Controllers
             await EmailService.SendAsync(new EmailSendModel
             {
                 Body = model.Body,
-                Subject = "Squirrel : " + model.Subject,
-                ToAddress = "behnam.zeighami@gmail.com",
+                Subject = "سنجاب : " + model.Subject,
+                ToAddress = ConfigurationManager.AppSettings.Get("ContactEmailAddress")
             });
 
             if (EmailService.Result.Succeeded)
             {
-                return Json(new { result = true },
+                return Json(new { result = true, message = "ایمیل با موفقیت ارسال شد." },
                     JsonRequestBehavior.AllowGet);
             }
 

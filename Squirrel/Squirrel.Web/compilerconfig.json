@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/themes/vone/main.css",
     "inputFile": "Content/themes/vone/main.less"
+  },
+  {
+    "outputFile": "Content/themes/vone/admin.css",
+    "inputFile": "Content/themes/vone/admin.less"
   }
 ]
